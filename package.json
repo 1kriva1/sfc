@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve", 
+    "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -20,7 +20,10 @@
     "@angular/router": "^15.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.12.0"
+    "zone.js": "~0.12.0",
+    "ngx-sfc-common": "0.0.6",
+    "ngx-sfc-components": "0.0.4",
+    "ngx-sfc-inputs": "0.0.2"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.0.4",

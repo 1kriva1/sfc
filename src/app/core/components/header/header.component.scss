@@ -1,0 +1,136 @@
+@use "node_modules/ngx-sfc-common/ngx-sfc-common.styles" as *;
+@import "../../../../styles/mixins";
+
+@mixin navigation() {
+  @include center;
+
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@mixin navigation-color($color) {
+  color: $color;
+
+  &:hover {
+    color: $color-yellow-0;
+  }
+}
+
+@mixin button-color($color) {
+  ::ng-deep sfc-button .button {
+    color: $color;
+    border-color: $color;
+
+    &:hover {
+      color: $color-yellow-0;
+      border-color: $color-yellow-0;
+    }
+  }
+}
+
+:host {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 9999;
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2em 5em 0;
+    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+
+    nav {
+      padding: 1em;
+
+      ul {
+        @include navigation;
+
+        li {
+          padding: 0 1.875em;
+
+          a {
+            font-size: 0.875em;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            text-align: center;
+
+            @include navigation-color($color-0);
+          }
+        }
+      }
+    }
+
+    .logo {
+      a {
+        @include center;
+
+        flex-wrap: wrap;
+        color: $color-0;
+
+        img {
+          padding-right: 0.5em;
+        }
+
+        span {
+          padding-top: 0.3em;
+          font-size: 1em;
+          text-transform: uppercase;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .identity {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+
+      @include button-color($color-0);
+
+      sfc-button {
+        padding: 0.2em 1em;
+      }
+    }
+  }
+
+  &.stick {
+    header {
+      padding: 0.5em 5em;
+      background-color: $color-1;
+
+      nav {
+        ul {
+          li {
+            a {
+              @include navigation-color($color-default);
+            }
+          }
+        }
+      }
+
+      .logo {
+        a {
+          color: $color-default;
+        }
+      }
+
+      .identity {
+        @include button-color($color-default);
+      }
+    }
+  }
+
+  @media (max-width: 430px) {
+    header {
+      flex-direction: column;
+    }
+  }
+}

@@ -1,0 +1,78 @@
+.sfc-section section {
+  min-height: 500px;
+  align-items: center;
+  justify-content: center;
+
+  /* padding: 62px 80px; */
+}
+
+.hero-featured-work {
+  height: 130vh;
+  z-index: 1;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+
+  /* background-image: url('../../../Images/Home/JAn6e8S.jpg'); */
+
+  /* background-image: url('../../../Images/Home/nike_ISS_santiago_g2_06_36002_native_1600.jpg'); */
+  background-image: url("/assets/images/home/main.jpg");
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.hero-featured-work > div {
+  width: 100%;
+}
+
+.hero-featured-work div.hero-text {
+  max-width: 880px;
+  margin: 0 auto;
+  z-index: 2;
+  position: relative;
+  text-align: center;
+  color: #fff;
+}
+
+.hero-featured-work div.hero-text h1 {
+  color: #fff;
+  padding-bottom: 20px;
+  font-size: 3.5em;
+  line-height: 1.3em;
+  margin: 0;
+}
+
+.hero-featured-work div.hero-text p {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: 0;
+  font-size: 1.1em;
+  line-height: 1.5em;
+  color: rgb(255 255 255 / 70%);
+}
+
+.hero-featured-work > .title {
+  // align-self: flex-end;
+}
+
+[data-responsive-background-image] {
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+[data-responsive-background-image]::before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgb(40 42 45 / 70%);
+}
+
+[data-responsive-background-image] .swap {
+  display: none;
+}

@@ -10,7 +10,7 @@ import { HomeModule } from './features/home/home.module';
     AppComponent
   ],
   imports: [
-    BrowserModule,    
+    BrowserModule,
     CoreModule,
     HomeModule,
     AppRoutingModule

@@ -1,0 +1,12 @@
+@mixin center() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+@mixin not-first-not-last {
+  &:not(:first-child, :last-child) {
+    @content;
+  }
+}

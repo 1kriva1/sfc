@@ -5,6 +5,8 @@ import { FooterComponent } from './components/footer/footer.component';
 import { NotFoundPageComponent } from './pages/not-found/not-found.page.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSfcCommonModule } from 'ngx-sfc-common';
+import { NgxSfcComponentsModule } from 'ngx-sfc-components';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -14,8 +16,10 @@ import { NgxSfcCommonModule } from 'ngx-sfc-common';
   ],
   imports: [
     CommonModule,
+    RouterModule,
     FontAwesomeModule,
-    NgxSfcCommonModule
+    NgxSfcCommonModule,
+    NgxSfcComponentsModule
   ],
   exports: [
     HeaderComponent,

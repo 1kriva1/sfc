@@ -5,6 +5,12 @@
   text-align: center;
 }
 
+@mixin center-wrap() {
+  @include center;
+
+  flex-wrap: wrap;
+}
+
 @mixin not-first-not-last {
   &:not(:first-child, :last-child) {
     @content;

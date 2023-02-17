@@ -1,0 +1,10 @@
+<div class="container">
+    <img #image [src]="item.image" (load)="{}" />
+    <sfc-button *ngIf="link" text="Get more" [iconBefore]="faDownload" [types]="[ButtonType.Rounded, ButtonType.Filled]"
+        [sfcComponentSize] [customSize]="0.7"></sfc-button>
+    <h1>{{item.title}}</h1>
+    <div class="raiting" *ngIf="raiting">
+        <fa-icon [icon]="faHeart"></fa-icon>
+        <p>{{item.raiting}}</p>
+    </div>
+</div>

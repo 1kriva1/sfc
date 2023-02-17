@@ -1,21 +1,29 @@
 <header>
     <div class="logo">
         <a href="/">
-            <img src="/assets/images/home/logo.png" />
+            <img src="/assets/images/core/logo.png" />
             <span>Street football club</span>
         </a>
+        <sfc-hamburger-menu [open]="open" (click)="open=!open"></sfc-hamburger-menu>
     </div>
     <nav>
         <ul>
-            <li><a href="/">Process</a></li>
-            <li><a href="/">About</a></li>
-            <li><a href="/">Contact Us</a></li>
+            <li><a (click)="navigate(HeaderPart.About)">About</a></li>
+            <li><a (click)="navigate(HeaderPart.Locations)">Locations</a></li>
+            <li><a (click)="navigate(HeaderPart.Process)">Process</a></li>
+            <li><a (click)="navigate(HeaderPart.Contact)">Contact Us</a></li>
         </ul>
     </nav>
-    <div class="identity">
-        <sfc-button [iconBefore]="faSignIn" [types]="[ButtonType.Rounded]" [sfcComponentSize] [customSize]="0.7"
-            text="Login"></sfc-button>
-        <sfc-button [iconBefore]="faUserPlus" [types]="[ButtonType.Rounded]" [sfcComponentSize] [customSize]="0.7"
-            text="Sign up"></sfc-button>
+    <div class="right">
+        <div class="languages">
+            <sfc-dropdown-menu [icon]="faGlobe" [label]="language" [items]="Languages"></sfc-dropdown-menu>
+            <sfc-delimeter [direction]="Direction.Vertical" [sfcComponentSize] [customSize]="1.5"></sfc-delimeter>
+        </div>
+        <div class="identity">
+            <sfc-button [iconBefore]="faSignIn" [types]="[ButtonType.Rounded]" [sfcComponentSize] [customSize]="0.7"
+                text="Login"></sfc-button>
+            <sfc-button [iconBefore]="faUserPlus" [types]="[ButtonType.Rounded]" [sfcComponentSize] [customSize]="0.7"
+                text="Sign up"></sfc-button>
+        </div>
     </div>
 </header>

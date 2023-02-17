@@ -1,0 +1,1 @@
+export { WelcomePageComponent } from './welcome/welcome.page.component';

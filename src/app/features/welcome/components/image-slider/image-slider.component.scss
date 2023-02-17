@@ -1,0 +1,41 @@
+@use "node_modules/ngx-sfc-common/styles/index" as *;
+
+:host {
+  display: inline-block;
+  width: 100%;
+
+  .container {
+    position: relative;
+
+    .actions {
+      sfc-button {
+        position: absolute;
+        z-index: 3;
+        display: block;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0 0.5em;
+
+        &.previous {
+          right: 100%;
+        }
+
+        &.next {
+          left: 100%;
+        }
+
+        ::ng-deep .button {
+          padding: 1.5em 0.9em;
+          border-radius: 0.9em;
+          background: $color-yellow-0;
+          border-color: $color-yellow-0;
+
+          &:hover {
+            background: $color-yellow-1;
+            border-color: $color-yellow-1;
+          }
+        }
+      }
+    }
+  }
+}

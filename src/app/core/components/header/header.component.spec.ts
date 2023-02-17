@@ -1,20 +1,30 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ButtonComponent, ButtonType, ComponentSizeDirective, WINDOW } from 'ngx-sfc-common';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
+import { ButtonType, CommonConstants, Direction, MediaLimits, NgxSfcCommonModule, Theme, UIClass, UIConstants, WINDOW } from 'ngx-sfc-common';
+import { NgxSfcComponentsModule } from 'ngx-sfc-components';
+import { of } from 'rxjs';
+import { RoutKey } from '../../enums';
 import { HeaderComponent } from './header.component';
+import { HeaderConstants } from './header.constants';
+import { HeaderPart } from './header.enum';
 
 describe('Core.Component:Header', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let windowMock: any = <any>{};
+  let resizeServiceMock: any = { onResize$: of(windowMock) };
+  let routerMock = { navigate: jasmine.createSpy('navigate') }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FontAwesomeModule],
-      declarations: [ButtonComponent, ComponentSizeDirective, HeaderComponent],
+      imports: [FontAwesomeModule, NgxSfcCommonModule, NgxSfcComponentsModule],
+      declarations: [HeaderComponent],
       providers: [
+        { provide: Router, useValue: routerMock },
         { provide: WINDOW, useFactory: (() => { return windowMock; }) }
       ]
     }).compileComponents();
@@ -35,12 +45,126 @@ describe('Core.Component:Header', () => {
       expect(fixture.nativeElement.querySelector('div.logo > a')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('div.logo > a > img')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('div.logo > a > span')).toBeTruthy();
+      expect(fixture.nativeElement.querySelector('div.logo > sfc-hamburger-menu')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('nav')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('nav > ul')).toBeTruthy();
-      expect(fixture.nativeElement.querySelectorAll('nav > ul > li').length).toEqual(3);
-      expect(fixture.nativeElement.querySelectorAll('nav > ul > li > a').length).toEqual(3);
+      expect(fixture.nativeElement.querySelectorAll('nav > ul > li').length).toEqual(4);
+      expect(fixture.nativeElement.querySelectorAll('nav > ul > li > a').length).toEqual(4);
+      expect(fixture.nativeElement.querySelector('div.right')).toBeTruthy();
+      expect(fixture.nativeElement.querySelector('div.languages')).toBeTruthy();
+      expect(fixture.nativeElement.querySelector('sfc-dropdown-menu')).toBeTruthy();
+      expect(fixture.nativeElement.querySelector('sfc-delimeter')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('div.identity')).toBeTruthy();
       expect(fixture.nativeElement.querySelectorAll('div.identity > sfc-button').length).toEqual(2);
+    });
+
+    fit("Should have dark theme class by default", () => {
+      expect(fixture.nativeElement.className).toContain(Theme.Dark);
+    });
+
+    fit("Should have dark theme class when mobile header is open", () => {
+      const menuEl = fixture.debugElement.query(By.css('sfc-hamburger-menu'));
+      menuEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).toContain(Theme.Dark);
+    });
+
+    fit("Should not have dark theme when stick", () => {
+      windowMock.scrollY = 100;
+      window.dispatchEvent(new Event('scroll'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).not.toContain(Theme.Dark);
+    });
+
+    fit("Should call unsubscribe on resize observable, when component destroyed", () => {
+      const unsubscribeSpy = spyOn(
+        (component as any)._resizeSubscription,
+        'unsubscribe'
+      ).and.callThrough();
+
+      component?.ngOnDestroy();
+
+      expect(unsubscribeSpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('Stick', () => {
+    fit("Should not have stick class by default", () => {
+      expect(fixture.nativeElement.className).not.toContain(HeaderConstants.STICK_CLASS);
+    });
+
+    fit("Should have stick class", () => {
+      window.scrollY = 100;
+      window.dispatchEvent(new Event('scroll'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).toContain(HeaderConstants.STICK_CLASS);
+    });
+  });
+
+  describe('Open', () => {
+    fit("Should not have open class by default", () => {
+      expect(fixture.nativeElement.className).not.toContain(UIClass.Open);
+    });
+
+    fit("Should have open class when mobile header is open", () => {
+      const menuEl = fixture.debugElement.query(By.css('sfc-hamburger-menu'));
+      menuEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).toContain(UIClass.Open);
+    });
+
+    fit("Should toggle body overflow value", () => {
+      const menuEl = fixture.debugElement.query(By.css('sfc-hamburger-menu'));
+
+      menuEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(document.body.style.overflow).toEqual(UIConstants.CSS_VISIBILITY_HIDDEN);
+
+      menuEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(document.body.style.overflow).toEqual(UIConstants.CSS_INITIAL);
+    });
+
+    fit("Should close mobile header when window width more than MobileLarge", () => {
+      const menuEl = fixture.debugElement.query(By.css('sfc-hamburger-menu'));
+      menuEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).toContain(UIClass.Open);
+
+      windowMock.innerWidth = MediaLimits.MobileLarge + 1;
+      (component as any).resizeService = resizeServiceMock;
+      component.ngOnDestroy();
+      component.ngAfterViewInit();
+
+      window.dispatchEvent(new Event('resize'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).not.toContain(UIClass.Open);
+    });
+
+    fit("Should not close mobile header when window width less than MobileLarge", () => {
+      const menuEl = fixture.debugElement.query(By.css('sfc-hamburger-menu'));
+      menuEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).toContain(UIClass.Open);
+
+      windowMock.innerWidth = MediaLimits.MobileLarge - 1;
+      (component as any).resizeService = resizeServiceMock;
+      component.ngOnDestroy();
+      component.ngAfterViewInit();
+
+      window.dispatchEvent(new Event('resize'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).toContain(UIClass.Open);
     });
   });
 
@@ -50,37 +174,113 @@ describe('Core.Component:Header', () => {
     });
 
     fit("Should have constant image", () => {
-      expect(fixture.nativeElement.querySelector('div.logo > a> img').src).toContain('/assets/images/home/logo.png');
+      expect(fixture.nativeElement.querySelector('div.logo > a > img').src).toContain('/assets/images/core/logo.png');
     });
 
     fit("Should have constant text", () => {
-      expect(fixture.nativeElement.querySelector('div.logo > a> span').innerText).toEqual('STREET FOOTBALL CLUB');
+      expect(fixture.nativeElement.querySelector('div.logo > a > span').innerText).toEqual('Street football club');
+    });
+
+    fit('Should hamburger menu have appropriate attributes', () => {
+      expect(fixture.debugElement.query(By.css('sfc-hamburger-menu')).componentInstance.open).toBeFalse();
+    });
+
+    fit('Should toggle hamburger menu', () => {
+      const menuEl = fixture.debugElement.query(By.css('sfc-hamburger-menu'));
+      menuEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(menuEl.componentInstance.open).toBeTrue();
     });
   });
 
   describe('Navigation', () => {
-    fit("Should have reference for process", () => {
-      expect(fixture.nativeElement.querySelectorAll('nav > ul > li > a')[0].pathname).toEqual('/');
+    fit("Should have text for about", () => {
+      expect(fixture.nativeElement.querySelectorAll('nav > ul > li')[0].innerText).toEqual('ABOUT');
     });
 
-    fit("Should have reference for about", () => {
-      expect(fixture.nativeElement.querySelectorAll('nav > ul > li > a')[1].pathname).toEqual('/');
+    fit("Should navigate to about", () => {
+      const aboutLink = fixture.debugElement.queryAll(By.css('nav > ul > li > a'))[0],
+        fragment = HeaderPart.About;
+      aboutLink.nativeElement.dispatchEvent(new MouseEvent('click'));
+
+      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Welcome}`], { fragment });
     });
 
-    fit("Should have reference for contact us", () => {
-      expect(fixture.nativeElement.querySelectorAll('nav > ul > li > a')[2].pathname).toEqual('/');
+    fit("Should have text for locations", () => {
+      expect(fixture.nativeElement.querySelectorAll('nav > ul > li')[1].innerText).toEqual('LOCATIONS');
+    });
+
+    fit("Should navigate to locations", () => {
+      const aboutLink = fixture.debugElement.queryAll(By.css('nav > ul > li > a'))[1],
+        fragment = HeaderPart.Locations;
+      aboutLink.nativeElement.dispatchEvent(new MouseEvent('click'));
+
+      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Welcome}`], { fragment });
     });
 
     fit("Should have text for process", () => {
-      expect(fixture.nativeElement.querySelectorAll('nav > ul > li')[0].innerText).toEqual('PROCESS');
+      expect(fixture.nativeElement.querySelectorAll('nav > ul > li')[2].innerText).toEqual('PROCESS');
     });
 
-    fit("Should have text for about", () => {
-      expect(fixture.nativeElement.querySelectorAll('nav > ul > li')[1].innerText).toEqual('ABOUT');
+    fit("Should navigate to process", () => {
+      const aboutLink = fixture.debugElement.queryAll(By.css('nav > ul > li > a'))[2],
+        fragment = HeaderPart.Process;
+      aboutLink.nativeElement.dispatchEvent(new MouseEvent('click'));
+
+      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Welcome}`], { fragment });
     });
 
     fit("Should have text for contact us", () => {
-      expect(fixture.nativeElement.querySelectorAll('nav > ul > li')[2].innerText).toEqual('CONTACT US');
+      expect(fixture.nativeElement.querySelectorAll('nav > ul > li')[3].innerText).toEqual('CONTACT US');
+    });
+
+    fit("Should navigate to contact us", () => {
+      const aboutLink = fixture.debugElement.queryAll(By.css('nav > ul > li > a'))[3],
+        fragment = HeaderPart.Contact;
+      aboutLink.nativeElement.dispatchEvent(new MouseEvent('click'));
+
+      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Welcome}`], { fragment });
+    });
+
+    fit("Should close mobile header", () => {
+      const menuEl = fixture.debugElement.query(By.css('sfc-hamburger-menu')),
+        aboutLink = fixture.debugElement.queryAll(By.css('nav > ul > li > a'))[0];
+
+      menuEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).toContain(UIClass.Open);
+
+      aboutLink.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.className).not.toContain(UIClass.Open);
+    });
+  });
+
+  describe('Languages', () => {
+    fit('Should sfc-dropdown-menu have appropriate attributes', () => {
+      const dropdownMenuEl: DebugElement = fixture.debugElement.query(By.css('sfc-dropdown-menu'));
+
+      expect(dropdownMenuEl.componentInstance.label).toEqual(HeaderConstants.LANGUAGES[1].label);
+      expect(dropdownMenuEl.componentInstance.items).toEqual(HeaderConstants.LANGUAGES);
+      expect(dropdownMenuEl.componentInstance.icon).toEqual(faGlobe);
+    });
+
+    fit('Should language be empty', () => {
+      component.Languages = [];
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('sfc-dropdown-menu')).componentInstance.label)
+        .toEqual(CommonConstants.EMPTY_STRING);
+    });
+
+    fit('Should sfc-delimeter have appropriate attributes', () => {
+      const delimeterEl: DebugElement = fixture.debugElement.query(By.css('sfc-delimeter'));
+
+      expect(delimeterEl.componentInstance.direction).toEqual(Direction.Vertical);
+      expect(delimeterEl.attributes['ng-reflect-custom-size']).toEqual('1.5');
     });
   });
 

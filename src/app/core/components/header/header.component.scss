@@ -1,32 +1,11 @@
-@use "node_modules/ngx-sfc-common/ngx-sfc-common.styles" as *;
+@use "node_modules/ngx-sfc-common/styles/index" as *;
 @import "../../../../styles/mixins";
-
-@mixin navigation() {
-  @include center;
-
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
 
 @mixin navigation-color($color) {
   color: $color;
 
   &:hover {
     color: $color-yellow-0;
-  }
-}
-
-@mixin button-color($color) {
-  ::ng-deep sfc-button .button {
-    color: $color;
-    border-color: $color;
-
-    &:hover {
-      color: $color-yellow-0;
-      border-color: $color-yellow-0;
-    }
   }
 }
 
@@ -39,27 +18,33 @@
 
   header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 2em 5em 0;
-    transition: all 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+    justify-content: space-between;
+    transition: all 0.3s $transition-timing-function-default;
+    padding: 2em 5em;
+    color: $color-default;
 
     nav {
       padding: 1em;
 
       ul {
-        @include navigation;
+        @include center-wrap;
+
+        margin: 0;
+        padding: 0;
+        list-style: none;
 
         li {
-          padding: 0 1.875em;
+          padding: 0.5em 1.875em;
 
           a {
             font-size: 0.875em;
             font-weight: bold;
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            transition: color 0.3s ease;
+            transition: color $transition-duration-default $transition-timing-function-default;
             text-align: center;
+            cursor: pointer;
 
             @include navigation-color($color-0);
           }
@@ -68,43 +53,107 @@
     }
 
     .logo {
-      a {
-        @include center;
+      @include center-wrap;
 
-        flex-wrap: wrap;
-        color: $color-0;
+      color: $color-0;
+
+      a {
+        @include center-wrap;
 
         img {
-          padding-right: 0.5em;
+          padding: 0.5em 0.5em 0.5em 0;
         }
 
         span {
-          padding-top: 0.3em;
           font-size: 1em;
           text-transform: uppercase;
           font-weight: bold;
+          user-select: none;
         }
+      }
+
+      sfc-hamburger-menu {
+        display: none;
       }
     }
 
-    .identity {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
+    .right {
+      @include center-wrap;
 
-      @include button-color($color-0);
+      .languages {
+        @include center;
+      }
 
-      sfc-button {
-        padding: 0.2em 1em;
+      .identity {
+        @include center-wrap;
+
+        gap: 0.5em;
+
+        sfc-button {
+          padding: 0.2em 0;
+        }
       }
     }
   }
 
-  &.stick {
+  &.open {
+    height: 100%;
+    bottom: 0;
+    background: $color-11;
+    overflow-y: scroll;
+
+    header {
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 0 2em;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      max-height: 100%;
+      height: stretch;
+
+      nav {
+        ul {
+          flex-direction: column;
+
+          li {
+            padding: 2em 1.875em;
+          }
+        }
+      }
+
+      .right {
+        flex-direction: column-reverse;
+        padding: 2em 0;
+
+        .languages {
+          sfc-delimeter {
+            display: none;
+          }
+        }
+
+        .identity {
+          sfc-button {
+            padding: 1em 0;
+            width: 100%;
+          }
+        }
+      }
+
+      nav,
+      .right {
+        display: flex;
+      }
+    }
+  }
+
+  &:not(.open).stick {
     header {
       padding: 0.5em 5em;
       background-color: $color-1;
+
+      .logo {
+        color: $color-default;
+      }
 
       nav {
         ul {
@@ -115,22 +164,90 @@
           }
         }
       }
+    }
+  }
 
+  @media (max-width: 1280px) {
+    header {
       .logo {
         a {
-          color: $color-default;
+          img {
+            padding: 0.5em 0;
+          }
+
+          span {
+            display: none;
+          }
         }
       }
 
-      .identity {
-        @include button-color($color-default);
+      .right {
+        .languages {
+          padding-right: 0.5em;
+
+          sfc-delimeter {
+            display: none;
+          }
+        }
       }
     }
   }
 
-  @media (max-width: 430px) {
+  @media (max-width: 768px) {
     header {
-      flex-direction: column;
+      padding: 2em;
+      justify-content: center;
+
+      .right {
+        .languages {
+          padding-right: 0;
+        }
+
+        .identity {
+          gap: 0.3em;
+        }
+      }
+    }
+
+    &:not(.open).stick {
+      header {
+        padding: 1em 2em;
+      }
+    }
+  }
+
+  @media (max-width: 425px) {
+    header {
+      padding: 1em !important;
+
+      .logo {
+        width: 100%;
+        justify-content: center;
+
+        a {
+          span {
+            display: block;
+            padding: 0.5em 1em;
+          }
+        }
+
+        sfc-hamburger-menu {
+          display: block;
+        }
+      }
+
+      nav,
+      .right {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-width: 375px) {
+    header {
+      .logo {
+        flex-direction: column;
+      }
     }
   }
 }

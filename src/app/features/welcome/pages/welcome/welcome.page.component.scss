@@ -1,0 +1,464 @@
+@use "node_modules/ngx-sfc-common/styles/index" as *;
+@import "../../../../../styles/mixins";
+
+:host {
+  main {
+    section {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-around;
+      padding: 3em 5em;
+      min-height: 30em;
+      transition: padding $transition-duration-default $transition-timing-function-default;
+
+      &.hero {
+        display: flex;
+        justify-content: initial;
+        min-height: 90vh;
+        position: relative;
+        background-image: url("/assets/images/welcome/hero/background.jpg");
+        background-size: cover;
+        background-position: center center;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: #282a2db3;
+        }
+
+        .title {
+          font-weight: bold;
+          user-select: none;
+          position: relative;
+          width: 40%;
+          padding-left: 15em;
+
+          h1 {
+            color: $color-0;
+            font-size: 2.5em;
+            line-height: 1em;
+            margin-top: 0;
+          }
+
+          p {
+            font-size: 1em;
+            line-height: 1.5em;
+            color: $color-1;
+
+            &.small {
+              font-size: 0.7em;
+            }
+          }
+
+          sfc-button {
+            transition: transform 500ms;
+            transform-origin: 50% 0;
+
+            &:hover {
+              transform: scale(1.05);
+            }
+
+            ::ng-deep {
+              .button {
+                background: $color-yellow-0;
+                border-color: $color-yellow-0;
+
+                &:hover {
+                  background: $color-yellow-1;
+                  border-color: $color-yellow-1;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.about {
+        flex-direction: column;
+
+        .title {
+          font-weight: bold;
+          user-select: none;
+          text-align: center;
+          max-width: 50em;
+
+          h1 {
+            color: $color-yellow-0;
+            font-size: 2.5em;
+            line-height: 1em;
+          }
+
+          h3 {
+            color: $color-default;
+            font-size: 2em;
+            font-weight: 500;
+
+            span {
+              color: $color-yellow-0;
+            }
+          }
+
+          p {
+            line-height: 1.5em;
+            color: $color-default;
+            font-size: 1.2em;
+            font-weight: normal;
+
+            span {
+              color: $color-yellow-0;
+            }
+          }
+        }
+
+        .parts {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          flex-wrap: wrap;
+          width: 100%;
+
+          .part {
+            @include center;
+
+            flex-direction: column;
+            padding: 2em;
+            max-width: 12em;
+
+            img {
+              transition: transform $transition-duration-default;
+              width: 100%;
+
+              &:hover {
+                transform: scale(1.1);
+              }
+            }
+
+            span {
+              color: $color-default;
+              padding-top: 0.5em;
+              font-size: 1.5em;
+              font-weight: bold;
+              text-align: center;
+            }
+          }
+        }
+      }
+
+      &.locations {
+        overflow: hidden;
+
+        .location-title {
+          width: 30%;
+          font-weight: bold;
+          user-select: none;
+
+          h1 {
+            color: $color-yellow-0;
+            font-size: 2.5em;
+            line-height: 1em;
+            margin-top: 0;
+          }
+
+          p {
+            font-size: 1em;
+            line-height: 1.5em;
+            color: $color-default;
+          }
+        }
+
+        sfc-image-slider {
+          width: 35%;
+        }
+      }
+
+      &.contact {
+        color: $color-0;
+        background: $color-11;
+        min-height: 15em;
+
+        .container {
+          display: flex;
+          justify-content: space-around;
+          width: 100%;
+
+          .details {
+            display: flex;
+
+            .detail {
+              padding: 0.5em 1em;
+
+              h5 {
+                color: $color-yellow-0;
+                margin: 0;
+              }
+
+              h4 {
+                font-size: 1.3em;
+                margin: 0.5em 0;
+              }
+
+              .description {
+                color: $color-2;
+                font-size: 0.9em;
+              }
+            }
+          }
+
+          .links {
+            h3 {
+              margin-top: 0;
+              color: $color-yellow-0;
+              text-align: center;
+            }
+
+            div {
+              @include center;
+
+              a {
+                transition: transform $transition-duration-default;
+
+                fa-icon {
+                  font-size: 1.5em;
+                  margin: 0.5em;
+                }
+
+                &:hover {
+                  transform: scale(1.2);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.process {
+        flex-wrap: nowrap;
+        background: url("/assets/images/welcome/process/background.svg");
+        background-size: cover;
+        background-position: center center;
+
+        .title {
+          width: 35%;
+          margin: 0 2em;
+          text-align: center;
+          font-weight: bold;
+          user-select: none;
+
+          h1 {
+            color: $color-0;
+            font-size: 2.5em;
+            line-height: 1em;
+            margin-top: 0;
+          }
+
+          p {
+            font-size: 1em;
+            line-height: 1.5em;
+            color: $color-default;
+          }
+        }
+
+        .schemas {
+          @include center-wrap;
+
+          margin: 1em 0;
+
+          sfc-timeline {
+            width: 100%;
+            margin: 1em 0;
+
+            ::ng-deep sfc-timeline-item {
+              .container {
+                .content {
+                  p {
+                    color: $color-default;
+                    font-size: 0.7em;
+                    margin: 0.5em 0;
+                    text-align: left;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.categories {
+        flex-wrap: nowrap;
+        background: $color-yellow-0;
+
+        .category {
+          @include center;
+
+          flex-direction: column;
+          max-width: 30em;
+          padding: 0 1em;
+
+          .title {
+            font-weight: bold;
+            user-select: none;
+            text-align: center;
+
+            h1 {
+              font-size: 1.5em;
+              line-height: initial;
+              color: $color-0;
+            }
+
+            .category-description {
+              font-size: 0.8em;
+              color: $color-default;
+              line-height: 1.5em;
+            }
+          }
+
+          .category-img {
+            width: 100%;
+            height: auto;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1280px) {
+    main {
+      section {
+        &.hero {
+          .title {
+            padding-left: 10em;
+            width: 50%;
+          }
+        }
+
+        &.categories {
+          .title {
+            text-align: center;
+          }
+        }
+
+        &.locations {
+          .location-title {
+            width: 40%;
+          }
+        }
+
+        &.process {
+          .title {
+            width: 80%;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1220px) {
+    main {
+      section {
+        &.hero {
+          justify-content: center;
+          text-align: center;
+          padding: 2em 5em;
+
+          .title {
+            padding-left: 0;
+            width: 100%;
+          }
+        }
+
+        &.categories {
+          flex-wrap: wrap;
+        }
+
+        &.locations {
+          flex-direction: column;
+
+          .location-title {
+            text-align: center;
+            width: 100%;
+          }
+
+          sfc-image-slider {
+            width: 80%;
+            padding: 3em 0;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    main {
+      section {
+        padding: 2em;
+
+        &.about {
+          .parts {
+            flex-wrap: wrap;
+          }
+        }
+
+        &.locations {
+          font-size: 0.8em;
+        }
+
+        &.process {
+          flex-flow: column-reverse wrap;
+
+          .title {
+            margin: 0;
+            width: 100%;
+
+            h1 {
+              color: $color-yellow-0;
+            }
+          }
+        }
+
+        &.contact {
+          .container {
+            flex-wrap: wrap;
+
+            .details {
+              flex-wrap: wrap;
+              justify-content: center;
+
+              .detail {
+                text-align: center;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 425px) {
+    main {
+      section {
+        padding: 1em;
+
+        &.hero {
+          .title {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 360px) {
+    main {
+      section {
+        &.locations {
+          font-size: 0.6em;
+        }
+      }
+    }
+  }
+}

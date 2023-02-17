@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { HomeModule } from './features/home/home.module';
+import { WelcomeModule } from './features/welcome/welcome.module';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,7 @@ import { HomeModule } from './features/home/home.module';
   imports: [
     BrowserModule,
     CoreModule,
+    WelcomeModule,
     HomeModule,
     AppRoutingModule
   ],

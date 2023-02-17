@@ -1,3 +1,7 @@
-<sfc-header *ngIf="layout.header"></sfc-header>
-<router-outlet></router-outlet>
-<sfc-footer *ngIf="layout.footer"></sfc-footer>
+<div>
+    <sfc-header *ngIf="layout.header"></sfc-header>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+    <sfc-footer *ngIf="layout.footer"></sfc-footer>
+</div>

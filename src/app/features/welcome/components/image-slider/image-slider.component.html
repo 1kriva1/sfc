@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="items">
+        <sfc-image-slider-item *ngFor="let item of items; let index = index" [item]="item" [type]="getItemType(index)">
+        </sfc-image-slider-item>
+    </div>
+    <div class="actions">
+        <sfc-button class="previous" [iconBefore]="faArrowLeft"
+            [types]="[ButtonType.Rounded, ButtonType.Filled]" [sfcComponentSize]="ComponentSize.Small"
+            (click)="previous()"></sfc-button>
+        <sfc-button class="next" [iconBefore]="faArrowRight" [types]="[ButtonType.Rounded, ButtonType.Filled]"
+            [sfcComponentSize]="ComponentSize.Small" (click)="next()"></sfc-button>
+    </div>
+</div>

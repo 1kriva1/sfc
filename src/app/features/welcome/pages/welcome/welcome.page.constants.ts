@@ -98,10 +98,30 @@ export class WelcomePageConstants {
     ];
 
     static LOCATIONS: IImageSliderItemModel[] = [
-        { image: '/assets/images/welcome/locations/default.jpg', title: 'Through the Mountains', raiting: '1' },
-        { image: '/assets/images/welcome/locations/default.jpg', title: 'Through the Mountains', raiting: '2' },
-        { image: '/assets/images/welcome/locations/default.jpg', title: 'Through the Mountains', raiting: '3' },
-        { image: '/assets/images/welcome/locations/default.jpg', title: 'Through the Mountains', raiting: '4' },
-        { image: '/assets/images/welcome/locations/default.jpg', title: 'Through the Mountains', raiting: '5' }
+        {
+            image: '/assets/images/welcome/locations/4a.jpg',
+            title: 'Sports complex of Kyiv National University',
+            raiting: '1',
+            link: 'https://google.com'
+        },
+        {
+            image: '/assets/images/welcome/locations/4a.jpg',
+            title: 'REJO ВДНГ',
+            raiting: '2',
+            link: 'https://rejo.ua/'
+        },
+        {
+            image: '/assets/images/welcome/locations/4a.jpg',
+            title: 'Футбольный центр "Меридиан"',
+            raiting: '3'
+        },
+        {
+            image: '/assets/images/welcome/locations/4a.jpg',
+            title: 'Through the Mountains', raiting: '4'
+        },
+        {
+            image: '/assets/images/welcome/locations/4a.jpg',
+            title: 'Through the Mountains', raiting: '5'
+        }
     ];
 }

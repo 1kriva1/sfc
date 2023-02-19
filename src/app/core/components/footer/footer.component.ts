@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Theme } from 'ngx-sfc-common';
 
 @Component({
   selector: 'sfc-footer',
@@ -7,4 +8,9 @@ import { Component } from '@angular/core';
 })
 export class FooterComponent {
 
+  Theme = Theme;
+
+  public get year(): number {
+    return new Date().getFullYear();
+  }
 }

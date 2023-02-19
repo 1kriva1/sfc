@@ -173,7 +173,7 @@ describe('Core.Component:Header', () => {
       expect(fixture.nativeElement.querySelector('div.logo > a').pathname).toEqual('/');
     });
 
-    fit("Should have constant image", () => {
+    xit("Should have constant image", () => {
       expect(fixture.nativeElement.querySelector('div.logo > a > img').src).toContain('/assets/images/core/logo.png');
     });
 

@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostBinding, Input, ViewChild } from '@angular/core';
-import { faDownload, faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faLink } from '@fortawesome/free-solid-svg-icons';
 import { ButtonType, CommonConstants, getCssLikeValue } from 'ngx-sfc-common';
 import { ImageSliderItemType } from './image-slider-item-type.enum';
 import { IImageSliderItemModel } from './image-slider-item.model';
@@ -11,7 +11,7 @@ import { IImageSliderItemModel } from './image-slider-item.model';
 })
 export class ImageSliderItemComponent {
 
-  faDownload = faDownload;
+  faLink = faLink;
   faHeart = faHeart;
 
   ButtonType = ButtonType;
@@ -23,17 +23,19 @@ export class ImageSliderItemComponent {
   @HostBinding('class')
   type: ImageSliderItemType = ImageSliderItemType.None;
 
-  @Input()
-  raiting: boolean = true;
-
-  @Input()
-  link: boolean = false;
-
   @ViewChild('image')
   imageEl!: ElementRef;
 
+  private get imageHeight(): number {
+    return this.imageEl?.nativeElement.offsetHeight || 0;
+  }
+
   @HostBinding('style.height')
-  get height(): string {
-    return getCssLikeValue(this.imageEl?.nativeElement.offsetHeight || 0);
+  private get height(): string {
+    return getCssLikeValue(this.imageHeight);
   };
+
+  public get linkSize(): number {
+    return this.imageHeight * 0.03 / 16;
+  }
 }

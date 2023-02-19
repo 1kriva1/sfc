@@ -23,18 +23,27 @@ $translate-x: 9.375em;
       transform: scale(0);
     }
 
-    sfc-button {
-      position: absolute;
-      right: -1.375em;
-      bottom: 0.75em;
+    .image {
+      position: relative;
 
-      ::ng-deep .button {
-        background: $color-yellow-0;
-        border-color: $color-yellow-0;
+      a {
+        position: absolute;
+        left: 90%;
+        bottom: 20%;
+        width: 100%;
 
-        &:hover {
-          background: $color-yellow-1;
-          border-color: $color-yellow-1;
+        sfc-button {
+          ::ng-deep .button {
+            background: $color-yellow-0;
+            border-color: $color-yellow-0;
+            font-weight: bold;
+
+            &:hover {
+              background: $color-yellow-1;
+              border-color: $color-yellow-1;
+              color: $color-default !important;
+            }
+          }
         }
       }
     }
@@ -69,8 +78,8 @@ $translate-x: 9.375em;
       }
     }
 
-    img,
-    sfc-button,
+    .image img,
+    .image a sfc-button,
     h1,
     .raiting {
       transition: 500ms cubic-bezier(0.17, 0.67, 0.55, 1.43);
@@ -82,13 +91,17 @@ $translate-x: 9.375em;
     .container {
       z-index: 2;
 
-      img {
-        opacity: 1;
-        transform: translateX(0%) scale(1);
-      }
+      .image {
+        img {
+          opacity: 1;
+          transform: translateX(0%) scale(1);
+        }
 
-      sfc-button {
-        transition-delay: 100ms;
+        a {
+          sfc-button {
+            transition-delay: 100ms;
+          }
+        }
       }
 
       h1 {
@@ -99,7 +112,7 @@ $translate-x: 9.375em;
         transition-delay: 300ms;
       }
 
-      sfc-button,
+      .image a sfc-button,
       h1,
       .raiting {
         opacity: 1;
@@ -112,12 +125,14 @@ $translate-x: 9.375em;
     .container {
       z-index: 1;
 
-      img {
-        opacity: 0.3;
-        transform: translateX(-25%) scale(0.8);
+      .image {
+        img {
+          opacity: 0.3;
+          transform: translateX(-25%) scale(0.8);
+        }
       }
 
-      sfc-button,
+      .image a sfc-button,
       h1,
       .raiting {
         transform: translateX(-$translate-x);
@@ -129,12 +144,14 @@ $translate-x: 9.375em;
     .container {
       z-index: 1;
 
-      img {
-        opacity: 0.3;
-        transform: translateX(25%) scale(0.8);
+      .image {
+        img {
+          opacity: 0.3;
+          transform: translateX(25%) scale(0.8);
+        }
       }
 
-      sfc-button,
+      .image a sfc-button,
       h1,
       .raiting {
         transform: translateX($translate-x);
@@ -144,16 +161,20 @@ $translate-x: 9.375em;
 
   &.next {
     .container {
-      img {
-        transform: translateX(-50%) scale(0);
+      .image {
+        img {
+          transform: translateX(-50%) scale(0);
+        }
       }
     }
   }
 
   &.previous {
     .container {
-      img {
-        transform: translateX(50%) scale(0);
+      .image {
+        img {
+          transform: translateX(50%) scale(0);
+        }
       }
     }
   }

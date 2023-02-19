@@ -47,14 +47,6 @@ describe('Features.Welcome.Component: ImageSliderItem', () => {
       expect(fixture.nativeElement.className).toEqual(ImageSliderItemType.Next);
     });
 
-    fit("Should have default raiting", () => {
-      expect(component.raiting).toBeTrue();
-    });
-
-    fit("Should have default link", () => {
-      expect(component.link).toBeFalse();
-    });
-
     fit("Should have height style", () => {
       expect(fixture.nativeElement.style.height).toEqual('0px');
     });
@@ -83,22 +75,21 @@ describe('Features.Welcome.Component: ImageSliderItem', () => {
     });
 
     fit("Should exist", () => {
-      component.link = true;
+      component.item.link = 'test.com';
       fixture.detectChanges();
 
       expect(fixture.nativeElement.querySelector('sfc-button')).toBeTruthy();
     });
 
     fit('Should have appropriate attributes', () => {
-      component.link = true;
+      component.item.link = 'test.com';
       fixture.detectChanges();
 
       const linkBtn: DebugElement = fixture.debugElement.query(By.css('sfc-button'));
 
       expect(linkBtn.componentInstance.types).toEqual([ButtonType.Rounded, ButtonType.Filled]);
-      expect(linkBtn.attributes['ng-reflect-custom-size']).toEqual('0.7');
-      expect(linkBtn.componentInstance.text).toEqual('Get more');
-      expect(linkBtn.componentInstance.iconBefore.iconName).toEqual('download');
+      expect(linkBtn.componentInstance.text).toEqual('Visit website!');
+      expect(linkBtn.componentInstance.iconBefore.iconName).toEqual('link');
       expect(linkBtn.componentInstance.iconBefore.prefix).toEqual('fas');
     });
   });
@@ -117,23 +108,22 @@ describe('Features.Welcome.Component: ImageSliderItem', () => {
   });
 
   describe('Raiting', () => {
-    fit("Should exist by default", () => {
-      expect(fixture.nativeElement.querySelector('.raiting')).toBeTruthy();
-    });
-
-    fit("Should not exist", () => {
-      component.raiting = false;
-      fixture.detectChanges();
-
+    fit("Should not exist by default", () => {
       expect(fixture.nativeElement.querySelector('.raiting')).toBeNull();
     });
 
-    fit("Should have static icon", () => {
-      expect(fixture.nativeElement.querySelector('fa-icon svg').classList).toContain('fa-heart');
+    fit("Should exist", () => {
+      component.item.raiting = '100';
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('.raiting')).toBeTruthy();
     });
 
-    fit("Should have default raiting", () => {
-      expect(fixture.nativeElement.querySelector('p').innerText).toEqual(CommonConstants.EMPTY_STRING);
+    fit("Should have static icon", () => {
+      component.item.raiting = '100';
+      fixture.detectChanges();
+
+      expect(fixture.nativeElement.querySelector('fa-icon svg').classList).toContain('fa-heart');
     });
 
     fit("Should have defined raiting", () => {

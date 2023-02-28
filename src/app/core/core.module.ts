@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { NotFoundPageComponent } from './pages/not-found/not-found.page.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSfcCommonModule } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { RouterModule } from '@angular/router';
+import { ShareModule } from '../share/share.module';
 
 @NgModule({
   declarations: [
@@ -17,9 +17,9 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     RouterModule,
-    FontAwesomeModule,
     NgxSfcCommonModule,
-    NgxSfcComponentsModule
+    NgxSfcComponentsModule,
+    ShareModule
   ],
   exports: [
     HeaderComponent,

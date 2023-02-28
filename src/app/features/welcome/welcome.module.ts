@@ -5,6 +5,7 @@ import { NgxSfcCommonModule } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ImageSliderComponent, ImageSliderItemComponent } from './components';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -15,9 +16,10 @@ import { ImageSliderComponent, ImageSliderItemComponent } from './components';
     ],
     imports: [
         CommonModule,
+        RouterModule,
         FontAwesomeModule,
         NgxSfcCommonModule,
-        NgxSfcComponentsModule,
+        NgxSfcComponentsModule
     ],
     exports: [
         WelcomePageComponent

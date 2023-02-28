@@ -7,6 +7,7 @@ import { faGlobe } from '@fortawesome/free-solid-svg-icons';
 import { ButtonType, CommonConstants, Direction, MediaLimits, NgxSfcCommonModule, Theme, UIClass, UIConstants, WINDOW } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { of } from 'rxjs';
+import { LogoComponent } from 'src/app/share/components/logo/logo.component';
 import { RoutKey } from '../../enums';
 import { HeaderComponent } from './header.component';
 import { HeaderConstants } from './header.constants';
@@ -22,7 +23,7 @@ describe('Core.Component:Header', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FontAwesomeModule, NgxSfcCommonModule, NgxSfcComponentsModule],
-      declarations: [HeaderComponent],
+      declarations: [LogoComponent, HeaderComponent],
       providers: [
         { provide: Router, useValue: routerMock },
         { provide: WINDOW, useFactory: (() => { return windowMock; }) }
@@ -42,9 +43,7 @@ describe('Core.Component:Header', () => {
     fit("Should have main elements", () => {
       expect(fixture.nativeElement.querySelector('header')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('div.logo')).toBeTruthy();
-      expect(fixture.nativeElement.querySelector('div.logo > a')).toBeTruthy();
-      expect(fixture.nativeElement.querySelector('div.logo > a > img')).toBeTruthy();
-      expect(fixture.nativeElement.querySelector('div.logo > a > span')).toBeTruthy();
+      expect(fixture.nativeElement.querySelector('sfc-logo')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('div.logo > sfc-hamburger-menu')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('nav')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('nav > ul')).toBeTruthy();
@@ -169,18 +168,6 @@ describe('Core.Component:Header', () => {
   });
 
   describe('Logo', () => {
-    fit("Should have reference to root", () => {
-      expect(fixture.nativeElement.querySelector('div.logo > a').pathname).toEqual('/');
-    });
-
-    xit("Should have constant image", () => {
-      expect(fixture.nativeElement.querySelector('div.logo > a > img').src).toContain('/assets/images/core/logo.png');
-    });
-
-    fit("Should have constant text", () => {
-      expect(fixture.nativeElement.querySelector('div.logo > a > span').innerText).toEqual('Street football club');
-    });
-
     fit('Should hamburger menu have appropriate attributes', () => {
       expect(fixture.debugElement.query(By.css('sfc-hamburger-menu')).componentInstance.open).toBeFalse();
     });
@@ -280,7 +267,6 @@ describe('Core.Component:Header', () => {
       const delimeterEl: DebugElement = fixture.debugElement.query(By.css('sfc-delimeter'));
 
       expect(delimeterEl.componentInstance.direction).toEqual(Direction.Vertical);
-      expect(delimeterEl.attributes['ng-reflect-custom-size']).toEqual('1.5');
     });
   });
 
@@ -295,6 +281,11 @@ describe('Core.Component:Header', () => {
       expect(loginBtn.componentInstance.iconBefore.prefix).toEqual('fas');
     });
 
+    fit("Should navigate to sign in", () => {
+      expect(fixture.debugElement.queryAll(By.css('sfc-button'))[0].attributes['routerLink'])
+        .toEqual(`${RoutKey.Identity}/${RoutKey.Login}`);
+    });
+
     fit('Should have appropriate attributes for sign up', () => {
       const registrationBtn: DebugElement = fixture.debugElement.queryAll(By.css('sfc-button'))[1];
 
@@ -303,6 +294,11 @@ describe('Core.Component:Header', () => {
       expect(registrationBtn.componentInstance.text).toEqual('Sign up');
       expect(registrationBtn.componentInstance.iconBefore.iconName).toEqual('user-plus');
       expect(registrationBtn.componentInstance.iconBefore.prefix).toEqual('fas');
+    });
+
+    fit("Should navigate to sign up", () => {
+      expect(fixture.debugElement.queryAll(By.css('sfc-button'))[1].attributes['routerLink'])
+        .toEqual(`${RoutKey.Identity}/${RoutKey.Registration}`);
     });
   });
 });

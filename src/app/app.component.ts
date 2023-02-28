@@ -12,7 +12,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(private router: Router) { }
 
-  layout: ILayoutModel = { header: false, footer: true };
+  layout: ILayoutModel = { header: false, footer: false };
 
   private _layoutSubscription!: Subscription;
 

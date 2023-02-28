@@ -2,7 +2,7 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { ButtonComponent, ButtonType, CommonConstants, ComponentSize, ComponentSizeDirective } from 'ngx-sfc-common';
+import { ButtonComponent, ButtonType, ComponentSize, ComponentSizeDirective } from 'ngx-sfc-common';
 import { ImageSliderComponent } from './image-slider.component';
 import { ImageSliderItemType } from './parts/image-slider-item/image-slider-item-type.enum';
 import { ImageSliderItemComponent } from './parts/image-slider-item/image-slider-item.component';

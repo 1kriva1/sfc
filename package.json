@@ -29,9 +29,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/free-brands-svg-icons": "^6.1.1",
     "chart.js": "^3.6.0",
-    "ngx-sfc-common": "^0.0.8",
-    "ngx-sfc-components": "^0.0.6",
-    "ngx-sfc-inputs": "^0.0.4",
+    "ngx-sfc-common": "^0.0.11",
+    "ngx-sfc-components": "^0.0.9",
+    "ngx-sfc-inputs": "^0.0.6",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

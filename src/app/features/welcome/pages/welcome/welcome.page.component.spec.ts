@@ -6,8 +6,10 @@ import { HeaderService } from 'src/app/core/components';
 import { ImageSliderComponent, ImageSliderItemComponent } from '../../components';
 import { WelcomePageComponent } from './welcome.page.component';
 import { of } from 'rxjs';
+import { RoutKey } from 'src/app/core/enums';
+import { By } from '@angular/platform-browser';
 
-describe('Features.Welcome.Page: Welcome', () => {
+describe('Features.Welcome.Page:Welcome', () => {
   let component: WelcomePageComponent;
   let fixture: ComponentFixture<WelcomePageComponent>;
   let headerServiceMock: HeaderService;
@@ -48,6 +50,11 @@ describe('Features.Welcome.Page: Welcome', () => {
     describe('Hero', () => {
       fit("Should have defined padding top value", () => {
         expect(fixture.nativeElement.querySelector('section.hero > div.title').style.paddingTop).toEqual('100px');
+      });
+
+      fit("Should navigate to sign in", () => {
+        expect(fixture.debugElement.query(By.css('section.hero > div.title > sfc-button')).attributes['routerLink'])
+          .toEqual(`/${RoutKey.Identity}/${RoutKey.Login}`);
       });
     });
 

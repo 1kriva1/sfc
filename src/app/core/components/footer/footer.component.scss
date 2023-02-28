@@ -6,10 +6,6 @@
     background: $color-11;
 
     .content {
-      display: flex;
-      justify-content: space-evenly;
-      flex-wrap: wrap;
-
       p {
         color: $color-0;
         margin: 0;
@@ -17,8 +13,25 @@
         font-size: 0.8em;
         text-align: center;
 
+        &:first-child {
+          position: absolute;
+          left: 0;
+          padding-left: 5em;
+        }
+
         span {
           color: $color-yellow-0;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      .content {
+        p:first-child {
+          position: relative;
+          padding-left: 0;
         }
       }
     }

@@ -1,0 +1,26 @@
+@use "node_modules/ngx-sfc-common/styles/index" as *;
+@import "../../../../styles//mixins";
+
+:host {
+  .container {
+    @include center-wrap;
+
+    color: inherit;
+
+    a {
+      @include center-wrap;
+
+      img {
+        max-width: 3em;
+        padding: 0.5em 0.5em 0.5em 0;
+      }
+
+      span {
+        font-size: 1em;
+        text-transform: uppercase;
+        font-weight: bold;
+        user-select: none;
+      }
+    }
+  }
+}

@@ -46,7 +46,7 @@ describe('Features.Identity.Page:Registration', () => {
       expect(fixture.nativeElement.querySelector('.action sfc-button')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('.action sfc-delimeter')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('.action .sso')).toBeTruthy();
-      expect(fixture.nativeElement.querySelector('.action .sign-in')).toBeTruthy();
+      expect(fixture.nativeElement.querySelector('.action .redirect')).toBeTruthy();
     });
   });
 
@@ -99,7 +99,7 @@ describe('Features.Identity.Page:Registration', () => {
     });
 
     fit('Should have appropriate route link for sign in link', () => {
-      expect(fixture.debugElement.query(By.css('.sign-in a')).attributes['routerLink'])
+      expect(fixture.debugElement.query(By.css('.redirect a')).attributes['routerLink'])
         .toEqual(`/${RoutKey.Identity}/${RoutKey.Login}`);
     });
   });

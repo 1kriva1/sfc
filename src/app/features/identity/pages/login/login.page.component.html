@@ -1,1 +1,59 @@
-<p>login.page works!</p>
+<div class="container">
+    <div class="left">
+        <h1 class="title">Welcome to Street Football Club!</h1>
+        <sfc-slider [items]="Constants.SLIDER_ITEMS" [showCount]="false" [showAutomaticToggle]="false"
+            [type]="SliderType.Automatic">
+        </sfc-slider>
+        <div class="description">
+            <h3>Choosing a WordPress Theme for</h3>
+            <p>
+                Here is your best destination for finding players, creating teams, planning games and more!
+                We believes in the passion, joy and sense of community that football brings.
+            </p>
+        </div>
+    </div>
+    <div class="right">
+        <sfc-logo [sfcComponentSize] [customSize]="1.3"></sfc-logo>
+        <div class="content">
+            <form [formGroup]="loginForm">
+                <div class="part">
+                    <sfc-text-input id="username-email" formControlName="userNameEmail" label="Username or Email"
+                        placeholder="Username or Email"></sfc-text-input>
+                </div>
+
+                <div class="part">
+                    <sfc-text-input id="password" formControlName="password" label="Password" placeholder="Password"
+                        type="password">
+                    </sfc-text-input>
+                </div>
+
+                <div class="part remember">
+                    <sfc-checkbox-input id="remember" formControlName="remember" [checkmarkType]="CheckmarkType.Rounded"
+                        sideLabel="Remember me!">
+                    </sfc-checkbox-input>
+                    <a class="forgot" routerLink="/identity/registration">Forgot password ?</a>
+                </div>
+
+                <div class="part action">
+                    <sfc-button text="Sign in!" [types]="[ButtonType.Rounded, ButtonType.Filled]" (click)="onSubmit()">
+                    </sfc-button>
+
+                    <sfc-delimeter label="or" [direction]="Direction.Horizontal"></sfc-delimeter>
+
+                    <div class="sso">
+                        <div class="google">
+                            <a class="sso-link" href="https://google.com">
+                                <img src="/assets/images/core/providers/google.png">
+                                <p> Sign in with Google </p>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="redirect">
+                        <span>Don't have an account? <a routerLink="/identity/registration">Sign Up</a></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -7,7 +7,7 @@ import { RegistrationPageConstants } from './registration.page.constants';
 @Component({
   selector: 'sfc-registration.page',
   templateUrl: './registration.page.component.html',
-  styleUrls: ['./registration.page.component.scss']
+  styleUrls: ['../base/base-identity.page.component.scss']
 })
 export class RegistrationPageComponent implements OnInit {
 

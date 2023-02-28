@@ -20,7 +20,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    transition: all 0.3s $transition-timing-function-default;
+    transition:
+      padding 0.3s $transition-timing-function-default,
+      background-color 0.3s $transition-timing-function-default;
     padding: 2em 5em;
     color: $color-default;
 
@@ -56,22 +58,6 @@
       @include center-wrap;
 
       color: $color-0;
-
-      a {
-        @include center-wrap;
-
-        img {
-          max-width: 3em;
-          padding: 0.5em 0.5em 0.5em 0;
-        }
-
-        span {
-          font-size: 1em;
-          text-transform: uppercase;
-          font-weight: bold;
-          user-select: none;
-        }
-      }
 
       sfc-hamburger-menu {
         display: none;
@@ -171,13 +157,17 @@
   @media (max-width: 1280px) {
     header {
       .logo {
-        a {
-          img {
-            padding: 0.5em 0;
-          }
+        ::ng-deep sfc-logo {
+          .container {
+            a {
+              img {
+                padding: 0.5em 0;
+              }
 
-          span {
-            display: none;
+              span {
+                display: none;
+              }
+            }
           }
         }
       }
@@ -225,10 +215,14 @@
         width: 100%;
         justify-content: center;
 
-        a {
-          span {
-            display: block;
-            padding: 0.5em 1em;
+        ::ng-deep sfc-logo {
+          .container {
+            a {
+              span {
+                display: block;
+                padding: 0.5em 1em;
+              }
+            }
           }
         }
 

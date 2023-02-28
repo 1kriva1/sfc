@@ -10,6 +10,7 @@ import { WelcomePageComponent } from './features/welcome/pages';
 const routes: Routes = [
   { path: RoutKey.Welcome, component: WelcomePageComponent, data: LayoutConstants.FULL_LAYOUT_MODEL },
   { path: RoutKey.Home, component: HomePageComponent, data: LayoutConstants.ONLY_CONTENT_LAYOUT_MODEL },
+  { path: RoutKey.Identity, loadChildren: () => import('./features/identity/identity.module').then(m => m.IdentityModule), data: LayoutConstants.ONLY_CONTENT_LAYOUT_MODEL },
   { path: '', redirectTo: buildPath(RoutKey.Welcome), pathMatch: 'full' },
   { path: '**', component: NotFoundPageComponent, data: LayoutConstants.ONLY_CONTENT_LAYOUT_MODEL }
 ];

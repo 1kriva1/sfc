@@ -1,0 +1,192 @@
+@use "node_modules/ngx-sfc-common/styles/index" as *;
+@import "../../../../../styles/mixins";
+
+:host {
+  display: block;
+  height: 100vh;
+
+  .container {
+    display: flex;
+    background: $color-2;
+    height: 100%;
+
+    .left {
+      @include center;
+
+      flex-direction: column;
+      flex: 1;
+      user-select: none;
+      background: $color-yellow-0;
+
+      .title {
+        color: $color-0;
+      }
+
+      .description {
+        @include center-wrap;
+
+        width: 80%;
+
+        h3 {
+          color: $color-default;
+          font-size: 1.5em;
+          font-weight: bold;
+        }
+
+        p {
+          color: $color-8;
+          line-height: 1.5em;
+          font-size: 0.7em;
+          font-weight: bold;
+          max-width: 80%;
+        }
+      }
+    }
+
+    .right {
+      @include center;
+
+      flex-direction: column;
+      flex: 2;
+
+      sfc-logo {
+        color: $color-default;
+        padding-bottom: 2em;
+
+        ::ng-deep {
+          .container {
+            a {
+              flex-direction: column;
+
+              span {
+                padding: 1em 0;
+              }
+            }
+          }
+        }
+      }
+
+      .content {
+        width: 35%;
+
+        form {
+          @include center;
+
+          flex-direction: column;
+
+          .part {
+            width: 100%;
+            padding: 1.2em 0;
+
+            &.action {
+              width: 60%;
+
+              sfc-button {
+                width: 100%;
+                padding: 2em 0;
+              }
+
+              .sso {
+                .google {
+                  padding: 1em 0;
+
+                  a.sso-link {
+                    @include center-wrap;
+
+                    display: inline-flex;
+
+                    img {
+                      width: 1.5em;
+                      padding: 0 1em 0 0;
+                    }
+
+                    p {
+                      text-align: center;
+                      color: $color-9;
+                      font-size: 0.8em;
+                      font-weight: bold;
+                    }
+                  }
+                }
+              }
+
+              .sign-in {
+                span {
+                  color: $color-default;
+                  font-size: 0.9em;
+                  user-select: none;
+
+                  strong {
+                    color: $color-yellow-1;
+                  }
+
+                  a {
+                    color: $color-yellow-1;
+                    text-decoration: underline;
+                    text-underline-offset: 2px;
+                    white-space: nowrap;
+
+                    &:hover {
+                      color: $color-yellow-0;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .left,
+    .right {
+      padding: 2em;
+    }
+  }
+
+  @media (max-width: 1280px) {
+    .container {
+      .left {
+        padding: 0.5em;
+
+        .description {
+          width: 100%;
+        }
+      }
+
+      .right {
+        .content {
+          width: 60%;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      .left {
+        display: none;
+      }
+
+      .right {
+        .content {
+          width: 60%;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 425px) {
+    .container {
+      .right {
+        .content {
+          width: 80%;
+        }
+      }
+    }
+  }
+
+  @media (max-height: 680px) {
+    height: 100%;
+  }
+}

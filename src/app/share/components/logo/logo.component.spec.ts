@@ -1,0 +1,40 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { LogoComponent } from './logo.component';
+
+describe('Share.Component:Logo', () => {
+  let component: LogoComponent;
+  let fixture: ComponentFixture<LogoComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [LogoComponent]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(LogoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  fit("Should create component", () => {
+    expect(component).toBeTruthy();
+  });
+
+  fit("Should have main elements", () => {
+    expect(fixture.nativeElement.querySelector('div.container')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('div.container > a')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('div.container > a > img')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('div.container > a > span')).toBeTruthy();
+  });
+
+  fit("Should have reference to root", () => {
+    expect(fixture.nativeElement.querySelector('div.container > a').pathname).toEqual('/');
+  });
+
+  fit("Should have constant image", () => {
+    expect(fixture.nativeElement.querySelector('div.container > a > img').src).toContain('/assets/images/core/bayen-munchen.png');
+  });
+
+  fit("Should have constant text", () => {
+    expect(fixture.nativeElement.querySelector('div.container > a > span').innerText).toEqual('STREET FOOTBALL CLUB');
+  });
+});

@@ -55,26 +55,7 @@
             }
           }
 
-          sfc-button {
-            transition: transform 500ms;
-            transform-origin: 50% 0;
-
-            &:hover {
-              transform: scale(1.05);
-            }
-
-            ::ng-deep {
-              .button {
-                background: $color-yellow-0;
-                border-color: $color-yellow-0;
-
-                &:hover {
-                  background: $color-yellow-1;
-                  border-color: $color-yellow-1;
-                }
-              }
-            }
-          }
+          @include button();
         }
       }
 

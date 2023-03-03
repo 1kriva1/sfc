@@ -1,18 +1,24 @@
-@mixin center() {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
+@use "node_modules/ngx-sfc-common/styles/index" as *;
 
-@mixin center-wrap() {
-  @include center;
+@mixin button() {
+  sfc-button {
+    transition: transform 500ms;
+            transform-origin: 50% 0;
+            
+    &:hover {
+      transform: scale(1.05);
+    }
 
-  flex-wrap: wrap;
-}
+    ::ng-deep {
+      .button {
+        background: $color-yellow-0;
+        border-color: $color-yellow-0;
 
-@mixin not-first-not-last {
-  &:not(:first-child, :last-child) {
-    @content;
+        &:hover {
+          background: $color-yellow-1;
+          border-color: $color-yellow-1;
+        }
+      }
+    }
   }
 }

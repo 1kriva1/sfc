@@ -3,8 +3,8 @@
 @mixin button() {
   sfc-button {
     transition: transform 500ms;
-            transform-origin: 50% 0;
-            
+    transform-origin: 50% 0;
+
     &:hover {
       transform: scale(1.05);
     }

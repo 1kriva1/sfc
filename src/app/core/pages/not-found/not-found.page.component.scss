@@ -14,7 +14,7 @@
     height: 100%;
     user-select: none;
 
-    @include center();
+    @include center;
 
     .content {
       display: flex;
@@ -25,7 +25,8 @@
       padding: 2em;
 
       .title {
-        @include center();
+        @include center;
+
         flex-direction: column;
         padding: 2em 0;
 
@@ -35,7 +36,7 @@
         }
 
         .description {
-          @include center();
+          @include center;
 
           img {
             max-width: 4em;
@@ -47,7 +48,7 @@
           }
         }
 
-        @include button();
+        @include button;
 
         sfc-button {
           width: 100%;
@@ -57,7 +58,7 @@
     }
 
     .status-code {
-      @include center();
+      @include center;
 
       .number {
         font-weight: 700;

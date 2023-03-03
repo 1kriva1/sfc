@@ -1,1 +1,19 @@
-<p>not-found works!</p>
+<div class="container">
+    <div class="content">
+        <div class="title">
+            <h1>OOPS!</h1>
+            <div class="description">
+                <p>You're out of line</p>
+                <img src="/assets/images/core/pages/not-found/flag.png">
+            </div>
+            <sfc-button routerLink="/welcome" [types]="[ButtonType.Rounded, ButtonType.Filled]" text="BACK THE GAME">
+            </sfc-button>
+        </div>
+
+        <div class="status-code" [style.fontSize.em]="size">
+            <span class="number">4</span>
+            <canvas sfcCanvasBall [size]="size"></canvas>
+            <span class="number">4</span>
+        </div>
+    </div>
+</div>

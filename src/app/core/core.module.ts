@@ -7,12 +7,14 @@ import { NgxSfcCommonModule } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { RouterModule } from '@angular/router';
 import { ShareModule } from '../share/share.module';
+import { CanvasBallDirective } from './pages/not-found/directives/ball/canvas-ball.directive';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
-    NotFoundPageComponent
+    NotFoundPageComponent,
+    CanvasBallDirective
   ],
   imports: [
     CommonModule,

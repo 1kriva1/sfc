@@ -8,17 +8,32 @@ import { ButtonType, CommonConstants, Direction, MediaLimits, NgxSfcCommonModule
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { of } from 'rxjs';
 import { LogoComponent } from 'src/app/share/components/logo/logo.component';
-import { RoutKey } from '../../enums';
+import { Locale, RoutKey } from '../../enums';
 import { HeaderComponent } from './header.component';
 import { HeaderConstants } from './header.constants';
 import { HeaderPart } from './header.enum';
+import { CommonConstants as Constants } from '../../constants';
 
 describe('Core.Component:Header', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
-  let windowMock: any = <any>{};
+  let windowMock: any = <any>{
+    location: {}
+  };
   let resizeServiceMock: any = { onResize$: of(windowMock) };
-  let routerMock = { navigate: jasmine.createSpy('navigate') }
+  let routerMock = { navigate: jasmine.createSpy('navigate') };
+  let store: any = {};
+  const mockLocalStorage = {
+    getItem: (key: string): string => {
+      return key in store ? store[key] : null;
+    },
+    setItem: (key: string, value: string) => {
+      store[key] = `${value}`;
+    },
+    clear: () => {
+      store = {};
+    }
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -33,6 +48,16 @@ describe('Core.Component:Header', () => {
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+
+    spyOn(localStorage, 'getItem')
+      .and.callFake(mockLocalStorage.getItem);
+    spyOn(localStorage, 'setItem')
+      .and.callFake(mockLocalStorage.setItem);
+    spyOn(localStorage, 'clear')
+      .and.callFake(mockLocalStorage.clear);
+
+    mockLocalStorage.clear();
+    windowMock.location.reload = jasmine.createSpy('reload');
   });
 
   describe('General', () => {
@@ -248,6 +273,10 @@ describe('Core.Component:Header', () => {
 
   describe('Languages', () => {
     fit('Should sfc-dropdown-menu have appropriate attributes', () => {
+      localStorage.setItem(Constants.LOCALE_KEY, Locale.English);
+      component.ngOnInit();
+      fixture.detectChanges();
+
       const dropdownMenuEl: DebugElement = fixture.debugElement.query(By.css('sfc-dropdown-menu'));
 
       expect(dropdownMenuEl.componentInstance.label).toEqual(HeaderConstants.LANGUAGES[1].label);
@@ -255,18 +284,48 @@ describe('Core.Component:Header', () => {
       expect(dropdownMenuEl.componentInstance.icon).toEqual(faGlobe);
     });
 
-    fit('Should language be empty', () => {
+    fit('Should language has default value', () => {
       component.Languages = [];
       fixture.detectChanges();
 
       expect(fixture.debugElement.query(By.css('sfc-dropdown-menu')).componentInstance.label)
-        .toEqual(CommonConstants.EMPTY_STRING);
+        .toEqual(HeaderConstants.DEFAULT_LANGUAGE);
     });
 
     fit('Should sfc-delimeter have appropriate attributes', () => {
       const delimeterEl: DebugElement = fixture.debugElement.query(By.css('sfc-delimeter'));
 
       expect(delimeterEl.componentInstance.direction).toEqual(Direction.Vertical);
+    });
+
+    fit('Should change language value', () => {
+      expect(fixture.debugElement.query(By.css('sfc-dropdown-menu')).componentInstance.label)
+        .toEqual(HeaderConstants.DEFAULT_LANGUAGE);
+
+      const uaLangItemEl: DebugElement = fixture.debugElement.queryAll(By.css('sfc-dropdown-menu-item'))[0];
+      uaLangItemEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(fixture.debugElement.query(By.css('sfc-dropdown-menu')).componentInstance.label)
+        .toEqual('Українська');
+    });
+
+    fit('Should change locale value', () => {
+      expect(localStorage.getItem(Constants.LOCALE_KEY)).toBeNull();
+
+      const uaLangItemEl: DebugElement = fixture.debugElement.queryAll(By.css('sfc-dropdown-menu-item'))[0];
+      uaLangItemEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(localStorage.getItem(Constants.LOCALE_KEY)).toEqual(Locale.Ukraine);
+    });
+
+    fit('Should reload page on change language', () => {
+      const uaLangItemEl: DebugElement = fixture.debugElement.queryAll(By.css('sfc-dropdown-menu-item'))[0];
+      uaLangItemEl.nativeElement.dispatchEvent(new MouseEvent('click'));
+      fixture.detectChanges();
+
+      expect(windowMock.location.reload).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -276,7 +335,7 @@ describe('Core.Component:Header', () => {
 
       expect(loginBtn.componentInstance.types).toEqual([ButtonType.Rounded]);
       expect(loginBtn.attributes['ng-reflect-custom-size']).toEqual('0.7');
-      expect(loginBtn.componentInstance.text).toEqual('Login');
+      expect(loginBtn.componentInstance.text).toEqual('Sign in');
       expect(loginBtn.componentInstance.iconBefore.iconName).toEqual('arrow-right-to-bracket');
       expect(loginBtn.componentInstance.iconBefore.prefix).toEqual('fas');
     });

@@ -5,22 +5,32 @@
     </div>
     <nav>
         <ul>
-            <li><a (click)="navigate(HeaderPart.About)">About</a></li>
-            <li><a (click)="navigate(HeaderPart.Locations)">Locations</a></li>
-            <li><a (click)="navigate(HeaderPart.Process)">Process</a></li>
-            <li><a (click)="navigate(HeaderPart.Contact)">Contact Us</a></li>
+            <li>
+                <a (click)="navigate(HeaderPart.About)" i18n="@@core.component.header.navigation.about">About</a>
+            </li>
+            <li>
+                <a (click)="navigate(HeaderPart.Locations)"
+                    i18n="@@core.component.header.navigation.locations">Locations</a>
+            </li>
+            <li>
+                <a (click)="navigate(HeaderPart.Process)" i18n="@@core.component.header.navigation.process">Process</a>
+            </li>
+            <li><a (click)="navigate(HeaderPart.Contact)" i18n="@@core.component.header.navigation.contact-us">Contact
+                    Us</a>
+            </li>
         </ul>
     </nav>
     <div class="right">
         <div class="languages">
-            <sfc-dropdown-menu [icon]="faGlobe" [label]="language" [items]="Languages"></sfc-dropdown-menu>
+            <sfc-dropdown-menu [icon]="faGlobe" [label]="language" [items]="Languages"
+                (selected)="changeLocale($event)"></sfc-dropdown-menu>
             <sfc-delimeter [direction]="Direction.Vertical"></sfc-delimeter>
         </div>
         <div class="identity">
             <sfc-button routerLink="identity/login" [iconBefore]="faSignIn" [types]="[ButtonType.Rounded]"
-                [sfcComponentSize] [customSize]="0.7" text="Login"></sfc-button>
+                [sfcComponentSize] [customSize]="0.7" [text]="BUTTON_SIGN_IN_TEXT"></sfc-button>
             <sfc-button routerLink="identity/registration" [iconBefore]="faUserPlus" [types]="[ButtonType.Rounded]"
-                [sfcComponentSize] [customSize]="0.7" text="Sign up"></sfc-button>
+                [sfcComponentSize] [customSize]="0.7" [text]="BUTTON_SIGN_UP_TEXT"></sfc-button>
         </div>
     </div>
 </header>

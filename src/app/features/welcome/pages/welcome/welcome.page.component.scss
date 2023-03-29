@@ -74,24 +74,28 @@
             line-height: 1em;
           }
 
-          h3 {
-            color: $color-default;
-            font-size: 2em;
-            font-weight: 500;
-
+          .main {
             span {
-              color: $color-yellow-0;
+              color: $color-default;
+              font-size: 2em;
+              font-weight: 500;
+
+              &.emphasize {
+                color: $color-yellow-0;
+              }
             }
           }
 
-          p {
-            line-height: 1.5em;
-            color: $color-default;
-            font-size: 1.2em;
-            font-weight: normal;
-
+          .description {
             span {
-              color: $color-yellow-0;
+              line-height: 1.5em;
+              color: $color-default;
+              font-size: 1.2em;
+              font-weight: normal;
+
+              &.emphasize {
+                color: $color-yellow-0;
+              }
             }
           }
         }

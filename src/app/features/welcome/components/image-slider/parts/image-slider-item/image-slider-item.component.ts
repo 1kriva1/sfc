@@ -18,6 +18,8 @@ export class ImageSliderItemComponent {
 
   ButtonType = ButtonType;
 
+  public BUTTON_LINK_TEXT = $localize`:@@feature.welcome.component.image-slider-item.link-button:Visit website!`;
+
   @Input()
   item: IImageSliderItemModel = { image: CommonConstants.EMPTY_STRING, title: CommonConstants.EMPTY_STRING };
 

@@ -5,22 +5,31 @@
     background: $color-11;
 
     .content {
-      p {
+      .designed {
+        position: absolute;
+        left: 0;
+        padding-left: 5em;
+
+        span.designer {
+          color: $color-yellow-0;
+        }
+      }
+
+      .year {
+        span {
+          &.brand {
+            color: $color-yellow-0;
+          }
+        }
+      }
+
+      .designed,
+      .year {
         color: $color-0;
         margin: 0;
         padding: 1em;
         font-size: 0.8em;
         text-align: center;
-
-        &:first-child {
-          position: absolute;
-          left: 0;
-          padding-left: 5em;
-        }
-
-        span {
-          color: $color-yellow-0;
-        }
       }
     }
   }
@@ -28,7 +37,7 @@
   @media (max-width: 768px) {
     .container {
       .content {
-        p:first-child {
+        .designed {
           position: relative;
           padding-left: 0;
         }

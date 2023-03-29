@@ -90,7 +90,7 @@
                   padding: 1em 0;
 
                   a.sso-link {
-                    @include center-wrap;
+                    @include center;
 
                     display: inline-flex;
 
@@ -110,24 +110,22 @@
               }
 
               .redirect {
+                text-align: center;
+
                 span {
                   color: $color-default;
                   font-size: 0.9em;
                   user-select: none;
+                }
 
-                  strong {
-                    color: $color-yellow-1;
-                  }
+                a {
+                  color: $color-yellow-1;
+                  text-decoration: underline;
+                  text-underline-offset: 2px;
+                  word-break: break-word;
 
-                  a {
-                    color: $color-yellow-1;
-                    text-decoration: underline;
-                    text-underline-offset: 2px;
-                    white-space: nowrap;
-
-                    &:hover {
-                      color: $color-yellow-0;
-                    }
+                  &:hover {
+                    color: $color-yellow-0;
                   }
                 }
               }
@@ -179,7 +177,25 @@
     .container {
       .right {
         .content {
-          width: 80%;
+          width: 100%;
+
+          form {
+            .part {
+              &.action {
+                .sso {
+                  .google {
+                    a.sso-link {
+                      flex-direction: column;
+
+                      img {
+                        padding: 0;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

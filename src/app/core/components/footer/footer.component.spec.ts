@@ -36,7 +36,7 @@ describe('Core.Component:Footer', () => {
 
   describe('Content', () => {
     fit("Should have current year value", () => {
-      expect(fixture.nativeElement.querySelectorAll('.content p')[1].innerText).toEqual(`© ${new Date().getFullYear()} The SFC. All Rights Reserved.`);
+      expect(fixture.nativeElement.querySelector('.content .year').innerText).toEqual(`© ${new Date().getFullYear()} The SFC. All Rights Reserved.`);
     });
   });
 });

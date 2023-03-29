@@ -2,12 +2,14 @@ import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject
 import { Router } from '@angular/router';
 import { faGlobe, faSignIn, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { WINDOW, ButtonType, firstOrDefault, CommonConstants, UIClass, DOCUMENT, ResizeService, MediaLimits, Direction, Theme, UIConstants } from 'ngx-sfc-common';
+import { IDropdownMenuItemModel } from 'ngx-sfc-components';
 import { filter, map, startWith, Subscription } from 'rxjs';
-import { RoutKey } from '../../enums';
+import { Locale, RoutKey } from '../../enums';
 import { buildPath } from '../../utils';
 import { HeaderConstants } from './header.constants';
 import { HeaderPart } from './header.enum';
 import { HeaderService } from './services/header.service';
+import { CommonConstants as Constants } from '../../constants';
 
 @Component({
   selector: 'sfc-header',
@@ -23,6 +25,9 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   Direction = Direction;
   Languages = HeaderConstants.LANGUAGES;
   HeaderPart = HeaderPart;
+
+  BUTTON_SIGN_IN_TEXT = $localize`:@@core.component.header.identity.login:Sign in`;
+  BUTTON_SIGN_UP_TEXT = $localize`:@@core.component.header.identity.registration:Sign up`;
 
   @HostBinding(`class.${HeaderConstants.STICK_CLASS}`)
   private _stick: boolean = false;
@@ -50,12 +55,14 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   public get language(): string {
-    return firstOrDefault(this.Languages, language => { return language.active || false; })?.label || CommonConstants.EMPTY_STRING;
+    return firstOrDefault(this.Languages, language => { return language.active || false; })?.label || HeaderConstants.DEFAULT_LANGUAGE;
   }
 
   private get headerHeight(): number {
     return this.element.nativeElement?.offsetHeight;
   }
+
+  private userLocale: Locale = Locale.English;
 
   private _resizeSubscription?: Subscription;
 
@@ -67,9 +74,13 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router) { }
 
   ngOnInit(): void {
+    this.userLocale = localStorage.getItem(Constants.LOCALE_KEY) as Locale;
+
+    this.Languages.forEach(item => item.active = this.userLocale === item.value);
+
     this.headerService.height$ = this.resizeService.onResize$.pipe(
       startWith(this.headerHeight),
-      filter(_=>!this.open),
+      filter(_ => !this.open),
       map(_ => this.headerHeight)
     );
   }
@@ -84,6 +95,11 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._resizeSubscription?.unsubscribe();
+  }
+
+  changeLocale(model: IDropdownMenuItemModel) {
+    localStorage.setItem(Constants.LOCALE_KEY, model.value);
+    this.window.location.reload();
   }
 
   public navigate(fragment: string): void {

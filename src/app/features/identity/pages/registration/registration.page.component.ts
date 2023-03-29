@@ -7,7 +7,7 @@ import { RegistrationPageConstants } from './registration.page.constants';
 @Component({
   selector: 'sfc-registration.page',
   templateUrl: './registration.page.component.html',
-  styleUrls: ['../base/base-identity.page.component.scss']
+  styleUrls: ['../base/base-identity.page.component.scss', './registration.page.component.scss']
 })
 export class RegistrationPageComponent implements OnInit {
 
@@ -16,6 +16,11 @@ export class RegistrationPageComponent implements OnInit {
   SliderType = SliderType;
 
   Constants = RegistrationPageConstants;
+
+  USERNAME_EMAIL_LABEL_PLACEHOLDER = $localize`:@@feature.identity.registration.page.username-email.label-placeholder:Username or Email`;
+  PASSWORD_LABEL_PLACEHOLDER = $localize`:@@feature.identity.registration.page.password.label-placeholder:Password`;
+  SIGN_UP_BUTTON_TEXT = $localize`:@@feature.identity.registration.page.sign-up:Sign up!`;
+  DELIMETER_TEXT = $localize`:@@feature.identity.registration.page.delimeter:or`;
 
   public registrationForm!: FormGroup
 

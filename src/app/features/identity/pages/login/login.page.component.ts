@@ -18,6 +18,12 @@ export class LoginPageComponent implements OnInit {
 
   Constants = LoginPageConstants;
 
+  USERNAME_EMAIL_LABEL_PLACEHOLDER = $localize`:@@feature.identity.login.page.username-email.label-placeholder:Username or Email`;
+  PASSWORD_LABEL_PLACEHOLDER = $localize`:@@feature.identity.login.page.password.label-placeholder:Password`;
+  REMEMBER_LABEL = $localize`:@@feature.identity.login.page.remember.label:Remember me!`;
+  SIGN_IN_BUTTON_TEXT = $localize`:@@feature.identity.login.page.sign-in:Sign in!`;
+  DELIMETER_TEXT = $localize`:@@feature.identity.login.page.delimeter:or`;
+
   public loginForm!: FormGroup
 
   constructor(private fb: FormBuilder) { }

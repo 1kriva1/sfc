@@ -1,42 +1,54 @@
 <main>
     <section class="hero">
         <div class="title" [ngStyle]="{'padding-top': (heroTitleTop$ | async) }">
-            <h1> Welcome to Street Football Club! </h1>
-            <p class="main">
+            <h1 i18n="@@feature.welcome.page.hero.title"> Welcome to Street Football Club! </h1>
+            <p class="main" i18n="@@feature.welcome.page.hero.description">
                 Here is your best destination for finding players, creating teams, planning games and more!
                 We believes in the passion, joy and sense of community that football brings.
             </p>
-            <sfc-button routerLink="/identity/login" text="Lets start the journey!"
+            <sfc-button routerLink="/identity/login" [text]="BUTTON_HERO_SIGN_IN_TEXT"
                 [types]="[ButtonType.Rounded, ButtonType.Filled]"></sfc-button>
-            <p class="small">We love and grove football. For you. For the game.</p>
+            <p class="small" i18n="@@feature.welcome.page.hero.small">We love and grove football. For you. For the game.
+            </p>
         </div>
     </section>
 
     <section id="about" class="about">
         <div class="title">
-            <h3>Choosing a <span>WordPress Theme</span> for</h3>
-            <h1>
+            <div class="main">
+                <span i18n="@@feature.welcome.page.about.title.one.part.1">Choosing a </span>
+                <span class="emphasize" i18n="@@feature.welcome.page.about.title.one.part.2">WordPress Theme</span>
+                <span i18n="@@feature.welcome.page.about.title.one.part.3"> for</span>
+            </div>
+            <h1 i18n="@@feature.welcome.page.about.title.two">
                 Your Next Project?
             </h1>
-            <p class="main">
-                The7 is the <span>most customizable</span> WordPress theme available on the market up to date. It gives
-                you creative
-                freedom that no other theme can match. No matter if you are a beginner or a pro, website owner, creative
-                professional, or a digital agency – The7 offers tremendous power and unparalleled value to everyone.
-            </p>
+            <div class="description">
+                <span i18n="@@feature.welcome.page.about.description.part-1"> The7 is the </span>
+                <span class="emphasize" i18n="@@feature.welcome.page.about.description.part-2">most customizable</span>
+                <span i18n="@@feature.welcome.page.about.description.part-3"> WordPress theme available on the market up
+                    to date. It gives
+                    you creative
+                    freedom that no other theme can match. No matter if you are a beginner or a pro, website owner,
+                    creative
+                    professional, or a digital agency – The7 offers tremendous power and unparalleled value to
+                    everyone.
+                </span>
+            </div>
+
         </div>
         <div class="parts">
             <div class="part">
                 <img src="/assets/images/welcome/about/find.png">
-                <span>FIND #1 selling Elementor theme</span>
+                <span i18n="@@feature.welcome.page.about.parts.find">FIND #1 selling Elementor theme</span>
             </div>
             <div class="part">
                 <img src="/assets/images/welcome/about/Icon2.jpg">
-                <span>CREATE 270 000+ satisfied customers</span>
+                <span i18n="@@feature.welcome.page.about.parts.create">CREATE 270 000+ satisfied customers</span>
             </div>
             <div class="part">
                 <img src="/assets/images/welcome/about/Icon3.jpg">
-                <span>INVITE Rock-solid 5-star rating</span>
+                <span i18n="@@feature.welcome.page.about.parts.invite">INVITE Rock-solid 5-star rating</span>
             </div>
         </div>
     </section>
@@ -45,10 +57,10 @@
         <div class="category">
             <img class="category-img" src="/assets/images/welcome/categories/games.png">
             <div class="title">
-                <h1>
+                <h1 i18n="@@feature.welcome.page.categories.game.title">
                     Games. Plan your games at a convenient place and time for you!
                 </h1>
-                <p class="category-description">
+                <p class="category-description" i18n="@@feature.welcome.page.categories.game.description">
                     Look for a game for the weekend. Or players of your level. Or just anyone to play with!
                     Choose a place for your game for any seasons.
                 </p>
@@ -57,10 +69,10 @@
         <div class="category">
             <img class="category-img" src="/assets/images/welcome/categories/players.png">
             <div class="title">
-                <h1>
+                <h1 i18n="@@feature.welcome.page.categories.players.title">
                     Players. Find sparring partners or even friends!
                 </h1>
-                <p class="category-description">
+                <p class="category-description" i18n="@@feature.welcome.page.categories.players.description">
                     It is convenient to search players for your game or for regular training. Or new players for your
                     team.
                 </p>
@@ -69,10 +81,10 @@
         <div class="category">
             <img class="category-img" src="/assets/images/welcome/categories/teams.png">
             <div class="title">
-                <h1>
+                <h1 i18n="@@feature.welcome.page.categories.teams.title">
                     Teams. Be the leader of your team or part of the success!
                 </h1>
-                <p class="category-description">
+                <p class="category-description" i18n="@@feature.welcome.page.categories.teams.description">
                     Find new rivals. Arrage cool competitions! Raise your own level of play and level of your team.
                 </p>
             </div>
@@ -81,28 +93,28 @@
 
     <section id="locations" class="locations">
         <div class="location-title">
-            <h1>
+            <h1 i18n="@@feature.welcome.page.locations.title">
                 Award-winning streaming service. Ad-free, original content.
             </h1>
-            <p>
+            <p i18n="@@feature.welcome.page.locations.description">
                 Wondrium is the place for minds that wonder. Stream thousands of entertaining, engaging, educational
                 videos on everything you've ever wondered about.
             </p>
         </div>
 
-        <sfc-image-slider [items]="Constants.LOCATIONS"></sfc-image-slider>
+        <sfc-image-slider [items]="LOCATIONS"></sfc-image-slider>
     </section>
 
     <section id="process" class="process">
         <div class="schemas">
-            <sfc-timeline [items]="Constants.PROCESS_SET_UP"></sfc-timeline>
-            <sfc-timeline [items]="Constants.PROCESS_MAIN"></sfc-timeline>
+            <sfc-timeline [items]="PROCESS_SET_UP"></sfc-timeline>
+            <sfc-timeline [items]="PROCESS_MAIN"></sfc-timeline>
         </div>
         <div class="title">
-            <h1>
+            <h1 i18n="@@feature.welcome.page.process.title">
                 Just one click to a safer internet.
             </h1>
-            <p>
+            <p i18n="@@feature.welcome.page.process.description">
                 Going online does not have to mean being exposed. Whether you are shopping from your desk or just
                 connecting at a cafe, keep your personal information more private and secure.
             </p>
@@ -113,25 +125,28 @@
         <div class="container">
             <div class="details">
                 <div class="detail">
-                    <h5>Questions? Call us!</h5>
+                    <h5 i18n="@@feature.welcome.page.contact.mobile.title">Questions? Call us!</h5>
                     <h4>098-59-59-509</h4>
-                    <p class="description">Monday to Friday from 9am to 6pm.</p>
+                    <p class="description" i18n="@@feature.welcome.page.contact.mobile.description">Monday to Friday
+                        from 9am to 6pm.</p>
                 </div>
 
                 <div class="detail">
-                    <h5>Customer support</h5>
+                    <h5 i18n="@@feature.welcome.page.contact.email.title">Customer support</h5>
                     <h4>info@sfc.com</h4>
-                    <p class="description">Questions? Send us an e-mail and we will reply to you ASAP.</p>
+                    <p class="description" i18n="@@feature.welcome.page.contact.email.description">Questions? Send us an
+                        e-mail and we will reply to you ASAP.</p>
                 </div>
 
                 <div class="detail">
-                    <h5>Location</h5>
-                    <h4>9157 Kyiv St. Symonenka, 02149</h4>
-                    <p class="description">Please call us prior your visit.</p>
+                    <h5 i18n="@@feature.welcome.page.contact.location.title">Location</h5>
+                    <h4 i18n="@@feature.welcome.page.contact.location">9157 Kyiv St. Symonenka, 02149</h4>
+                    <p class="description" i18n="@@feature.welcome.page.contact.location.description">Please call us
+                        prior your visit.</p>
                 </div>
             </div>
             <div class="links">
-                <h3>Connect</h3>
+                <h3 i18n="@@feature.welcome.page.contact.links.title">Connect</h3>
                 <div>
                     <a href="http://google.com">
                         <fa-icon [icon]="faFacebook"></fa-icon>

@@ -10,6 +10,8 @@ export class NotFoundPageComponent implements AfterViewChecked {
 
   ButtonType = ButtonType;
 
+  BUTTON_BACK_TEXT = $localize`:@@core.page.not-found.button-back:BACK THE GAME`;
+
   public get size(): number {
     return NotFoundPageConstants.DEFAULT_SIZE * this.sizeFactor;
   }

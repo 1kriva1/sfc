@@ -1,12 +1,12 @@
 <div class="container">
     <div class="left">
-        <h1 class="title">Welcome to Street Football Club!</h1>
+        <h1 class="title" i18n="@@feature.identity.login.page.title">Welcome to Street Football Club!</h1>
         <sfc-slider [items]="Constants.SLIDER_ITEMS" [showCount]="false" [showAutomaticToggle]="false"
             [type]="SliderType.Automatic">
         </sfc-slider>
         <div class="description">
-            <h3>Choosing a WordPress Theme for</h3>
-            <p>
+            <h3 i18n="@@feature.identity.login.page.description.1">Choosing a WordPress Theme for</h3>
+            <p i18n="@@feature.identity.login.page.description.2">
                 Here is your best destination for finding players, creating teams, planning games and more!
                 We believes in the passion, joy and sense of community that football brings.
             </p>
@@ -17,40 +17,44 @@
         <div class="content">
             <form [formGroup]="loginForm">
                 <div class="part">
-                    <sfc-text-input id="username-email" formControlName="userNameEmail" label="Username or Email"
-                        placeholder="Username or Email"></sfc-text-input>
+                    <sfc-text-input id="username-email" formControlName="userNameEmail"
+                        [label]="USERNAME_EMAIL_LABEL_PLACEHOLDER" [placeholder]="USERNAME_EMAIL_LABEL_PLACEHOLDER">
+                    </sfc-text-input>
                 </div>
 
                 <div class="part">
-                    <sfc-text-input id="password" formControlName="password" label="Password" placeholder="Password"
-                        type="password">
+                    <sfc-text-input id="password" formControlName="password" [label]="PASSWORD_LABEL_PLACEHOLDER"
+                        [placeholder]="PASSWORD_LABEL_PLACEHOLDER" type="password">
                     </sfc-text-input>
                 </div>
 
                 <div class="part remember">
                     <sfc-checkbox-input id="remember" formControlName="remember" [checkmarkType]="CheckmarkType.Rounded"
-                        sideLabel="Remember me!">
+                        [sideLabel]="REMEMBER_LABEL">
                     </sfc-checkbox-input>
-                    <a class="forgot" routerLink="/identity/registration">Forgot password ?</a>
+                    <a class="forgot" routerLink="/identity/registration"
+                        i18n="@@feature.identity.login.page.forgot">Forgot password ?</a>
                 </div>
 
                 <div class="part action">
-                    <sfc-button text="Sign in!" [types]="[ButtonType.Rounded, ButtonType.Filled]" (click)="onSubmit()">
+                    <sfc-button [text]="SIGN_IN_BUTTON_TEXT" [types]="[ButtonType.Rounded, ButtonType.Filled]"
+                        (click)="onSubmit()">
                     </sfc-button>
 
-                    <sfc-delimeter label="or" [direction]="Direction.Horizontal"></sfc-delimeter>
+                    <sfc-delimeter [label]="DELIMETER_TEXT" [direction]="Direction.Horizontal"></sfc-delimeter>
 
                     <div class="sso">
                         <div class="google">
                             <a class="sso-link" href="https://google.com">
                                 <img src="/assets/images/core/providers/google.png">
-                                <p> Sign in with Google </p>
+                                <p i18n="@@feature.identity.login.page.sso.google"> Sign in with Google </p>
                             </a>
                         </div>
                     </div>
 
                     <div class="redirect">
-                        <span>Don't have an account? <a routerLink="/identity/registration">Sign Up</a></span>
+                        <span i18n="@@feature.identity.login.page.redirect.question">Don't have an account? </span>
+                        <a routerLink="/identity/registration" i18n="@@feature.identity.login.page.redirect">Sign Up</a>
                     </div>
                 </div>
             </form>

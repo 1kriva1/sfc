@@ -2,8 +2,9 @@
     <div class="image">
         <img #image [src]="item.image" (load)="{}" />
         <a *ngIf="item.link" href="{{item.link}}">
-            <sfc-button text="Visit website!" [iconBefore]="faLink" [types]="[ButtonType.Rounded, ButtonType.Filled]"
-                [sfcComponentSize] [customSize]="sizeFactor"></sfc-button>
+            <sfc-button [text]="BUTTON_LINK_TEXT" [iconBefore]="faLink"
+                [types]="[ButtonType.Rounded, ButtonType.Filled]" [sfcComponentSize] [customSize]="sizeFactor">
+            </sfc-button>
         </a>
     </div>
     <h1>{{item.title}}</h1>

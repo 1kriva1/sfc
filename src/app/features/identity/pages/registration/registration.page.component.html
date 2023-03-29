@@ -1,12 +1,12 @@
 <div class="container">
     <div class="left">
-        <h1 class="title">Welcome to Street Football Club!</h1>
+        <h1 class="title" i18n="@@feature.identity.registration.page.title">Welcome to Street Football Club!</h1>
         <sfc-slider [items]="Constants.SLIDER_ITEMS" [showCount]="false" [showAutomaticToggle]="false"
             [type]="SliderType.Automatic">
         </sfc-slider>
         <div class="description">
-            <h3>Choosing a WordPress Theme for</h3>
-            <p>
+            <h3 i18n="@@feature.identity.registration.page.description.1">Choosing a WordPress Theme for</h3>
+            <p i18n="@@feature.identity.registration.page.description.2">
                 Here is your best destination for finding players, creating teams, planning games and more!
                 We believes in the passion, joy and sense of community that football brings.
             </p>
@@ -17,33 +17,38 @@
         <div class="content">
             <form [formGroup]="registrationForm">
                 <div class="part">
-                    <sfc-text-input id="username-email" formControlName="userNameEmail" label="Username or Email"
-                        placeholder="Username or Email"></sfc-text-input>
+                    <sfc-text-input id="username-email" formControlName="userNameEmail"
+                        [label]="USERNAME_EMAIL_LABEL_PLACEHOLDER" [placeholder]="USERNAME_EMAIL_LABEL_PLACEHOLDER">
+                    </sfc-text-input>
                 </div>
 
                 <div class="part">
-                    <sfc-text-input id="password" formControlName="password" label="Password" placeholder="Password"
-                        type="password">
+                    <sfc-text-input id="password" formControlName="password" [label]="PASSWORD_LABEL_PLACEHOLDER"
+                        [placeholder]="PASSWORD_LABEL_PLACEHOLDER" type="password">
                     </sfc-text-input>
                 </div>
 
                 <div class="part action">
-                    <sfc-button text="Sign up!" [types]="[ButtonType.Rounded, ButtonType.Filled]" (click)="onSubmit()">
+                    <sfc-button [text]="SIGN_UP_BUTTON_TEXT" [types]="[ButtonType.Rounded, ButtonType.Filled]"
+                        (click)="onSubmit()">
                     </sfc-button>
 
-                    <sfc-delimeter label="or" [direction]="Direction.Horizontal"></sfc-delimeter>
+                    <sfc-delimeter [label]="DELIMETER_TEXT" [direction]="Direction.Horizontal"></sfc-delimeter>
 
                     <div class="sso">
                         <div class="google">
                             <a class="sso-link" href="https://google.com">
                                 <img src="/assets/images/core/providers/google.png">
-                                <p> Sign up with Google </p>
+                                <p i18n="@@feature.identity.registration.page.sso.google"> Sign up with Google </p>
                             </a>
                         </div>
                     </div>
 
                     <div class="redirect">
-                        <span>Already a <strong>SFC</strong> player? <a routerLink="/identity/login">Sign In</a></span>
+                        <span i18n="@@feature.identity.registration.page.redirect.question.1">Already a </span>
+                        <strong>SFC</strong>
+                        <span i18n="@@feature.identity.registration.page.redirect.question.2"> player? </span>
+                        <a routerLink="/identity/login" i18n="@@feature.identity.registration.page.redirect">Sign In</a>
                     </div>
                 </div>
             </form>

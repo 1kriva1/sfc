@@ -30,9 +30,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "chart.js": "^3.6.0",
     "cropperjs": ">=1.5.7",
-    "ngx-sfc-common": "^0.0.14",
-    "ngx-sfc-components": "^0.0.12",
-    "ngx-sfc-inputs": "^0.0.8",
+    "ngx-sfc-common": "^0.0.15",
+    "ngx-sfc-components": "^0.0.13",
+    "ngx-sfc-inputs": "^0.0.10",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

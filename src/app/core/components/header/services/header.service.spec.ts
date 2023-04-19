@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HeaderService } from './header.service';
 
-describe('Core.Service: Header', () => {
+describe('Core.Component:Header.Service: Header', () => {
     let service: HeaderService;
 
     beforeEach(() => {

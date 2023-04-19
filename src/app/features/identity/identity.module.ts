@@ -9,7 +9,6 @@ import { NgxSfcCommonModule } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { ShareModule } from 'src/app/share/share.module';
 
-
 @NgModule({
   declarations: [
     RegistrationPageComponent,
@@ -17,11 +16,11 @@ import { ShareModule } from 'src/app/share/share.module';
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     NgxSfcCommonModule,
     NgxSfcInputsModule,
     NgxSfcComponentsModule,
-    ShareModule,
-    ReactiveFormsModule,
+    ShareModule,    
     IdentityRoutingModule
   ],
   exports: []

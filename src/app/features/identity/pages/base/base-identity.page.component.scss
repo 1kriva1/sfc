@@ -19,11 +19,13 @@
 
       .title {
         color: $color-0;
+        text-align: center;
       }
 
       .description {
         @include center-wrap;
 
+        text-align: center;
         width: 80%;
 
         h3 {
@@ -34,6 +36,7 @@
 
         p {
           color: $color-8;
+          text-align: center;
           line-height: 1.5em;
           font-size: 0.7em;
           font-weight: bold;
@@ -76,9 +79,21 @@
           .part {
             width: 100%;
             padding: 1.2em 0;
+            position: relative;
+
+            &.errors {
+              text-align: center;
+              font-weight: bold;
+              color: $color-failed;
+              width: 100%;
+              padding: 0;
+              font-size: 0.8em;
+            }
 
             &.action {
               width: 60%;
+              user-select: none;
+              padding: 0;
 
               sfc-button {
                 width: 100%;
@@ -86,6 +101,8 @@
               }
 
               .sso {
+                text-align: center;
+
                 .google {
                   padding: 1em 0;
 
@@ -127,6 +144,15 @@
                   &:hover {
                     color: $color-yellow-0;
                   }
+                }
+              }
+            }
+
+            sfc-text-input {
+              ::ng-deep .sfc-input {
+                &:-webkit-autofill {
+                  box-shadow: 0 0 0 30px $color-2 inset;
+                  box-shadow: 0 0 0 30px $color-2 inset;
                 }
               }
             }

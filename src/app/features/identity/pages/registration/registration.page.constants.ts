@@ -10,6 +10,7 @@ export class RegistrationPageConstants {
         },
         {
             imageSrc: '/assets/images/identity/registration/slider-default.png'
-        }       
+        }
     ];
+    static PASSWORD_PATTERN = '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[#$^+=!*()@%&]).{6,}$';
 }

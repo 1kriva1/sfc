@@ -1,8 +1,9 @@
 import { registerLocaleData } from '@angular/common';
 import { APP_INITIALIZER, Injectable, LOCALE_ID } from '@angular/core';
 import { loadTranslations } from '@angular/localize';
-import { Locale } from '../enums';
+import { Feature, Locale } from '../enums';
 import { CommonConstants as Constants } from '../constants';
+import { mergeDeep } from 'ngx-sfc-common';
 
 @Injectable({
     providedIn: 'root',
@@ -13,17 +14,31 @@ class I18n {
     async setLocale() {
         const userLocale = localStorage.getItem(Constants.LOCALE_KEY) as Locale;
 
-        if (userLocale) {
+        if (userLocale)
             this.locale = userLocale;
-        }
 
-        import(`@/../@angular/common/locales/${this.locale}.mjs`)
+        await import(
+            /* webpackInclude: /\b(en-GB|ru-UA)\.mjs/ */
+            `/node_modules/@angular/common/locales/${this.locale}`)
             .then(localeModule => registerLocaleData(localeModule.default))
             .catch(() => console.warn(`Missing locale: ${this.locale}`));
 
-        const localeTranslationsModule = await import(`src/assets/i18n/${this.locale}.json`);
+        const localeTranslationsModule = await import(`src/assets/i18n/${this.locale}.json`),
+            welcomeTranslations = await this.loadFeatureTranslations(Feature.Welcome),
+            registrationTranslations = await this.loadFeatureTranslations(Feature.Identity);
 
-        loadTranslations(localeTranslationsModule.default);
+        const translations = mergeDeep(localeTranslationsModule.default,
+            welcomeTranslations,
+            registrationTranslations);
+
+        loadTranslations(translations);
+    }
+
+    private async loadFeatureTranslations(featureKey: string) {
+        const featureTranslations = await import(`src/app/features/${featureKey}/assets/i18n/${this.locale}.json`),
+            translations = featureTranslations.default;
+
+        return Object.keys(translations).reduce((a, c) => ((a as any)[`feature.${featureKey}.${c}`] = translations[c], a), {});
     }
 }
 

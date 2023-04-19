@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivationStart, Router } from '@angular/router';
+import { INotificationAutoCloseModel } from 'ngx-sfc-components';
 import { Subscription } from 'rxjs';
 import { ILayoutModel } from './core/models/layout.model';
+import { NotificationService } from './core/services/notification/notification.service';
 
 @Component({
   selector: 'sfc-root',
@@ -10,9 +12,11 @@ import { ILayoutModel } from './core/models/layout.model';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, public notificationService: NotificationService) { }
 
-  layout: ILayoutModel = { header: false, footer: false };
+  public layout: ILayoutModel = { header: false, footer: false };
+
+  public notificationAutoCloseModel: INotificationAutoCloseModel = { enabled: true, interval: 3000 };
 
   private _layoutSubscription!: Subscription;
 

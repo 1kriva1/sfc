@@ -1,4 +1,4 @@
-<header>
+<header *ngIf="!identityService.userId">
     <div class="logo">
         <sfc-logo></sfc-logo>
         <sfc-hamburger-menu [open]="open" (click)="open=!open"></sfc-hamburger-menu>
@@ -34,3 +34,8 @@
         </div>
     </div>
 </header>
+
+<div *ngIf="identityService.userId">
+    HAHA: {{identityService.userId}}
+    <sfc-button text="Logout" (click)="logout()"></sfc-button>
+</div>

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faGlobe, faSignIn, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import { WINDOW, ButtonType, firstOrDefault, CommonConstants, UIClass, DOCUMENT, ResizeService, MediaLimits, Direction, Theme, UIConstants } from 'ngx-sfc-common';
+import { WINDOW, ButtonType, firstOrDefault, UIClass, DOCUMENT, ResizeService, MediaLimits, Direction, Theme, UIConstants } from 'ngx-sfc-common';
 import { IDropdownMenuItemModel } from 'ngx-sfc-components';
 import { filter, map, startWith, Subscription } from 'rxjs';
 import { Locale, RoutKey } from '../../enums';
@@ -10,6 +10,8 @@ import { HeaderConstants } from './header.constants';
 import { HeaderPart } from './header.enum';
 import { HeaderService } from './services/header.service';
 import { CommonConstants as Constants } from '../../constants';
+import { IdentityService } from 'src/app/share/services/identity/identity.service';
+import { BaseResponse } from 'src/app/share/models/base.response';
 
 @Component({
   selector: 'sfc-header',
@@ -71,7 +73,8 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
     @Inject(DOCUMENT) private document: Document,
     private resizeService: ResizeService,
     private headerService: HeaderService,
-    private router: Router) { }
+    private router: Router,
+    public identityService: IdentityService) { }
 
   ngOnInit(): void {
     this.userLocale = localStorage.getItem(Constants.LOCALE_KEY) as Locale;
@@ -105,5 +108,12 @@ export class HeaderComponent implements OnInit, AfterViewInit, OnDestroy {
   public navigate(fragment: string): void {
     this.open = false;
     this.router.navigate([buildPath(RoutKey.Welcome)], { fragment });
+  }
+
+  public logout() {
+    this.identityService.logout().subscribe((response: BaseResponse) => {
+      if (response.Success)
+        this.router.navigate([buildPath(RoutKey.Welcome)]);
+    });
   }
 }

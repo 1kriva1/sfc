@@ -13,6 +13,7 @@ import { HeaderComponent } from './header.component';
 import { HeaderConstants } from './header.constants';
 import { HeaderPart } from './header.enum';
 import { CommonConstants as Constants } from '../../constants';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('Core.Component:Header', () => {
   let component: HeaderComponent;
@@ -37,7 +38,7 @@ describe('Core.Component:Header', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FontAwesomeModule, NgxSfcCommonModule, NgxSfcComponentsModule],
+      imports: [FontAwesomeModule, HttpClientModule, NgxSfcCommonModule, NgxSfcComponentsModule],
       declarations: [LogoComponent, HeaderComponent],
       providers: [
         { provide: Router, useValue: routerMock },

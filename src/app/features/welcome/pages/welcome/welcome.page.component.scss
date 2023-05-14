@@ -8,6 +8,7 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-around;
+      word-wrap: break-word;
       padding: 3em 5em;
       min-height: 30em;
       transition: padding $transition-duration-default $transition-timing-function-default;

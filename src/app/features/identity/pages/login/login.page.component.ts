@@ -85,7 +85,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
             }),
             switchMap((request: ILoginRequest) =>
               this.identityService.login(request).pipe(
-                catchError((error) => of(error))
+                catchError((error) =>of(error))
               ))
           );
       })

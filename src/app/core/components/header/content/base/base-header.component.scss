@@ -1,29 +1,23 @@
 @use "node_modules/ngx-sfc-common/styles/index" as *;
-
-@mixin navigation-color($color) {
-  color: $color;
-
-  &:hover {
-    color: $color-yellow-0;
-  }
-}
+@import "../../../../../../styles/";
 
 :host {
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  z-index: 9999;
-
   header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    transition:
-      padding 0.3s $transition-timing-function-default,
-      background-color 0.3s $transition-timing-function-default;
     padding: 2em 5em;
     color: $color-default;
+
+    .logo {
+      @include center-wrap;
+
+      transition: color $transition-duration-default $transition-timing-function-default;
+
+      sfc-hamburger-menu {
+        display: none;
+      }
+    }
 
     nav {
       padding: 1em;
@@ -37,6 +31,7 @@
 
         li {
           padding: 0.5em 1.875em;
+          text-align: center;
 
           a {
             font-size: 0.875em;
@@ -44,41 +39,14 @@
             letter-spacing: 0.05em;
             text-transform: uppercase;
             transition: color $transition-duration-default $transition-timing-function-default;
-            text-align: center;
             cursor: pointer;
-
-            @include navigation-color($color-0);
           }
         }
       }
     }
 
-    .logo {
-      @include center-wrap;
-
-      color: $color-0;
-
-      sfc-hamburger-menu {
-        display: none;
-      }
-    }
-
     .right {
       @include center-wrap;
-
-      .languages {
-        @include center;
-      }
-
-      .identity {
-        @include center-wrap;
-
-        gap: 0.5em;
-
-        sfc-button {
-          padding: 0.2em 0;
-        }
-      }
     }
   }
 
@@ -87,6 +55,8 @@
     bottom: 0;
     background: $color-11;
     overflow-y: scroll;
+    position: fixed;
+    width: 100%;
 
     header {
       flex-direction: column;
@@ -97,12 +67,28 @@
       max-height: 100%;
       height: stretch;
 
+      .logo {
+        color: $color-0;
+      }
+
       nav {
         ul {
           flex-direction: column;
 
           li {
             padding: 2em 1.875em;
+
+            a {
+              font-size: 0.875em;
+              font-weight: bold;
+              letter-spacing: 0.05em;
+              text-transform: uppercase;
+              transition: color $transition-duration-default $transition-timing-function-default;
+              text-align: center;
+              cursor: pointer;
+
+              @include navigation-color($color-0);
+            }
           }
         }
       }
@@ -111,17 +97,8 @@
         flex-direction: column-reverse;
         padding: 2em 0;
 
-        .languages {
-          sfc-delimeter {
-            display: none;
-          }
-        }
-
-        .identity {
-          sfc-button {
-            padding: 1em 0;
-            width: 100%;
-          }
+        sfc-delimeter {
+          display: none;
         }
       }
 
@@ -132,28 +109,7 @@
     }
   }
 
-  &:not(.open).stick {
-    header {
-      padding: 0.5em 5em;
-      background-color: $color-1;
-
-      .logo {
-        color: $color-default;
-      }
-
-      nav {
-        ul {
-          li {
-            a {
-              @include navigation-color($color-default);
-            }
-          }
-        }
-      }
-    }
-  }
-
-  @media (max-width: 1280px) {
+  @media (max-width: 1330px) {
     header {
       .logo {
         ::ng-deep sfc-logo {
@@ -172,12 +128,12 @@
       }
 
       .right {
-        .languages {
+        sfc-language-toggler {
           padding-right: 0.5em;
+        }
 
-          sfc-delimeter {
-            display: none;
-          }
+        sfc-delimeter {
+          display: none;
         }
       }
     }
@@ -189,19 +145,9 @@
       justify-content: center;
 
       .right {
-        .languages {
+        sfc-language-toggler {
           padding-right: 0;
         }
-
-        .identity {
-          gap: 0.3em;
-        }
-      }
-    }
-
-    &:not(.open).stick {
-      header {
-        padding: 1em 2em;
       }
     }
   }

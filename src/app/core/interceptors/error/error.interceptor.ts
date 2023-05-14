@@ -17,8 +17,8 @@ export class ErrorInterceptor implements HttpInterceptor {
                     if (errorResponse.status === 0) {
                         // A client-side or network error occurred. Handle it accordingly.
                         const message: IMessage = {
-                            value: `An error occurred: ${errorResponse.statusText}`,
-                            title: 'Opps, error occured!',
+                            value: `${$localize`:@@core.interceptor.error.error-value-part:An error occurred:`} ${errorResponse.statusText}`,
+                            title: $localize`:@@core.interceptor.error.error-title:Opps, error occured!`,
                             severity: MessageSeverity.ERROR,
                             args: errorResponse.error,
                             notify: true

@@ -1,8 +1,7 @@
 import { IDropdownMenuItemModel } from "ngx-sfc-components";
-import { Locale } from "../../enums";
+import { Locale } from "../../../../../enums/locale.enum";
 
-export class HeaderConstants {
-    static STICK_CLASS = 'stick';
+export class LanguageTogglerConstants {
     static DEFAULT_LANGUAGE = 'English';
     static LANGUAGES: IDropdownMenuItemModel[] = [
         {

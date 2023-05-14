@@ -1,13 +1,30 @@
+@use "node_modules/ngx-sfc-common/styles/index" as *;
+@import "../styles/";
+
 :host {
-  color: initial;
+  .container {
+    transition: background $transition-theme-backround-duration $transition-theme-backround-timing-function;
 
-  .notifications {
-    position: absolute;
-    right: 0;
-    top: 0;
+    .notifications {
+      position: absolute;
+      right: 0;
+      top: 0;
 
-    sfc-notification {
-      padding: 1em;
+      sfc-notification {
+        padding: 1em;
+      }
+    }
+  }
+
+  &.sfc-default-theme {
+    .container {
+      background: $background-default;
+    }
+  }
+
+  &.sfc-dark-theme {
+    .container {
+      background: $background-dark;
     }
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { isDefined } from 'ngx-sfc-common';
+import { StorageService } from 'src/app/core/services/storage/storage.service';
 import { IToken } from './token.model';
 
 @Injectable({
@@ -53,16 +54,18 @@ export class TokenService {
         return this.exist && !this.isExpired;
     }
 
+    constructor(private storageService: StorageService) { }
+
     set(token: IToken): void {
-        window.localStorage.setItem(this.TOKEN_KEY, JSON.stringify(token));
+        this.storageService.set(this.TOKEN_KEY, JSON.stringify(token));
     }
 
     get(): IToken | null {
-        const tokenValue = window.localStorage.getItem(this.TOKEN_KEY);
+        const tokenValue = this.storageService.get<string>(this.TOKEN_KEY);
         return tokenValue ? JSON.parse(tokenValue) : null;
     }
 
     remove(): void {
-        window.localStorage.removeItem(this.TOKEN_KEY);
+        this.storageService.remove(this.TOKEN_KEY);
     }
 }

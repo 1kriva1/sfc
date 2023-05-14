@@ -11,6 +11,7 @@ import { I18nModule } from './core/i18n/i18n.module';
 import { TokenRefreshModule } from './core/Identity/token-refresh/token-refresh.module';
 import { HttpInterceptorProviders } from './core/interceptors';
 import { HomeModule } from './features/home/home.module';
+import { ProfileModule } from './features/profile/profile.module';
 import { WelcomeModule } from './features/welcome/welcome.module';
 
 @NgModule({
@@ -23,10 +24,11 @@ import { WelcomeModule } from './features/welcome/welcome.module';
     HttpClientModule,
     NgxSfcCommonModule,
     NgxSfcComponentsModule,
-    CoreModule,    
+    CoreModule,
     WelcomeModule,
     HomeModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ProfileModule
   ],
   providers: [
     I18nModule.setLocale(),

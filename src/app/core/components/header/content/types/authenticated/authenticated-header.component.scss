@@ -44,7 +44,8 @@
         padding: 0.3em;
         margin: 0.5em;
         cursor: pointer;
-        transition: color $transition-duration-default $transition-timing-function-default,
+        transition:
+          color $transition-duration-default $transition-timing-function-default,
           border-color $transition-duration-default $transition-timing-function-default;
 
         &:hover {

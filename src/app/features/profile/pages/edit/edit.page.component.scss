@@ -1,0 +1,6 @@
+@use "node_modules/ngx-sfc-common/styles/index" as *;
+
+:host {
+  color: inherit;
+  background-color: $color-1;
+}

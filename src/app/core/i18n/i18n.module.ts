@@ -4,6 +4,7 @@ import { loadTranslations } from '@angular/localize';
 import { Feature, Locale } from '../enums';
 import { CommonConstants as Constants } from '../constants';
 import { mergeDeep } from 'ngx-sfc-common';
+import { StorageService } from '../services/storage/storage.service';
 
 @Injectable({
     providedIn: 'root',
@@ -11,8 +12,8 @@ import { mergeDeep } from 'ngx-sfc-common';
 class I18n {
     locale = Locale.English;
 
-    async setLocale() {
-        const userLocale = localStorage.getItem(Constants.LOCALE_KEY) as Locale;
+    async setLocale(storageService: StorageService) {
+        const userLocale = storageService.get<Locale>(Constants.LOCALE_KEY);
 
         if (userLocale)
             this.locale = userLocale;
@@ -23,11 +24,14 @@ class I18n {
             .then(localeModule => registerLocaleData(localeModule.default))
             .catch(() => console.warn(`Missing locale: ${this.locale}`));
 
-        const localeTranslationsModule = await import(`src/assets/i18n/${this.locale}.json`),
+        const coreTranslationsModule = await this.loadTranslations('core'),
+            shareTranslationsModule = await this.loadTranslations('share'),
             welcomeTranslations = await this.loadFeatureTranslations(Feature.Welcome),
             registrationTranslations = await this.loadFeatureTranslations(Feature.Identity);
 
-        const translations = mergeDeep(localeTranslationsModule.default,
+        const translations = mergeDeep(
+            coreTranslationsModule,
+            shareTranslationsModule,
             welcomeTranslations,
             registrationTranslations);
 
@@ -40,13 +44,21 @@ class I18n {
 
         return Object.keys(translations).reduce((a, c) => ((a as any)[`feature.${featureKey}.${c}`] = translations[c], a), {});
     }
+
+    private async loadTranslations(part: string) {
+        const featureTranslations = await import(`src/app/${part}/assets/i18n/${this.locale}.json`),
+            translations = featureTranslations.default;
+
+        return Object.keys(translations).reduce((a, c) => ((a as any)[`${part}.${c}`] = translations[c], a), {});
+    }
 }
 
 function setLocale() {
     return {
         provide: APP_INITIALIZER,
-        useFactory: (i18n: I18n) => () => i18n.setLocale(),
-        deps: [I18n],
+        useFactory: (i18n: I18n, storageService: StorageService) =>
+            () => i18n.setLocale(storageService),
+        deps: [I18n, StorageService],
         multi: true,
     };
 }

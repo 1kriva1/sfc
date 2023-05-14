@@ -1,3 +1,46 @@
+@use "node_modules/ngx-sfc-common/styles/index" as *;
+@import "../../../../../styles/";
+
 :host {
-  color: inherit;
+  .container {
+    display: flex;
+
+    .side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+
+      sfc-side-menu {
+        display: block;
+
+        ::ng-deep .container {
+          transition:
+            background $transition-theme-backround-duration $transition-theme-backround-timing-function,
+            width $transition-duration-default ease-in-out;
+        }
+      }
+
+      sfc-theme-toggler {
+        padding-bottom: 3em;
+
+        @include center-wrap;
+      }
+    }
+
+    .content {
+      @include center-wrap;
+      @include theme-value(color, $color-default, $color-0);
+      @include theme-value(background, $color-1, $color-8);
+
+      border: 1px solid;
+
+      @include theme-value(border-color, $color-1, $color-8);
+
+      border-radius: 1em;
+      width: 100%;
+      margin: 0 1em 1em 0;
+      text-align: center;
+    }
+  }
 }

@@ -1,15 +1,17 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, ActivatedRouteSnapshot, ActivationStart, convertToParamMap, Router, RouterEvent } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DOCUMENT, NgxSfcCommonModule, WINDOW } from 'ngx-sfc-common';
+import { CommonConstants, DOCUMENT, NgxSfcCommonModule, Theme, WINDOW } from 'ngx-sfc-common';
 import { INotificationContentModel, NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { of, Subject } from 'rxjs';
 import { AppComponent } from './app.component';
-import { FooterComponent, HeaderComponent } from './core/components';
-import { ILayoutModel } from './core/models';
+import { AuthenticatedHeaderComponent, BaseHeaderComponent, FooterComponent, HeaderComponent, LanguageTogglerComponent, WelcomeHeaderComponent } from './core/components';
+import { ILayoutModel, IRouteDataModel } from './core/models';
 import { NotificationService } from './core/services/notification/notification.service';
+import { ThemeService } from './share/components/theme-toggler/services/theme/theme.service';
 import { ShareModule } from './share/share.module';
 
 describe('Component: Application', () => {
@@ -20,19 +22,25 @@ describe('Component: Application', () => {
 
     let component: AppComponent;
     let fixture: ComponentFixture<AppComponent>;
-    let notificationServiceStub: Partial<NotificationService> = { remove: (notification: INotificationContentModel) => { } };
+    let notificationServiceStub: Partial<NotificationService> = { remove: (_: INotificationContentModel) => { } };
+    let themeServiceStub: Partial<ThemeService> = { theme: Theme.Default };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
                 HttpClientTestingModule,
+                NoopAnimationsModule,
                 NgxSfcCommonModule,
                 NgxSfcComponentsModule,
                 ShareModule,
             ],
             declarations: [
                 HeaderComponent,
+                BaseHeaderComponent,
+                WelcomeHeaderComponent,
+                AuthenticatedHeaderComponent,
+                LanguageTogglerComponent,
                 FooterComponent,
                 AppComponent
             ],
@@ -40,6 +48,7 @@ describe('Component: Application', () => {
                 { provide: WINDOW, useValue: {} },
                 { provide: DOCUMENT, useValue: window.document },
                 { provide: NotificationService, useValue: notificationServiceStub },
+                { provide: ThemeService, useValue: themeServiceStub },
                 { provide: Router, useValue: routerStub },
                 {
                     provide: ActivatedRoute,
@@ -56,6 +65,8 @@ describe('Component: Application', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
+
+    afterEach(() => (themeServiceStub as any).theme = Theme.Default);
 
     describe('General', () => {
         fit('Should create component', () => {
@@ -77,6 +88,43 @@ describe('Component: Application', () => {
             component?.ngOnDestroy();
 
             expect(unsubscribeSpy).toHaveBeenCalled();
+        });
+    });
+
+    describe('Theme', () => {
+        fit('Should have value by default', () => {
+            expect(fixture.nativeElement.className).toContain(Theme.Default);
+        });
+
+        fit('Should have default value', () => {
+            expect(fixture.nativeElement.className).toContain(Theme.Default);
+        });
+
+        fit('Should have defined value', () => {
+            (themeServiceStub as any).theme = Theme.Dark;
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.className).toContain(Theme.Dark);
+        });
+
+        fit('Should not have value', () => {
+            const dataValue: IRouteDataModel = { layout: { footer: true, header: true }, themeEnabled: false },
+                snapshot: ActivatedRouteSnapshot = ({ data: dataValue } as unknown) as ActivatedRouteSnapshot;
+
+            routerEventsSubject.next(new ActivationStart(snapshot) as any);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.className).toEqual(CommonConstants.EMPTY_STRING);
+        });
+
+        fit('Should have value', () => {
+            const dataValue: IRouteDataModel = { layout: { footer: true, header: true }, themeEnabled: true },
+                snapshot: ActivatedRouteSnapshot = ({ data: dataValue } as unknown) as ActivatedRouteSnapshot;
+
+            routerEventsSubject.next(new ActivationStart(snapshot) as any);
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.className).toContain(Theme.Default);
         });
     });
 
@@ -105,7 +153,8 @@ describe('Component: Application', () => {
 
         fit('Should change layout', () => {
             const newLayout: ILayoutModel = { footer: true, header: true },
-                snapshot: ActivatedRouteSnapshot = ({ data: newLayout } as unknown) as ActivatedRouteSnapshot;
+                dataValue: IRouteDataModel = { layout: newLayout, themeEnabled: false },
+                snapshot: ActivatedRouteSnapshot = ({ data: dataValue } as unknown) as ActivatedRouteSnapshot;
 
             routerEventsSubject.next(new ActivationStart(snapshot) as any);
 

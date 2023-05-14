@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { CommonConstants } from 'src/app/core/constants';
 import { IToken } from './token.model';
 import { TokenService } from './token.service';
 
@@ -45,7 +46,8 @@ describe('Share.Service: Token', () => {
 
         service.set(token)
 
-        expect(window.localStorage.setItem).toHaveBeenCalledOnceWith('Token', JSON.stringify(token));
+        expect(window.localStorage.setItem).toHaveBeenCalledOnceWith(`${CommonConstants.APPLICATION_PREFIX}-Token`,
+            JSON.stringify(token));
     });
 
     fit('Should get token', () => {

@@ -137,6 +137,7 @@
 
                 a {
                   color: $color-yellow-1;
+                  transition: color $transition-duration-default $transition-timing-function-default;
                   text-decoration: underline;
                   text-underline-offset: 2px;
                   word-break: break-word;

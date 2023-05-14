@@ -1,0 +1,5 @@
+<div class="container" [sfc-tooltip]="TOOLTIP_TEXT" [tooltipPosition]="Position.Top">
+    <sfc-toggle-switcher [active]="isActive" [leftModel]="{label:'', icon:faSun}" [rightModel]="{label:'', icon:faMoon}"
+        (click)="themeService.toggle()">
+    </sfc-toggle-switcher>
+</div>

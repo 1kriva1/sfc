@@ -1,4 +1,5 @@
 @use "node_modules/ngx-sfc-common/styles/index" as *;
+@import "./variables";
 
 @mixin button() {
   sfc-button {
@@ -21,4 +22,28 @@
       }
     }
   }
+}
+
+@mixin navigation-color($color) {
+  color: $color;
+
+  &:hover {
+    color: $color-yellow-0;
+  }
+}
+
+@mixin navigation-color-border($color) {
+  color: $color;
+  border-color: $color;
+
+  &:hover {
+    color: $color-yellow-0;
+    border-color: $color-yellow-0;
+  }
+}
+
+@mixin theme-background() {
+  @include theme-value(background, $background-default, $background-dark);
+
+  transition: background $transition-theme-backround-duration $transition-theme-backround-timing-function;
 }

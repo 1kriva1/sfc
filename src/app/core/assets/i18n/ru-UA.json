@@ -1,0 +1,26 @@
+{
+  "interceptor.error.error-value-part": "Виникла помилка:",
+  "interceptor.error.error-title": "На жаль, сталася помилка!",
+  "component.header-welcome.navigation.about": "Про сервіс",
+  "component.header-welcome.navigation.locations": "Поля",
+  "component.header-welcome.navigation.process": "Процес",
+  "component.header-welcome.navigation.contact-us": "Про нас",
+  "component.header-welcome.identity.login": "Ввійти",
+  "component.header-welcome.identity.registration": "Зареєструватись",
+  "component.header-authenticated.navigation.players": "Гравці",
+  "component.header-authenticated.navigation.games": "Ігри",
+  "component.header-authenticated.navigation.teams": "Команди",
+  "component.header-authenticated.navigation.locations": "Поля",
+  "component.header-authenticated.action.logout": "Вийти",
+  "component.header-authenticated.action.profile": "Профіль",
+  "component.header-authenticated.tooltip.messages": "Повідомлення",
+  "component.header-authenticated.tooltip.notifications": "Сповіщення",
+  "component.header-authenticated.create-profile": "Створити профіль",
+  "component.header-authenticated.tooltip.avatar-badge-create-profile": "Будь ласка, створіть профіль!",
+
+  "component.footer.designed": "Спроектований ",
+  "component.footer.reserved": " Всі права захищені.",
+  "page.not-found.title": "Ой!",
+  "page.not-found.description": "Ви вийшли за рамки",
+  "page.not-found.button-back": "Повернутися"
+}

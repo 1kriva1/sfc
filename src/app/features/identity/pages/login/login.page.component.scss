@@ -14,6 +14,7 @@
 
               a.forgot {
                 float: right;
+                transition: color $transition-duration-default $transition-timing-function-default;
                 color: $color-yellow-1;
                 font-size: 0.8em;
                 user-select: none;

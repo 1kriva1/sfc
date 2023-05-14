@@ -1,1 +1,12 @@
-<h1>UserId: {{userId}}</h1>
+<div class="container">
+    <div class="side" *ngIf="!headerService.open" [ngStyle]="{'min-height': (headerTop$ | async) }">
+        <sfc-side-menu [model]="MENU_MODEL" (selected)="onSelect($event)"></sfc-side-menu>
+        <sfc-theme-toggler [sfcComponentSize] [customSize]="0.8">
+        </sfc-theme-toggler>
+    </div>
+
+    <div class="content">
+        {{selectedItem}}
+        <h1>UserId: {{userId}}</h1>
+    </div>
+</div>

@@ -1,8 +1,9 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { isDefined, isNullOrEmptyString } from 'ngx-sfc-common';
+import { CommonConstants, isDefined, isNullOrEmptyString, parseBoolean } from 'ngx-sfc-common';
 import { BehaviorSubject, map, Observable, Subject, Subscription } from 'rxjs';
 import { LOADER } from 'src/app/core/interceptors/loader/loader.interceptor';
+import { StorageService } from 'src/app/core/services/storage/storage.service';
 import { environment } from 'src/environments/environment';
 import { IToken } from '../token/token.model';
 import { TokenService } from '../token/token.service';
@@ -24,22 +25,27 @@ export class IdentityService {
 
   private tokenSubject: Subject<IToken> = new Subject<IToken>();
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService, private storageService: StorageService) { }
 
   public userId$: Observable<string | null> = this.userSubject.asObservable();
 
   public token$: Observable<IToken> = this.tokenSubject.asObservable();
 
   public get userId(): string | null {
-    return this.userSubject.value || window.localStorage.getItem(IdentityConstants.USER_ID_KEY);
+    return this.userSubject.value || this.storageService.get(IdentityConstants.USER_ID_KEY);
   }
 
   public get isLoggedIn() {
     return !isNullOrEmptyString(this.userId) && this.tokenService.valid;
   }
 
+  public get hasProfile() {
+    return false;
+  }
+
   public get rememberMe(): boolean {
-    return window.localStorage.getItem(IdentityConstants.REMEMBER_ME_KEY) === "true";
+    return parseBoolean(this.storageService.get<string>(IdentityConstants.REMEMBER_ME_KEY)
+      || CommonConstants.EMPTY_STRING);
   }
 
   private refreshTokenTimeout?: NodeJS.Timeout;
@@ -67,7 +73,7 @@ export class IdentityService {
     ).pipe(
       map(response => {
         this.setIdentity(response.Token, response.UserId as string);
-        window.localStorage.setItem(IdentityConstants.REMEMBER_ME_KEY, `${request.RememberMe}`);
+        this.storageService.set(IdentityConstants.REMEMBER_ME_KEY, request.RememberMe);
         return response;
       })
     );
@@ -94,7 +100,7 @@ export class IdentityService {
       map(response => {
         this.tokenService.remove();
 
-        window.localStorage.removeItem(IdentityConstants.USER_ID_KEY);
+        this.storageService.remove(IdentityConstants.USER_ID_KEY);
 
         this.userSubject.next(null);
 
@@ -113,10 +119,9 @@ export class IdentityService {
 
     this.clearTokenSubscriptions();
 
-    this.refreshTokenTimeout = setTimeout(() =>
-      {
-        this._refreshSubscription = this.refreshToken({ Token: token as IToken }).subscribe()
-      }, timeout);
+    this.refreshTokenTimeout = setTimeout(() => {
+      this._refreshSubscription = this.refreshToken({ Token: token as IToken }).subscribe()
+    }, timeout);
   }
 
   private setIdentity(token: IToken, userId: string) {
@@ -131,7 +136,7 @@ export class IdentityService {
   }
 
   private setUserId(userId: string): void {
-    window.localStorage.setItem(IdentityConstants.USER_ID_KEY, userId);
+    this.storageService.set(IdentityConstants.USER_ID_KEY, userId);
     this.userSubject.next(userId);
   }
 

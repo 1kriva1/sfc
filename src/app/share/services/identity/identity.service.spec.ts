@@ -1,6 +1,7 @@
 import { HttpContext } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { CommonConstants } from 'src/app/core/constants';
 import { LOADER } from 'src/app/core/interceptors/loader/loader.interceptor';
 import { environment } from 'src/environments/environment';
 import { IToken } from '../token/token.model';
@@ -100,7 +101,7 @@ describe('Share.Service: Identity', () => {
         expect(tokenServiceStub.set).toHaveBeenCalledOnceWith(response.Token);
         expect((service as any).setAutoRefresh).toHaveBeenCalledOnceWith(response.Token);
         expect(window.localStorage.setItem)
-            .toHaveBeenCalledOnceWith(IdentityConstants.USER_ID_KEY, response.UserId as string);
+            .toHaveBeenCalledOnceWith(`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.USER_ID_KEY}`, response.UserId as string);
     });
 
     fit('Should login player', (done) => {
@@ -142,8 +143,8 @@ describe('Share.Service: Identity', () => {
         expect((service as any).setAutoRefresh).toHaveBeenCalledOnceWith(response.Token);
         expect((window.localStorage.setItem as any).calls.allArgs())
             .toEqual([
-                [IdentityConstants.USER_ID_KEY, response.UserId],
-                [IdentityConstants.REMEMBER_ME_KEY, `${request.RememberMe}`]
+                [`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.USER_ID_KEY}`, response.UserId],
+                [`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.REMEMBER_ME_KEY}`, `${request.RememberMe}`]
             ]);
     });
 
@@ -217,7 +218,7 @@ describe('Share.Service: Identity', () => {
 
         expect(tokenServiceStub.remove).toHaveBeenCalledTimes(1);
         expect(window.localStorage.removeItem)
-            .toHaveBeenCalledOnceWith(IdentityConstants.USER_ID_KEY);
+            .toHaveBeenCalledOnceWith(`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.USER_ID_KEY}`);
         expect(clearTimeout).toHaveBeenCalledWith((service as any).refreshTokenTimeout);
     });
 
@@ -281,7 +282,8 @@ describe('Share.Service: Identity', () => {
     fit('Should return user id from local storage', () => {
         const assertUserId = 'local-user-id';
 
-        window.localStorage.setItem(IdentityConstants.USER_ID_KEY, assertUserId);
+        window.localStorage.setItem(`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.USER_ID_KEY}`,
+            assertUserId);
 
         expect(service.userId).toEqual(assertUserId);
     });

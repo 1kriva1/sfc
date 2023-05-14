@@ -1,41 +1,4 @@
-<header *ngIf="!identityService.userId">
-    <div class="logo">
-        <sfc-logo></sfc-logo>
-        <sfc-hamburger-menu [open]="open" (click)="open=!open"></sfc-hamburger-menu>
-    </div>
-    <nav>
-        <ul>
-            <li>
-                <a (click)="navigate(HeaderPart.About)" i18n="@@core.component.header.navigation.about">About</a>
-            </li>
-            <li>
-                <a (click)="navigate(HeaderPart.Locations)"
-                    i18n="@@core.component.header.navigation.locations">Locations</a>
-            </li>
-            <li>
-                <a (click)="navigate(HeaderPart.Process)" i18n="@@core.component.header.navigation.process">Process</a>
-            </li>
-            <li><a (click)="navigate(HeaderPart.Contact)" i18n="@@core.component.header.navigation.contact-us">Contact
-                    Us</a>
-            </li>
-        </ul>
-    </nav>
-    <div class="right">
-        <div class="languages">
-            <sfc-dropdown-menu [icon]="faGlobe" [label]="language" [items]="Languages"
-                (selected)="changeLocale($event)"></sfc-dropdown-menu>
-            <sfc-delimeter [direction]="Direction.Vertical"></sfc-delimeter>
-        </div>
-        <div class="identity">
-            <sfc-button routerLink="identity/login" [iconBefore]="faSignIn" [types]="[ButtonType.Rounded]"
-                [sfcComponentSize] [customSize]="0.7" [text]="BUTTON_SIGN_IN_TEXT"></sfc-button>
-            <sfc-button routerLink="identity/registration" [iconBefore]="faUserPlus" [types]="[ButtonType.Rounded]"
-                [sfcComponentSize] [customSize]="0.7" [text]="BUTTON_SIGN_UP_TEXT"></sfc-button>
-        </div>
-    </div>
-</header>
-
-<div *ngIf="identityService.userId">
-    HAHA: {{identityService.userId}}
-    <sfc-button text="Logout" (click)="logout()"></sfc-button>
+<div class="container">
+    <sfc-welcome-header *ngIf="!identityService.isLoggedIn"></sfc-welcome-header>
+    <sfc-authenticated-header *ngIf="identityService.isLoggedIn"></sfc-authenticated-header>
 </div>

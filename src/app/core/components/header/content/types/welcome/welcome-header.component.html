@@ -1,0 +1,8 @@
+<sfc-base-header [navigations]="navigations">
+    <div class="identity">
+        <sfc-button routerLink="identity/login" [iconBefore]="faSignIn" [types]="[ButtonType.Rounded]"
+            [sfcComponentSize] [customSize]="0.7" [text]="BUTTON_SIGN_IN_TEXT"></sfc-button>
+        <sfc-button routerLink="identity/registration" [iconBefore]="faUserPlus" [types]="[ButtonType.Rounded]"
+            [sfcComponentSize] [customSize]="0.7" [text]="BUTTON_SIGN_UP_TEXT"></sfc-button>
+    </div>
+</sfc-base-header>

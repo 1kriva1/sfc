@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ButtonType, Direction, isEmail, ComponentSize, LoaderService, nameof } from 'ngx-sfc-common';
+import { ButtonType, Direction, isEmail, ComponentSize, LoaderService, nameof, Theme } from 'ngx-sfc-common';
 import { SliderType } from 'ngx-sfc-components';
 import { map, filter, switchMap, tap, fromEvent, Subscription, startWith, catchError, of } from 'rxjs';
 import { ExistenceService } from '../../services/existence/existence.service';
@@ -16,6 +16,8 @@ import { IdentityService } from 'src/app/share/services/identity/identity.servic
 import { IRegistrationRequest, IRegistrationResponse } from 'src/app/share/services/identity/models';
 import { RegistrationPageLocalization } from './registration.page.localization';
 import { match } from 'ngx-sfc-inputs';
+import { StorageService } from 'src/app/core/services/storage/storage.service';
+import { CommonConstants } from 'src/app/core/constants';
 
 @Component({
   selector: 'sfc-registration.page',
@@ -49,6 +51,7 @@ export class RegistrationPageComponent implements OnInit, AfterViewInit, OnDestr
     private router: Router,
     private existenceService: ExistenceService,
     private loaderService: LoaderService,
+    private storageService: StorageService,
     private identityService: IdentityService) { }
 
   ngOnInit(): void {
@@ -109,8 +112,10 @@ export class RegistrationPageComponent implements OnInit, AfterViewInit, OnDestr
     ).subscribe((response: IRegistrationResponse) => {
       this.error = response.Success ? null : response as BaseErrorResponse;
 
-      if (response.Success)
+      if (response.Success) {
+        this.storageService.set(CommonConstants.THEME_KEY, Theme.Default);
         this.router.navigate([buildPath(RoutKey.Home)]);
+      }
     });
   }
 

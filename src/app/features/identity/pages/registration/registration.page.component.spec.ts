@@ -4,11 +4,13 @@ import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { ButtonType, ComponentSize, Direction, ILoaderEvent, LoaderService, NgxSfcCommonModule, UIConstants } from 'ngx-sfc-common';
+import { ButtonType, ComponentSize, Direction, ILoaderEvent, LoaderService, NgxSfcCommonModule, Theme, UIConstants } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule, SliderType } from 'ngx-sfc-components';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
 import { of, throwError } from 'rxjs';
+import { CommonConstants } from 'src/app/core/constants';
 import { RoutKey } from 'src/app/core/enums';
+import { StorageService } from 'src/app/core/services/storage/storage.service';
 import { LogoComponent } from 'src/app/share/components/logo/logo.component';
 import { IdentityService } from 'src/app/share/services/identity/identity.service';
 import { IRegistrationRequest, IRegistrationResponse } from 'src/app/share/services/identity/models';
@@ -26,7 +28,12 @@ describe('Features.Identity.Page:Registration', () => {
       show: (id?: string, register?: boolean) => { return null; },
       hide: () => { },
       register: (_: ILoaderEvent) => { return of(); }
+    },
+    storageServiceStub: Partial<StorageService> = {
+      set: () => { },
+      get: () => Theme.Default as any
     };
+
   let routerMock = { navigate: (routes: string[]) => { } };
 
   beforeEach(async () => {
@@ -38,6 +45,7 @@ describe('Features.Identity.Page:Registration', () => {
         { provide: ExistenceService, useValue: existenceServiceStub },
         { provide: IdentityService, useValue: identityServiceStub },
         { provide: LoaderService, useValue: loaderServiceStub },
+        { provide: StorageService, useValue: storageServiceStub }
       ]
     }).compileComponents();
 
@@ -566,6 +574,28 @@ describe('Features.Identity.Page:Registration', () => {
         fixture.detectChanges();
 
         expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Home}`]);
+
+        flush();
+      }));
+
+      fit("Should set default theme on success", fakeAsync(() => {
+        spyOn((storageServiceStub as any), 'set').and.callThrough();
+        spyOn(identityServiceStub, 'register' as any).and.returnValue(of({
+          Token: {},
+          UserId: 'user-id',
+          Errors: null,
+          Success: true,
+          Message: 'msg'
+        } as IRegistrationResponse));
+        spyOn(routerMock, 'navigate');
+
+        makeFormValid(false);
+
+        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
+        submitBtnEl.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(storageServiceStub.set).toHaveBeenCalledOnceWith(CommonConstants.THEME_KEY, Theme.Default);
 
         flush();
       }));

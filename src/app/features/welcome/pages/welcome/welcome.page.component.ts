@@ -1,17 +1,23 @@
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { faFacebook, faInstagram, faTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { faCirclePlay, faFutbol, faIdCard, faPeopleGroup, faPersonWalking, faPlus, faSearch, faTruckField, faUserGroup, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCirclePlay, faFutbol, faIdCard, faPeopleGroup, faPersonWalking,
+  faPlus, faSearch, faTruckField, faUserGroup, faUserPlus
+} from '@fortawesome/free-solid-svg-icons';
 import { ButtonType, getCssLikeValue } from 'ngx-sfc-common';
 import { ITimelineItemModel, TimelineItemPosition } from 'ngx-sfc-components';
 import { map, Observable } from 'rxjs';
-import { HeaderService } from 'src/app/core/components/header/services/header.service';
+import { HeaderService } from '@core/components/header/services/header.service';
+import { buildTitle } from '@core/utils';
 import { IImageSliderItemModel } from '../../components';
+import { WelcomePageLocalization } from './welcome.page.localization';
 
 @Component({
   templateUrl: './welcome.page.component.html',
   styleUrls: ['./welcome.page.component.scss']
 })
-export class WelcomePageComponent implements AfterViewInit {
+export class WelcomePageComponent implements AfterViewInit, OnInit {
 
   faFacebook = faFacebook;
   faYoutube = faYoutube;
@@ -19,6 +25,7 @@ export class WelcomePageComponent implements AfterViewInit {
   faTwitter = faTwitter;
 
   ButtonType = ButtonType;
+  Localization = WelcomePageLocalization;
 
   public BUTTON_HERO_SIGN_IN_TEXT = $localize`:@@feature.welcome.page.hero.button-text:Lets start the journey!`;
 
@@ -118,39 +125,46 @@ export class WelcomePageComponent implements AfterViewInit {
 
   public LOCATIONS: IImageSliderItemModel[] = [
     {
-      image: '/assets/images/welcome/locations/4a.jpg',
+      image: 'app/features/welcome/assets/images/locations/4a.jpg',
       title: $localize`:@@feature.welcome.page.locations.knu:Sports complex of Kyiv National University`,
       raiting: '1',
       link: 'https://google.com'
     },
     {
-      image: '/assets/images/welcome/locations/4a.jpg',
+      image: 'app/features/welcome/assets/images/locations/4a.jpg',
       title: $localize`:@@feature.welcome.page.locations.rejo:REJO VDNH`,
       raiting: '2',
       link: 'https://rejo.ua/'
     },
     {
-      image: '/assets/images/welcome/locations/4a.jpg',
+      image: 'app/features/welcome/assets/images/locations/4a.jpg',
       title: $localize`:@@feature.welcome.page.locations.meridian:Meridian Football Center`,
       raiting: '3'
     },
     {
-      image: '/assets/images/welcome/locations/4a.jpg',
+      image: 'app/features/welcome/assets/images/locations/4a.jpg',
       title: $localize`:@@feature.welcome.page.locations.unknown:Unknown`,
       raiting: '4'
     },
     {
-      image: '/assets/images/welcome/locations/4a.jpg',
+      image: 'app/features/welcome/assets/images/locations/4a.jpg',
       title: $localize`:@@feature.welcome.page.locations.unknown:Unknown`,
       raiting: '5'
     }
   ];
 
-  constructor(private headerService: HeaderService, private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(
+    private headerService: HeaderService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private titleService: Title) { }
+
+  ngOnInit(): void {
+    this.titleService.setTitle(buildTitle($localize`:@@feature.welcome.page.title:Welcome`));
+  }
 
   public heroTitleTop$!: Observable<string>;
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.heroTitleTop$ = this.headerService.height$?.pipe(map(height => getCssLikeValue(height)));
     this.changeDetectorRef.detectChanges();
   }

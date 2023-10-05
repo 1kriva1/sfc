@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Theme } from 'ngx-sfc-common';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { StorageService } from 'src/app/core/services/storage/storage.service';
-import { CommonConstants } from '../../../../../core/constants';
+import { StorageService } from '@core/services/storage/storage.service';
+import { CommonConstants } from '@core/constants';
 
 @Injectable({
     providedIn: 'root'

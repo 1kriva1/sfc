@@ -1,0 +1,25 @@
+@use "ngx-sfc-common/styles/index" as *;
+@import "mixins";
+
+:host {
+  .container {
+    a {
+      display: flex;
+      justify-content: center;
+
+      @include theme-color($color-default, $color-0);
+
+      fa-icon {
+        cursor: pointer;
+      }
+
+      &::before {
+        min-width: 10em;
+      }
+
+      &:hover {
+        color: $color-hover-default;
+      }
+    }
+  }
+}

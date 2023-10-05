@@ -8,11 +8,15 @@ import { CommonConstants, DOCUMENT, NgxSfcCommonModule, Theme, WINDOW } from 'ng
 import { INotificationContentModel, NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { of, Subject } from 'rxjs';
 import { AppComponent } from './app.component';
-import { AuthenticatedHeaderComponent, BaseHeaderComponent, FooterComponent, HeaderComponent, LanguageTogglerComponent, WelcomeHeaderComponent } from './core/components';
-import { ILayoutModel, IRouteDataModel } from './core/models';
-import { NotificationService } from './core/services/notification/notification.service';
-import { ThemeService } from './share/components/theme-toggler/services/theme/theme.service';
-import { ShareModule } from './share/share.module';
+import {
+    AuthenticatedHeaderComponent, BaseHeaderComponent,
+    FooterComponent, HeaderComponent, LanguageTogglerComponent, WelcomeHeaderComponent
+} from '@core/components';
+import { ILayoutModel, IRouteDataModel } from '@core/models';
+import { NotificationService } from '@core/services/notification/notification.service';
+import { ThemeService } from '@share/components/theme-toggler/services/theme/theme.service';
+import { ShareModule } from '@share/share.module';
+import { AppComponentConstants } from './app.component.constants';
 
 describe('Component: Application', () => {
     const routerEventsSubject = new Subject<RouterEvent>(),
@@ -200,23 +204,11 @@ describe('Component: Application', () => {
             });
         });
 
-        fit('Should remove notification ', () => {
-            spyOn(notificationServiceStub, 'remove' as any);
-
-            notificationServiceStub.notifications$ = of([
-                { id: 'test-id-1' } as INotificationContentModel,
-                { id: 'test-id-2' } as INotificationContentModel
-            ]);
-            fixture.detectChanges();
-
-            fixture.debugElement.queryAll(By.css('sfc-notification'))[1]
-                .query(By.css('sfc-close')).nativeElement.dispatchEvent(new MouseEvent('click'));
-
-            expect(notificationServiceStub.remove).toHaveBeenCalledOnceWith({ id: 'test-id-2' });
-        });
-
         fit('Should have default notification model', () => {
-            expect(component.notificationAutoCloseModel).toEqual({ enabled: true, interval: 3000 });
+            expect(component.notificationAutoCloseModel).toEqual({
+                enabled: true,
+                interval: AppComponentConstants.NOTIFICATION_AUTO_CLOSE_INTERVAL
+            });
         });
     });
 });

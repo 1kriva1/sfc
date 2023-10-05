@@ -2,12 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonComponent, ComponentSizeDirective } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
-import { HeaderService } from 'src/app/core/components';
+import { HeaderService } from '@core/components';
 import { ImageSliderComponent, ImageSliderItemComponent } from '../../components';
 import { WelcomePageComponent } from './welcome.page.component';
 import { of } from 'rxjs';
-import { RoutKey } from 'src/app/core/enums';
-import { By } from '@angular/platform-browser';
+import { RoutKey } from '@core/enums';
+import { By, Title } from '@angular/platform-browser';
+import { buildTitle } from '@core/utils';
 
 describe('Features.Welcome.Page:Welcome', () => {
   let component: WelcomePageComponent;
@@ -43,6 +44,12 @@ describe('Features.Welcome.Page:Welcome', () => {
       expect(fixture.nativeElement.querySelector('section#locations.locations')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('section#process.process')).toBeTruthy();
       expect(fixture.nativeElement.querySelector('section#contact.contact')).toBeTruthy();
+    });
+
+    fit('Should have page title', () => {
+      const titleService = TestBed.inject(Title);
+
+      expect(titleService.getTitle()).toBe(buildTitle('Welcome'));
     });
   });
 

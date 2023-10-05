@@ -15,26 +15,33 @@ describe('Share.Component:Logo', () => {
     fixture.detectChanges();
   });
 
-  fit("Should create component", () => {
+  fit('Should create component', () => {
     expect(component).toBeTruthy();
   });
 
-  fit("Should have main elements", () => {
+  fit('Should have main elements', () => {
     expect(fixture.nativeElement.querySelector('div.container')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('div.container > a')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('div.container > a > img')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('div.container > a > span')).toBeTruthy();
   });
 
-  fit("Should have reference to root", () => {
-    expect(fixture.nativeElement.querySelector('div.container > a').pathname).toEqual('/');
+  fit('Should have reference to root', () => {
+    expect(fixture.nativeElement.querySelector('div.container > a').pathname).toEqual('');
   });
 
-  fit("Should have constant image", () => {
-    expect(fixture.nativeElement.querySelector('div.container > a > img').src).toContain('/assets/images/core/bayen-munchen.png');
+  fit('Should have constant image', () => {
+    expect(fixture.nativeElement.querySelector('div.container > a > img').src).toContain('app/share/assets/images/logo/bayen-munchen.png');
   });
 
-  fit("Should have constant text", () => {
+  fit('Should have constant text', () => {
     expect(fixture.nativeElement.querySelector('div.container > a > span').innerText).toEqual('STREET FOOTBALL CLUB');
+  });
+
+  fit('Should hide title', () => {
+    component.showTitle = false;
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('div.container > a > span')).toBeNull();
   });
 });

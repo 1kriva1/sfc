@@ -5,8 +5,9 @@ import {
     HttpEvent,
     HttpInterceptor,
     HttpContextToken,
+    HttpResponse,
 } from '@angular/common/http';
-import { Observable, finalize } from 'rxjs';
+import { Observable, map, catchError, throwError } from 'rxjs';
 import { LoaderService } from 'ngx-sfc-common';
 
 export const LOADER = new HttpContextToken(() => false);
@@ -21,8 +22,16 @@ export class LoaderInterceptor implements HttpInterceptor {
             this.loaderService.show();
 
             return next.handle(request).pipe(
-                finalize(() => this.loaderService.hide())
-            );
+                map((event: HttpEvent<any>) => {
+                    if (event instanceof HttpResponse)
+                        this.loaderService.hide();
+
+                    return event;
+                }),
+                catchError(error => {
+                    this.loaderService.hide();
+                    return throwError(() => error);
+                }));
         }
 
         return next.handle(request);

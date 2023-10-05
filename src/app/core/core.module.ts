@@ -13,18 +13,18 @@ import { NotFoundPageComponent, CanvasBallDirective } from './pages';
 import { NgxSfcCommonModule } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { RouterModule } from '@angular/router';
-import { ShareModule } from '../share/share.module';
+import { ShareModule } from '@share/share.module';
 
 @NgModule({
   declarations: [
-    WelcomeHeaderComponent,
-    BaseHeaderComponent,
-    LanguageTogglerComponent,
     HeaderComponent,
+    BaseHeaderComponent,
+    WelcomeHeaderComponent,
+    AuthenticatedHeaderComponent,
+    LanguageTogglerComponent,    
     FooterComponent,
     NotFoundPageComponent,
-    CanvasBallDirective,
-    AuthenticatedHeaderComponent
+    CanvasBallDirective    
   ],
   imports: [
     CommonModule,
@@ -36,8 +36,6 @@ import { ShareModule } from '../share/share.module';
   ],
   exports: [
     HeaderComponent,
-    WelcomeHeaderComponent,
-    AuthenticatedHeaderComponent,
     FooterComponent,
     NotFoundPageComponent
   ]

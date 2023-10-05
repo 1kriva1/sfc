@@ -2,31 +2,45 @@ import { HttpClientModule } from '@angular/common/http';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
+import { By, Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { ButtonType, CheckmarkType, Direction, NgxSfcCommonModule, UIConstants } from 'ngx-sfc-common';
+import { ButtonType, CheckmarkType, CommonConstants, Direction, nameof, NgxSfcCommonModule, UIConstants } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule, SliderType } from 'ngx-sfc-components';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
 import { of, throwError } from 'rxjs';
-import { RoutKey } from 'src/app/core/enums';
-import { LogoComponent } from 'src/app/share/components/logo/logo.component';
-import { IdentityService } from 'src/app/share/services/identity/identity.service';
-import { ILoginRequest, ILoginResponse } from 'src/app/share/services/identity/models';
+import { RoutKey } from '@core/enums';
+import { IdentityService } from '@share/services/identity/identity.service';
+import { ILoginRequest, ILoginResponse } from '@share/services/identity/models';
 import { LoginPageComponent } from './login.page.component';
 import { LoginPageConstants } from './login.page.constants';
+import { IGetPlayerByUserResponse, PlayerService } from '@share/services';
+import { ILoginFormModel } from './login-form.model';
+import { ShareModule } from '@share/share.module';
+import { HttpConstants } from '@core/constants';
+import { BaseResponse } from '@core/models';
+import { buildTitle } from '@core/utils';
 
 describe('Features.Identity.Page:Login', () => {
   let component: LoginPageComponent;
   let fixture: ComponentFixture<LoginPageComponent>;
-  let identityServiceStub: Partial<IdentityService> = { login: (_: ILoginRequest) => { return of(); } };
-  let routerMock = { navigate: (routes: string[]) => { } };
+  let identityServiceStub: Partial<IdentityService> = {
+    login: (_: ILoginRequest) => { return of(); },
+    logout: () => { return of(); }
+  };
+  let routerMock = { navigate: (_: string[]) => { } };
+  let playerServiceStub: any = {
+    player: { value$: of(null) },
+    get: () => { return of(); }
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, HttpClientModule, NgxSfcCommonModule, NgxSfcInputsModule, NgxSfcComponentsModule],
-      declarations: [LogoComponent, LoginPageComponent],
+      imports: [ReactiveFormsModule, HttpClientModule, NgxSfcCommonModule, NgxSfcInputsModule, NgxSfcComponentsModule,
+        ShareModule],
+      declarations: [LoginPageComponent],
       providers: [
         { provide: Router, useValue: routerMock },
+        { provide: PlayerService, useValue: playerServiceStub },
         { provide: IdentityService, useValue: identityServiceStub }
       ]
     }).compileComponents();
@@ -72,6 +86,32 @@ describe('Features.Identity.Page:Login', () => {
 
       expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
     });
+
+    fit('Should call unsubscribe for logout subscription', () => {
+      spyLogin('user-id');
+      (playerServiceStub as any).get = () => throwError(() => new Error());
+
+      makeFormValid();
+
+      const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
+      submitBtnEl.nativeElement.click();
+      fixture.detectChanges();
+
+      const logoutUnsubscribeSpy = spyOn(
+        (component as any)._logoutSubscription,
+        'unsubscribe'
+      ).and.callThrough();
+
+      component.ngOnDestroy();
+
+      expect(logoutUnsubscribeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    fit('Should have page title', () => {
+      const titleService = TestBed.inject(Title);
+
+      expect(titleService.getTitle()).toBe(buildTitle('Login'));
+    });
   });
 
   describe('Left side', () => {
@@ -88,6 +128,11 @@ describe('Features.Identity.Page:Login', () => {
   describe('Right side', () => {
     fit('Should logo have appropriate size', () => {
       expect(fixture.debugElement.query(By.css('sfc-logo')).attributes['ng-reflect-custom-size']).toEqual('1.3');
+    });
+
+    fit('Should logo have appropriate route link', () => {
+      expect(fixture.debugElement.query(By.css('sfc-logo')).attributes['routerLink'])
+        .toEqual('/');
     });
 
     fit('Should username or email input have appropriate attributes', () => {
@@ -193,26 +238,19 @@ describe('Features.Identity.Page:Login', () => {
         expect(submitBtnEl.componentInstance.disabled).toBeFalse();
       });
 
-      fit('Should make form touched on submit button click', () => {
-        expect(component.loginForm.touched).toBeFalse();
-
-        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
-        submitBtnEl.nativeElement.click();
-        fixture.detectChanges();
-
-        expect(component.loginForm.touched).toBeTrue();
-      });
-
       fit('Should make form controls dirty on submit button click', () => {
-        Object.keys(component.loginForm.controls).forEach(key =>
-          expect(component.loginForm.get(key)?.dirty).toBeFalse());
+        const passwordInput = component.loginForm.get(nameof<ILoginFormModel>('password')),
+          userNameEmailInput = component.loginForm.get(nameof<ILoginFormModel>('userNameEmail'));
+
+        expect(passwordInput!.dirty).toBeFalse();
+        expect(userNameEmailInput!.dirty).toBeFalse();
 
         const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
         submitBtnEl.nativeElement.click();
         fixture.detectChanges();
 
-        Object.keys(component.loginForm.controls).forEach(key =>
-          expect(component.loginForm.get(key)?.dirty).toBeTrue());
+        expect(passwordInput!.dirty).toBeTrue();
+        expect(userNameEmailInput!.dirty).toBeTrue();
       });
 
       describe('UserNameEmail input', () => {
@@ -308,13 +346,7 @@ describe('Features.Identity.Page:Login', () => {
       });
 
       fit('Should call login if form valid when using email', () => {
-        spyOn(identityServiceStub, 'login' as any).and.returnValue(of({
-          Token: {},
-          UserId: 'user-id',
-          Errors: null,
-          Success: true,
-          Message: 'msg'
-        } as ILoginResponse));
+        spyLogin('user-id');
 
         makeFormValid();
 
@@ -326,13 +358,7 @@ describe('Features.Identity.Page:Login', () => {
       });
 
       fit('Should call login if form valid when using username', () => {
-        spyOn(identityServiceStub, 'login' as any).and.returnValue(of({
-          Token: {},
-          UserId: 'user-id',
-          Errors: null,
-          Success: true,
-          Message: 'msg'
-        } as ILoginResponse));
+        spyLogin('user-id');
 
         makeFormValid(false);
 
@@ -344,13 +370,9 @@ describe('Features.Identity.Page:Login', () => {
       });
 
       fit('Should show error if login failed', () => {
-        spyOn(identityServiceStub, 'login' as any).and.returnValue(of({
-          Token: {},
-          UserId: '',
-          Errors: null,
-          Success: false,
-          Message: 'Login error'
-        } as ILoginResponse));
+        spyLogin('');
+
+        spyPlayerGet(false);
 
         makeFormValid();
 
@@ -358,6 +380,7 @@ describe('Features.Identity.Page:Login', () => {
 
         expect(errorsEl.styles['visibility']).toEqual(UIConstants.CSS_VISIBILITY_HIDDEN);
         expect(errorsEl.styles['opacity']).toEqual('0');
+        expect(fixture.nativeElement.querySelector('.error-message').textContent).toEqual(CommonConstants.EMPTY_STRING);
 
         const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
         submitBtnEl.nativeElement.click();
@@ -365,16 +388,12 @@ describe('Features.Identity.Page:Login', () => {
 
         expect(errorsEl.styles['visibility']).toEqual(UIConstants.CSS_VISIBILITY_VISIBLE);
         expect(errorsEl.styles['opacity']).toEqual('1');
+        expect(fixture.nativeElement.querySelector('.error-message').textContent).toEqual('Message');
       });
 
       fit('Should clear previous error if login success', () => {
-        const loginSpy = spyOn(identityServiceStub, 'login' as any).and.returnValue(of({
-          Token: {},
-          UserId: '',
-          Errors: null,
-          Success: false,
-          Message: 'Login error'
-        } as ILoginResponse));
+        const loginSpy = spyLogin(''),
+          playerGetSpy = spyPlayerGet(false);
 
         makeFormValid();
 
@@ -395,6 +414,13 @@ describe('Features.Identity.Page:Login', () => {
           Message: 'Success'
         } as ILoginResponse));
 
+        playerGetSpy.and.returnValue(of({
+          Player: {},
+          Errors: null,
+          Success: true,
+          Message: 'Success'
+        } as IGetPlayerByUserResponse));
+
         submitBtnEl.nativeElement.click();
         fixture.detectChanges();
 
@@ -403,13 +429,8 @@ describe('Features.Identity.Page:Login', () => {
       });
 
       fit("Should navigate to home on success", () => {
-        spyOn(identityServiceStub, 'login' as any).and.returnValue(of({
-          Token: {},
-          UserId: 'user-id',
-          Errors: null,
-          Success: true,
-          Message: 'msg'
-        } as ILoginResponse));
+        spyLogin('user-id');
+        spyPlayerGet(true);
         spyOn(routerMock, 'navigate');
 
         makeFormValid(false);
@@ -433,23 +454,95 @@ describe('Features.Identity.Page:Login', () => {
 
         expect(routerMock.navigate).not.toHaveBeenCalledWith([`/${RoutKey.Home}`]);
       });
+
+      fit('Should call player get after success login', () => {
+        spyLogin('user-id');
+        spyPlayerGet(true);
+
+        makeFormValid(false);
+
+        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
+        submitBtnEl.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(playerServiceStub.get).toHaveBeenCalledTimes(1);
+      });
+
+      fit('Should not call player get after failed login', () => {
+        spyLogin('', false);
+        spyPlayerGet(true);
+
+        makeFormValid(false);
+
+        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
+        submitBtnEl.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(playerServiceStub.get).not.toHaveBeenCalled();
+      });
+
+      fit('Should call logout on error for player get call', () => {
+        spyLogin('user-id');
+        (playerServiceStub as any).get = () => throwError(() => new Error());
+        spyOn(identityServiceStub, 'logout' as any);
+
+        makeFormValid(false);
+
+        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
+        submitBtnEl.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(identityServiceStub.logout).toHaveBeenCalledTimes(1);
+      });
+
+      fit('Should return failed response on error for player get call', () => {
+        spyLogin('user-id');
+        (playerServiceStub as any).get = () => throwError(() => new Error());
+
+        makeFormValid();
+
+        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
+        submitBtnEl.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(component.error as BaseResponse).toEqual(HttpConstants.FAILED_RESPONSE);
+      });
     });
-
-    function makeFormValid(useEmail = true): void {
-      const userNameEmailInputEl = fixture.nativeElement.querySelector('sfc-text-input .sfc-input#sfc-username-email'),
-        rememberControlInputEl = fixture.debugElement.query(By.css('sfc-checkbox-input .sfc-input#sfc-remember')),
-        passwordControlInputEl = fixture.nativeElement.querySelector('sfc-text-input .sfc-input#sfc-password');
-
-      userNameEmailInputEl.value = useEmail ? 'email@mail.com' : 'username';
-      userNameEmailInputEl.dispatchEvent(new Event('input'));
-      fixture.detectChanges();
-
-      rememberControlInputEl.triggerEventHandler('input', { target: { nativeElement: rememberControlInputEl.nativeElement, checked: true } });
-      fixture.detectChanges();
-
-      passwordControlInputEl.value = 'Test1234!';
-      passwordControlInputEl.dispatchEvent(new Event('input'));
-      fixture.detectChanges();
-    }
   });
+
+  function makeFormValid(useEmail = true): void {
+    const userNameEmailInputEl = fixture.nativeElement.querySelector('sfc-text-input .sfc-input#sfc-username-email'),
+      rememberControlInputEl = fixture.debugElement.query(By.css('sfc-checkbox-input .sfc-input#sfc-remember')),
+      passwordControlInputEl = fixture.nativeElement.querySelector('sfc-text-input .sfc-input#sfc-password');
+
+    userNameEmailInputEl.value = useEmail ? 'email@mail.com' : 'username';
+    userNameEmailInputEl.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    rememberControlInputEl.triggerEventHandler('input', { target: { nativeElement: rememberControlInputEl.nativeElement, checked: true } });
+    fixture.detectChanges();
+
+    passwordControlInputEl.value = 'Test1234!';
+    passwordControlInputEl.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+  }
+
+  function spyPlayerGet(success: boolean): jasmine.Spy<any> {
+    return spyOn(playerServiceStub, 'get' as any).and.returnValue(of({
+      Player: {},
+      Errors: null,
+      Success: success,
+      Message: 'Message'
+    }));
+  }
+
+  function spyLogin(userId: string, success: boolean = true): jasmine.Spy<any> {
+    return spyOn(identityServiceStub, 'login' as any).and.returnValue(of({
+      Token: {},
+      UserId: userId,
+      Errors: null,
+      Success: success,
+      Message: 'msg'
+    } as ILoginResponse));
+  }
 });

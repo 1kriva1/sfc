@@ -1,6 +1,356 @@
-@use "node_modules/ngx-sfc-common/styles/index" as *;
+@use "ngx-sfc-common/styles/index" as *;
+@import "index";
 
 :host {
-  color: inherit;
-  background-color: $color-1;
+  sfc-modal {
+    .changes-warning-body {
+      @include center;
+
+      flex-direction: column;
+      user-select: none;
+      max-width: 20em;
+      white-space: pre-wrap;
+      text-align: center;
+
+      fa-icon {
+        color: $color-yellow-1;
+      }
+
+      h3 {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .container {
+    display: flex;
+
+    .side {
+      .menu-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: column;
+        position: sticky;
+        top: 1em;
+        bottom: 0;
+
+        sfc-side-menu {
+          ::ng-deep .container {
+            transition:
+              background $transition-theme-backround-duration $transition-theme-backround-timing-function,
+              width $transition-duration-default ease-in-out;
+          }
+        }
+
+        sfc-theme-toggler {
+          @include center-wrap;
+
+          padding: 3em 0;
+        }
+      }
+    }
+
+    .content {
+      width: 100%;
+      padding: 0 2em 2em;
+      overflow: hidden;
+
+      .title {
+        .back {
+          @include theme-value(color, $color-default, $color-0);
+
+          cursor: pointer;
+
+          span {
+            padding-left: 0.5em;
+          }
+
+          fa-icon,
+          span {
+            transition: color $transition-duration-default $transition-timing-function-default;
+          }
+
+          &:hover {
+            color: $color-hover-default;
+
+            span {
+              color: $color-hover-default;
+            }
+          }
+        }
+      }
+
+      .form {
+        .parts {
+          display: flex;
+
+          .part {
+            @include theme-value(background, #fcfcfc, #0e0d0d);
+
+            transition: background $transition-theme-backround-duration $transition-theme-backround-timing-function;
+            border-radius: 1em;
+            padding: 2em;
+            margin: 0.5em;
+          }
+
+          .left {
+            width: 15%;
+
+            div {
+              @include center;
+
+              flex-direction: column;
+              padding: 0.8em 0;
+            }
+
+            .photo {
+              sfc-image-input {
+                width: 80%;
+              }
+            }
+
+            .info {
+              @include theme-value(color, $color-default, $color-0);
+
+              text-align: center;
+
+              h3 {
+                margin: 0.3em 0;
+              }
+
+              p {
+                @include theme-color($color-8, $color-5);
+
+                font-size: 0.8em;
+                margin: 0;
+
+                span {
+                  color: $color-hover-default;
+                  font-weight: bold;
+                }
+              }
+
+              h3,
+              p {
+                white-space: initial;
+                word-wrap: break-word;
+                max-width: 10em;
+                max-height: 10em;
+                overflow-y: auto;
+              }
+
+              .stars {
+                flex-direction: row;
+                align-items: flex-start;
+              }
+            }
+
+            .errors {
+              @include error-message;
+            }
+
+            .progress {
+              .item {
+                width: 100%;
+                align-items: flex-start;
+
+                span {
+                  @include theme-color($color-7, $color-5);
+
+                  font-size: 0.7em;
+                  padding-top: 0.5em;
+                }
+              }
+            }
+          }
+
+          .combined-part {
+            display: flex;
+            width: 85%;
+
+            .center {
+              width: 100%;
+
+              .invalid-asterisk {
+                font-size: 0.5em;
+                align-self: baseline;
+                padding-left: 0.5em;
+                color: $color-failed;
+              }
+
+              .tabs-container {
+                @include center;
+
+                flex-direction: column;
+                padding: 1em 2em 0;
+              }
+            }
+
+            .right {
+              display: flex;
+              justify-content: flex-start;
+              align-items: baseline;
+              flex-direction: column;
+              max-width: 10%;
+
+              .element {
+                @include center;
+
+                flex-direction: column;
+                padding: 1em 0;
+
+                .label {
+                  text-align: center;
+                  padding: 0.3em 0;
+
+                  h4 {
+                    @include theme-color($color-default, $color-0);
+
+                    margin: 0;
+                  }
+
+                  span {
+                    @include theme-color($color-7, $color-5);
+
+                    font-size: 0.7em;
+                    padding-top: 0.5em;
+                  }
+                }
+
+                sfc-progress-circle {
+                  display: inline-block;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .container {
+      .content {
+        .form {
+          form {
+            .parts {
+              .part {
+                padding: 1em;
+              }
+
+              .left {
+                width: 30%;
+              }
+
+              .combined-part {
+                flex-direction: column-reverse;
+
+                .center {
+                  width: auto;
+                }
+
+                .right {
+                  flex-direction: row;
+                  max-width: 100%;
+
+                  .element {
+                    padding: 1em;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      .content {
+        padding: 0 1em 1em;
+
+        .form {
+          form {
+            .parts {
+              flex-direction: column;
+
+              .part {
+                &.left {
+                  width: auto;
+                }
+
+                &.right {
+                  flex-wrap: wrap;
+                  justify-content: center;
+                }
+              }
+
+              .combined-part {
+                flex-direction: column !important;
+                width: auto;
+
+                .center {
+                  .tabs-container {
+                    padding: 0.5em 1em 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 425px) {
+    .container {
+      .content {
+        padding: 0 0.5em 0.5em;
+
+        .form {
+          form {
+            .parts {
+              .part {
+                padding: 0.5em;
+              }
+
+              .combined-part {
+                .right {
+                  flex-direction: column;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 375px) {
+    .container {
+      .content {
+        padding: 0;
+
+        .form {
+          form {
+            .parts {
+              .combined-part {
+                .center {
+                  .tabs-container {
+                    padding: 0.5em;
+                  }
+                }
+
+                .right {
+                  flex-direction: column;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

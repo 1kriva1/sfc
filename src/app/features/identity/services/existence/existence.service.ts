@@ -1,7 +1,8 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CACHE } from 'src/app/core/interceptors/cache/cache.interceptor';
-import { environment } from 'src/environments/environment';
+import { CACHE } from '@core/interceptors/cache/cache.interceptor';
+import { environment } from '@environments/environment';
+import { Observable } from 'rxjs';
 import { IExistenceResponse } from './existence.response';
 
 @Injectable({
@@ -13,16 +14,16 @@ export class ExistenceService {
 
   constructor(private http: HttpClient) { }
 
-  existByUserName(username: string) {
+  existByUserName(username: string): Observable<IExistenceResponse> {
     return this.http.get<IExistenceResponse>(
-      `${environment.url}${this.EXISTENCE_URI_PART}/name/${username}`,
+      `${environment.identity_url}${this.EXISTENCE_URI_PART}/name/${username}`,
       { context: new HttpContext().set(CACHE, true) }
     );
   }
 
-  existByEmail(email: string) {
+  existByEmail(email: string): Observable<IExistenceResponse> {
     return this.http.get<IExistenceResponse>(
-      `${environment.url}${this.EXISTENCE_URI_PART}/email/${email}`,
+      `${environment.identity_url}${this.EXISTENCE_URI_PART}/email/${email}`,
       { context: new HttpContext().set(CACHE, true) }
     );
   }

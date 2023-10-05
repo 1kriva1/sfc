@@ -1,0 +1,79 @@
+@use "ngx-sfc-common/styles/index" as *;
+
+%position {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+:host {
+  .container {
+    user-select: none;
+
+    .avarage {
+      @include center-wrap;
+
+      justify-content: space-evenly;
+      padding: 0 1em 1.2em;
+
+      .part {
+        padding: 1em;
+
+        h3 {
+          text-align: center;
+        }
+      }
+    }
+
+    .items {
+      display: flex;
+      flex-wrap: wrap;
+
+      .part {
+        flex-grow: 1;
+        width: 30%;
+        margin: 1em;
+
+        .title {
+          @extend %position;
+
+          h3 {
+            margin: 0;
+          }
+
+          span {
+            font-weight: bold;
+            font-size: 1.8em;
+          }
+        }
+
+        .content {
+          min-height: 12.5em;
+          padding: 1em 0 0;
+
+          .line {
+            @extend %position;
+
+            padding: 0.2em 0;
+            font-size: 0.9em;
+
+            .label {
+              overflow-wrap: break-word;
+              width: 50%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      .items {
+        .part {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

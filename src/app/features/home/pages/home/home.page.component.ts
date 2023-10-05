@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { faMoon, faSun } from '@fortawesome/free-regular-svg-icons';
 import {
   faFootball, faMagnifyingGlass, faCirclePlus, faMountain, faBasketball, faTableTennisPaddleBall, faVolleyball,
@@ -7,8 +8,10 @@ import {
 import { ComponentSize, getCssLikeValue } from 'ngx-sfc-common';
 import { ISideMenuItemModel, ISideMenuModel, SideMenuItemType } from 'ngx-sfc-components';
 import { map, Observable } from 'rxjs';
-import { HeaderService } from 'src/app/core/components';
-import { IdentityService } from 'src/app/share/services/identity/identity.service';
+import { HeaderService } from '@core/components';
+import { buildTitle } from '@core/utils';
+import { IdentityService } from '@share/services/identity/identity.service';
+import { HomePageLocalization } from './home.page.localization';
 
 @Component({
   templateUrl: './home.page.component.html',
@@ -20,6 +23,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
   faSun = faSun;
 
   ComponentSize = ComponentSize;
+  Localization = HomePageLocalization;
 
   public userId!: string;
 
@@ -144,11 +148,15 @@ export class HomePageComponent implements OnInit, AfterViewInit {
 
   public headerTop$!: Observable<string>;
 
-  constructor(private identityService: IdentityService, public headerService: HeaderService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(
+    private identityService: IdentityService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private titleService: Title,
+    public headerService: HeaderService) { }
 
   ngOnInit(): void {
     this.userId = this.identityService.userId as string;
+    this.titleService.setTitle(buildTitle(this.Localization.PAGE_TITLE));
   }
 
   ngAfterViewInit(): void {

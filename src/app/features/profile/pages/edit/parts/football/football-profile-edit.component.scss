@@ -1,0 +1,27 @@
+:host {
+  .container {
+    .row {
+      .column {
+        ::ng-deep sfc-number-input {
+          .container {
+            .content {
+              .component {
+                sfc-number-spinner {
+                  .sfc-input {
+                    max-width: 2em;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.physical {
+        .column {
+          justify-content: center;
+        }
+      }
+    }
+  }
+}

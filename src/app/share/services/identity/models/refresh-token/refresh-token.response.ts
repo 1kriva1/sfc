@@ -1,4 +1,4 @@
-import { BaseErrorResponse } from "src/app/share/models/base-error.response";
+import { BaseErrorResponse } from "@core/models/http/base-error.response";
 import { IToken } from "../../../token/token.model";
 
 export interface IRefreshTokenResponse extends BaseErrorResponse {

@@ -1,0 +1,123 @@
+<div class="container" [formGroupName]="ProfileEditPagePart.General">
+  <sfc-title [sfcComponentSize] [customSize]="1.5" [label]="Localization.TITLE.GENERAL.LABEL"
+    [description]="Localization.TITLE.GENERAL.DESCRIPTION" [tooltip]="Localization.TITLE.GENERAL.TOOLTIP">
+  </sfc-title>
+
+  <div class="row">
+    <div class="column">
+      <sfc-text-input id="first-name" formControlName="firstName"
+        [label]="Localization.INPUT.FIRST_NAME.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.FIRST_NAME.LABEL_PLACEHOLDER" [bordered]="true" [validations]="{
+          required: Localization.INPUT.FIRST_NAME.VALIDATIONS.REQUIRED, 
+          maxlength: Localization.INPUT.FIRST_NAME.VALIDATIONS.MAX_LENGTH
+        }">
+      </sfc-text-input>
+    </div>
+
+    <div class="column">
+      <sfc-text-input id="last-name" formControlName="lastName" [label]="Localization.INPUT.LAST_NAME.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.LAST_NAME.LABEL_PLACEHOLDER" [bordered]="true" [validations]="{
+          required: Localization.INPUT.LAST_NAME.VALIDATIONS.REQUIRED, 
+          maxlength: Localization.INPUT.LAST_NAME.VALIDATIONS.MAX_LENGTH
+        }">
+      </sfc-text-input>
+    </div>
+
+    <div class="column">
+      <sfc-datetime-input id="birthday" formControlName="birthday" [time]="false"
+        [label]="Localization.INPUT.BIRTHDAY.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.BIRTHDAY.LABEL_PLACEHOLDER" [switchOnClick]="true" [fullSize]="true"
+        [hideOnClickOutside]="true" [locale]="locale" [bordered]="true"
+        [modalButtonsModel]="DATE_INPUT_MODAL_BUTTONS_MODEL" [minDate]="birtdayLimits.min"
+        [maxDate]="birtdayLimits.max">
+      </sfc-datetime-input>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <sfc-text-input id="city" formControlName="city" [label]="Localization.INPUT.CITY.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.CITY.LABEL_PLACEHOLDER" [bordered]="true"
+        [helperText]="Localization.INPUT.CITY.HELPER_TEXT" [validations]="{
+          required: Localization.INPUT.CITY.VALIDATIONS.REQUIRED, 
+          maxlength: Localization.INPUT.CITY.VALIDATIONS.MAX_LENGTH
+        }">
+      </sfc-text-input>
+    </div>
+
+    <div class="column">
+      <sfc-text-area-input id="biography" formControlName="biography" [bordered]="true"
+        [label]="Localization.INPUT.BIOGRAPHY.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.BIOGRAPHY.LABEL_PLACEHOLDER"
+        [helperText]="Localization.INPUT.BIOGRAPHY.HELPER_TEXT"
+        [validations]="{maxlength: Localization.INPUT.BIOGRAPHY.VALIDATIONS.MAX_LENGTH}">
+      </sfc-text-area-input>
+    </div>
+
+    <div class="column">
+      <sfc-tags-input id="tags" formControlName="tags" [label]="Localization.INPUT.TAGS.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.TAGS.LABEL_PLACEHOLDER" [helperText]="Localization.INPUT.TAGS.HELPER_TEXT"
+        [bordered]="true" [newTagPlaceholder]="'+ '+Localization.INPUT.TAGS.NEW_TAG_PLACEHOLDER"
+        [maxTagLength]="Constants.MAX_TAG_VALUE_LENGTH" [validations]="{
+          'sfc-empty': Localization.INPUT.TAGS.VALIDATIONS.EMPTY, 
+          'sfc-duplicate': Localization.INPUT.TAGS.VALIDATIONS.DUPLICATE, 
+          'sfc-tags-length': MAX_TAG_VALUE_VALIDATION, 
+          'sfc-max-array-length': Localization.INPUT.TAGS.VALIDATIONS.TAGS_LENGTH
+        }">
+      </sfc-tags-input>
+    </div>
+  </div>
+
+  <ng-container formGroupName="availability">
+    <sfc-title [sfcComponentSize] [customSize]="1.5" [label]="Localization.TITLE.AVAILABILITY.LABEL"
+      [description]="Localization.TITLE.AVAILABILITY.DESCRIPTION" [tooltip]="Localization.TITLE.AVAILABILITY.TOOLTIP">
+    </sfc-title>
+
+    <div class="row">
+      <div class="column">
+        <sfc-datetime-input id="from-time" formControlName="from" [time]="true" [date]="false"
+          [label]="Localization.INPUT.AVAILABLE_FROM.LABEL_PLACEHOLDER"
+          [placeholder]="Localization.INPUT.AVAILABLE_FROM.LABEL_PLACEHOLDER"
+          [helperText]="Localization.INPUT.AVAILABLE_FROM.HELPER_TEXT" [switchOnClick]="true" [fullSize]="true"
+          [bordered]="true" [hideOnClickOutside]="true" [locale]="locale"
+          [modalButtonsModel]="DATE_INPUT_MODAL_BUTTONS_MODEL"
+          [validations]="{'sfc-compare-than': Localization.INPUT.AVAILABLE_FROM.VALIDATIONS.COMPARE}">
+        </sfc-datetime-input>
+      </div>
+
+      <div class="column">
+        <sfc-datetime-input id="to-time" formControlName="to" [time]="true" [date]="false"
+          [label]="Localization.INPUT.AVAILABLE_TO.LABEL_PLACEHOLDER"
+          [placeholder]="Localization.INPUT.AVAILABLE_TO.LABEL_PLACEHOLDER"
+          [helperText]="Localization.INPUT.AVAILABLE_TO.HELPER_TEXT" [switchOnClick]="true" [fullSize]="true"
+          [bordered]="true" [hideOnClickOutside]="true" [locale]="locale"
+          [modalButtonsModel]="DATE_INPUT_MODAL_BUTTONS_MODEL"
+          [validations]="{'sfc-compare-than': Localization.INPUT.AVAILABLE_TO.VALIDATIONS.COMPARE}">
+        </sfc-datetime-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column">
+        <sfc-select-input id="available-days" formControlName="days"
+          [label]="Localization.INPUT.AVAILABLE_DAYS.LABEL_PLACEHOLDER"
+          [placeholder]="Localization.INPUT.AVAILABLE_DAYS.LABEL_PLACEHOLDER"
+          [helperText]="Localization.INPUT.AVAILABLE_DAYS.HELPER_TEXT" [data]="WEEK_DAYS" [multiple]="true"
+          [showDefaultItem]="false" [bordered]="true" [size]="7">
+        </sfc-select-input>
+      </div>
+    </div>
+  </ng-container>
+
+  <sfc-title [sfcComponentSize] [customSize]="1.5" [label]="Localization.TITLE.FINANCIAL.LABEL"
+    [description]="Localization.TITLE.FINANCIAL.DESCRIPTION" [tooltip]="Localization.TITLE.FINANCIAL.TOOLTIP">
+  </sfc-title>
+
+  <div class="row">
+    <div class="column full">
+      <sfc-checkbox-input id="free-play" formControlName="freePlay" [checkmarkType]="CheckmarkType.Rounded"
+        [sideLabel]="Localization.INPUT.FREE_PLAY.LABEL" [helperText]="Localization.INPUT.FREE_PLAY.HELPER_TEXT">
+      </sfc-checkbox-input>
+    </div>
+  </div>
+</div>

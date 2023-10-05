@@ -1,0 +1,198 @@
+@use "ngx-sfc-common/styles/index" as *;
+@import "mixins";
+
+@mixin delimeter-color($stick, $direction, $slice) {
+  @if $stick {
+    border-image:
+      linear-gradient(
+        to $direction,
+        rgb(0 0 0 / 0%) 0%,
+        rgb(0 0 0 / 30%) 47%,
+        rgb(0 0 0 / 30%) 53%,
+        rgb(0 0 0 / 30%) 100%
+      )
+      $slice;
+  } @else {
+    border-image:
+      linear-gradient(
+        to $direction,
+        rgb(255 255 255 / 0%) 0%,
+        rgb(255 255 255 / 40%) 47%,
+        rgb(255 255 255 / 40%) 53%,
+        rgb(255 255 255 / 40%) 100%
+      )
+      $slice;
+  }
+}
+
+@mixin hamburger-menu($color) {
+  sfc-hamburger-menu {
+    .container {
+      span {
+        color: $color !important;
+        background: $color !important;
+      }
+
+      &:hover {
+        span {
+          background: $color-hover-default !important;
+
+          &.text {
+            color: $color-hover-default !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 9999;
+
+  sfc-base-header {
+    ::ng-deep header {
+      transition:
+        padding $transition-duration-default $transition-timing-function-default,
+        background-color $transition-duration-default $transition-timing-function-default;
+      padding: 2em 5em;
+
+      .logo {
+        color: $color-0;
+
+        @include hamburger-menu($color-0);
+      }
+
+      nav {
+        ul {
+          li {
+            a {
+              @include navigation-color($color-0);
+            }
+          }
+        }
+      }
+
+      .right {
+        sfc-language-toggler {
+          sfc-dropdown-menu {
+            .container {
+              color: $color-0 !important;
+
+              &:hover {
+                color: $color-hover-default !important;
+              }
+            }
+          }
+        }
+
+        sfc-delimeter {
+          span::before {
+            @include delimeter-color(false, bottom, 1 100%);
+          }
+
+          span::after {
+            @include delimeter-color(false, top, 1 100%);
+          }
+        }
+      }
+    }
+
+    .identity {
+      @include center-wrap;
+
+      gap: 0.5em;
+
+      sfc-button {
+        padding: 0.2em 0;
+
+        ::ng-deep .button {
+          @include navigation-color-border($color-0);
+        }
+      }
+    }
+
+    &.open {
+      .identity {
+        sfc-button {
+          padding: 1em 0;
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &.stick {
+    sfc-base-header:not(.open) {
+      ::ng-deep header {
+        padding: 0.5em 5em;
+        background-color: $color-1;
+
+        .logo {
+          color: $color-default;
+
+          @include hamburger-menu($color-default);
+        }
+
+        nav {
+          ul {
+            li {
+              a {
+                @include navigation-color($color-default);
+              }
+            }
+          }
+        }
+
+        .right {
+          sfc-language-toggler {
+            sfc-dropdown-menu {
+              .container {
+                color: $color-default !important;
+
+                &:hover {
+                  color: $color-hover-default !important;
+                }
+              }
+            }
+          }
+
+          sfc-delimeter {
+            span::before {
+              @include delimeter-color(true, bottom, 1 100%);
+            }
+
+            span::after {
+              @include delimeter-color(true, top, 1 100%);
+            }
+          }
+        }
+
+        .identity {
+          sfc-button {
+            .button {
+              @include navigation-color-border($color-default);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .identity {
+      gap: 0.3em;
+    }
+
+    &.stick {
+      sfc-base-header:not(.open) {
+        ::ng-deep header {
+          padding: 1em 2em;
+        }
+      }
+    }
+  }
+}

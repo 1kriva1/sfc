@@ -1,5 +1,6 @@
 export const environment = {
     production: true,
-    url: 'http://localhost:4000',
+    identity_url: 'https://localhost:7266',
+    players_url: 'https://localhost:7366',
     cacheAgeMs: 30000
 };

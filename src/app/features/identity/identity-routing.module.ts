@@ -1,17 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { RoutKey } from 'src/app/core/enums';
-import { LoginPageComponent } from './pages/login/login.page.component';
-import { RegistrationPageComponent } from './pages/registration/registration.page.component';
+import { RoutKey } from '@core/enums';
+import { LoginPageComponent, RegistrationPageComponent } from './pages';
 
 const routes: Routes = [
   {
     path: RoutKey.Registration,
-    component: RegistrationPageComponent,
+    component: RegistrationPageComponent
   },
   {
     path: RoutKey.Login,
-    component: LoginPageComponent,
+    component: LoginPageComponent
   },
   {
     path: '',

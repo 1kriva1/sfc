@@ -1,12 +1,12 @@
-@use "node_modules/ngx-sfc-common/styles/index" as *;
-@import "../../../../styles/mixins";
+@use "ngx-sfc-common/styles/index" as *;
+@import "mixins";
 
 :host {
   display: block;
   height: 100vh;
 
   .container {
-    background-image: url("/assets/images/core/pages/not-found/background.jpg");
+    background-image: url("../../assets/images/pages/not-found/background.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

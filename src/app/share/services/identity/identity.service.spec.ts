@@ -1,18 +1,25 @@
 import { HttpContext } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { CommonConstants } from 'src/app/core/constants';
-import { LOADER } from 'src/app/core/interceptors/loader/loader.interceptor';
-import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { CommonConstants } from '@core/constants';
+import { RoutKey } from '@core/enums';
+import { LOADER } from '@core/interceptors/loader/loader.interceptor';
+import { buildPath } from '@core/utils';
+import { environment } from '@environments/environment';
+import { of, throwError } from 'rxjs';
 import { IToken } from '../token/token.model';
 import { TokenService } from '../token/token.service';
-import { IdentityConstants } from './identity.constants';
+import { IdentityServiceConstants } from './identity.constants';
 import { IdentityService } from './identity.service';
-import { ILoginRequest, ILoginResponse, ILogoutRequest, ILogoutResponse, IRegistrationRequest, IRegistrationResponse } from './models';
+import {
+    ILoginRequest, ILoginResponse, ILogoutRequest, ILogoutResponse,
+    IRegistrationRequest, IRegistrationResponse
+} from './models';
 import { IRefreshTokenRequest } from './models/refresh-token/refresh-token.request';
 import { IRefreshTokenResponse } from './models/refresh-token/refresh-token.response';
 
-describe('Share.Service: Identity', () => {
+describe('Share.Service:Identity', () => {
     let service: IdentityService;
     let tokenServiceStub: Partial<TokenService> = {
         remove: () => { },
@@ -21,13 +28,17 @@ describe('Share.Service: Identity', () => {
         valid: false
     };
     let httpMock: HttpTestingController;
+    let routerMock = { navigate: jasmine.createSpy('navigate') };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 HttpClientTestingModule,
             ],
-            providers: [{ provide: TokenService, useValue: tokenServiceStub }],
+            providers: [
+                { provide: Router, useValue: routerMock },
+                { provide: TokenService, useValue: tokenServiceStub }
+            ],
             teardown: { destroyAfterEach: false }
         });
 
@@ -86,7 +97,7 @@ describe('Share.Service: Identity', () => {
         service.token$.subscribe((token: IToken) =>
             expect(token).toEqual(response.Token));
 
-        const testRequest = httpMock.expectOne(`${environment.url}${IdentityConstants.IDENTITY_URI_PART}/register`);
+        const testRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/register`);
 
         expect(testRequest.request.body).toEqual(request);
         expect(testRequest.request.context).toEqual(new HttpContext().set(LOADER, true));
@@ -101,7 +112,7 @@ describe('Share.Service: Identity', () => {
         expect(tokenServiceStub.set).toHaveBeenCalledOnceWith(response.Token);
         expect((service as any).setAutoRefresh).toHaveBeenCalledOnceWith(response.Token);
         expect(window.localStorage.setItem)
-            .toHaveBeenCalledOnceWith(`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.USER_ID_KEY}`, response.UserId as string);
+            .toHaveBeenCalledOnceWith(`${CommonConstants.APPLICATION_PREFIX}-${IdentityServiceConstants.USER_ID_KEY}`, response.UserId as string);
     });
 
     fit('Should login player', (done) => {
@@ -127,7 +138,7 @@ describe('Share.Service: Identity', () => {
         service.token$.subscribe((token: IToken) =>
             expect(token).toEqual(response.Token));
 
-        const testRequest = httpMock.expectOne(`${environment.url}${IdentityConstants.IDENTITY_URI_PART}/login`);
+        const testRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/login`);
 
         expect(testRequest.request.body).toEqual(request);
         expect(testRequest.request.context).toEqual(new HttpContext().set(LOADER, true));
@@ -143,8 +154,8 @@ describe('Share.Service: Identity', () => {
         expect((service as any).setAutoRefresh).toHaveBeenCalledOnceWith(response.Token);
         expect((window.localStorage.setItem as any).calls.allArgs())
             .toEqual([
-                [`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.USER_ID_KEY}`, response.UserId],
-                [`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.REMEMBER_ME_KEY}`, `${request.RememberMe}`]
+                [`${CommonConstants.APPLICATION_PREFIX}-${IdentityServiceConstants.USER_ID_KEY}`, response.UserId],
+                [`${CommonConstants.APPLICATION_PREFIX}-${IdentityServiceConstants.REMEMBER_ME_KEY}`, `${request.RememberMe}`]
             ]);
     });
 
@@ -170,7 +181,7 @@ describe('Share.Service: Identity', () => {
             done();
         });
 
-        const testRequest = httpMock.expectOne(`${environment.url}${IdentityConstants.IDENTITY_URI_PART}/refresh`);
+        const testRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/refresh`);
 
         expect(testRequest.request.body).toEqual(request);
 
@@ -204,7 +215,7 @@ describe('Share.Service: Identity', () => {
         service.token$.subscribe((token: IToken) =>
             expect(token).toBeNull());
 
-        const testRequest = httpMock.expectOne(`${environment.url}${IdentityConstants.IDENTITY_URI_PART}/logout`);
+        const testRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/logout`);
 
         expect(testRequest.request.body).toEqual(request);
         expect(testRequest.request.context).toEqual(new HttpContext().set(LOADER, true));
@@ -218,7 +229,7 @@ describe('Share.Service: Identity', () => {
 
         expect(tokenServiceStub.remove).toHaveBeenCalledTimes(1);
         expect(window.localStorage.removeItem)
-            .toHaveBeenCalledOnceWith(`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.USER_ID_KEY}`);
+            .toHaveBeenCalledOnceWith(`${CommonConstants.APPLICATION_PREFIX}-${IdentityServiceConstants.USER_ID_KEY}`);
         expect(clearTimeout).toHaveBeenCalledWith((service as any).refreshTokenTimeout);
     });
 
@@ -237,10 +248,51 @@ describe('Share.Service: Identity', () => {
 
         tick();
 
-        httpMock.expectOne(`${environment.url}${IdentityConstants.IDENTITY_URI_PART}/refresh`);
+        httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/refresh`);
 
         expect((service as any).refreshTokenTimeout).toBeDefined();
         expect((service as any)._refreshSubscription).toBeDefined();
+    }));
+
+    fit('Should logout on failed auto refresh', fakeAsync(() => {
+        spyOn(service, 'logout').and.callThrough();
+        spyOn(service, 'refreshToken' as any).and.returnValue(of({
+            Token: null,
+            Success: false,
+            Errors: null,
+            Message: 'msg'
+        }));
+        (tokenServiceStub as any).expiredDate = new Date();
+
+        service.setAutoRefresh({ Access: 'access', Refresh: 'refresh' });
+
+        tick();
+
+        const logoutTestRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/logout`);
+        logoutTestRequest.flush({ Success: true, Message: 'msg' });
+
+        expect((service as any).refreshTokenTimeout).toBeDefined();
+        expect((service as any)._refreshSubscription).toBeDefined();
+        expect(service.logout).toHaveBeenCalledTimes(1);
+        expect(routerMock.navigate).toHaveBeenCalledWith([buildPath(RoutKey.Home)]);
+    }));
+
+    fit('Should logout on auto refresh error', fakeAsync(() => {
+        spyOn(service, 'logout').and.callThrough();
+        spyOn(service, 'refreshToken' as any).and.returnValue(throwError(() => new Error()));
+        (tokenServiceStub as any).expiredDate = new Date();
+
+        service.setAutoRefresh({ Access: 'access', Refresh: 'refresh' });
+
+        tick();
+
+        const logoutTestRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/logout`);
+        logoutTestRequest.flush({ Success: true, Message: 'msg' });
+
+        expect((service as any).refreshTokenTimeout).toBeDefined();
+        expect((service as any)._refreshSubscription).toBeDefined();
+        expect(service.logout).toHaveBeenCalledTimes(1);
+        expect(routerMock.navigate).toHaveBeenCalledWith([buildPath(RoutKey.Home)]);
     }));
 
     fit('Should clear previous timers during auto refresh', fakeAsync(() => {
@@ -253,7 +305,7 @@ describe('Share.Service: Identity', () => {
 
         tick(60000);
 
-        httpMock.expectOne(`${environment.url}${IdentityConstants.IDENTITY_URI_PART}/refresh`);
+        httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/refresh`);
 
         const spyUnsubscribe = spyOn(
             (service as any)._refreshSubscription,
@@ -268,7 +320,7 @@ describe('Share.Service: Identity', () => {
 
         tick();
 
-        httpMock.expectOne(`${environment.url}${IdentityConstants.IDENTITY_URI_PART}/refresh`);
+        httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/refresh`);
 
         discardPeriodicTasks();
     }));
@@ -282,7 +334,7 @@ describe('Share.Service: Identity', () => {
     fit('Should return user id from local storage', () => {
         const assertUserId = 'local-user-id';
 
-        window.localStorage.setItem(`${CommonConstants.APPLICATION_PREFIX}-${IdentityConstants.USER_ID_KEY}`,
+        window.localStorage.setItem(`${CommonConstants.APPLICATION_PREFIX}-${IdentityServiceConstants.USER_ID_KEY}`,
             assertUserId);
 
         expect(service.userId).toEqual(assertUserId);
@@ -318,7 +370,7 @@ describe('Share.Service: Identity', () => {
         expect(service.rememberMe).toBeFalse();
     });
 
-    fit('Should not be remembered user, if explicity defined', () => {
+    fit('Should not be remembered user, if explicfity defined', () => {
         loginPlayer(false);
 
         expect(service.rememberMe).toBeFalse();
@@ -340,7 +392,7 @@ describe('Share.Service: Identity', () => {
 
         service.login(request).subscribe();
 
-        httpMock.expectOne(`${environment.url}${IdentityConstants.IDENTITY_URI_PART}/login`)
+        httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/login`)
             .flush(response);
 
         return response;

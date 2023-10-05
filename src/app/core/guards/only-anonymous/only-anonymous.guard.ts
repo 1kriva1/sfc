@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router, Route, UrlSegment, CanMatch } from '@angular/router';
 import { map, Observable } from 'rxjs';
-import { IdentityService } from 'src/app/share/services/identity/identity.service';
-import { IToken } from 'src/app/share/services/token/token.model';
-import { TokenService } from 'src/app/share/services/token/token.service';
+import { IdentityService } from '@share/services/identity/identity.service';
+import { IToken } from '@share/services/token/token.model';
+import { TokenService } from '@share/services/token/token.service';
 import { RoutKey } from '../../enums';
 import { buildPath } from '../../utils';
 

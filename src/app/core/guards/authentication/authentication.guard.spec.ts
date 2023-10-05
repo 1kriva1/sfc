@@ -1,10 +1,10 @@
 import { Route, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
-import { IdentityService } from "src/app/share/services/identity/identity.service";
-import { TokenService } from "src/app/share/services/token/token.service";
+import { IdentityService } from "@share/services/identity/identity.service";
+import { TokenService } from "@share/services/token/token.service";
 import { RoutKey } from "../../enums";
 import { CanMatchAuthorized } from "./authentication.guard";
-import { IToken } from 'src/app/share/services/token/token.model';
+import { IToken } from '@share/services/token/token.model';
 
 describe('Core.Guard:CanMatchAuthorized', () => {
     const dummyRoute = { path: '/home' } as Route;

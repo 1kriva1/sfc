@@ -1,4 +1,4 @@
-import { BaseResponse } from "src/app/share/models/base.response";
+import { BaseResponse } from "@core/models";
 
 export interface IExistenceResponse extends BaseResponse{
     Exist: boolean;

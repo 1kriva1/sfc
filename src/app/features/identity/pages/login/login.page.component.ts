@@ -1,19 +1,22 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { isEmail } from 'ngx-sfc-common';
-import { ButtonType, CheckmarkType, Direction } from 'ngx-sfc-common';
+import { ButtonType, CheckmarkType, Direction, isEmail } from 'ngx-sfc-common';
 import { SliderType } from 'ngx-sfc-components';
 import { Subscription, startWith, switchMap, fromEvent, tap, map, filter, catchError, of } from 'rxjs';
-import { RoutKey } from 'src/app/core/enums';
-import { IForm } from 'src/app/core/models';
-import { buildPath } from 'src/app/core/utils';
-import { BaseErrorResponse } from 'src/app/share/models/base-error.response';
-import { IdentityService } from 'src/app/share/services/identity/identity.service';
-import { ILoginRequest, ILoginResponse } from 'src/app/share/services/identity/models';
+import { RoutKey } from '@core/enums';
+import { BaseResponse, IForm } from '@core/models';
+import { buildPath, buildTitle, markFormTouchedAndDirty } from '@core/utils';
+import { BaseErrorResponse } from '@core/models/http/base-error.response';
+import { IdentityService } from '@share/services/identity/identity.service';
+import { ILoginRequest, ILoginResponse } from '@share/services/identity/models';
 import { ILoginFormModel } from './login-form.model';
 import { LoginPageConstants } from './login.page.constants';
 import { LoginPageLocalization } from './login.page.localization';
+import { PlayerService } from '@share/services/player/player.service';
+import { IGetPlayerByUserResponse } from '@share/services';
+import { Title } from '@angular/platform-browser';
+import { HttpConstants } from '@core/constants';
 
 @Component({
   selector: 'sfc-login.page',
@@ -39,11 +42,16 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _subscription!: Subscription;
 
+  private _logoutSubscription!: Subscription;
+
   public loginForm!: FormGroup
 
-  constructor(private fb: FormBuilder,
+  constructor(
+    private fb: FormBuilder,
     private router: Router,
-    private identityService: IdentityService) { }
+    private identityService: IdentityService,
+    private playerService: PlayerService,
+    private titleService: Title) { }
 
   ngOnInit(): void {
     const controls: IForm<ILoginFormModel> = {
@@ -53,6 +61,7 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
     };
 
     this.loginForm = this.fb.group(controls);
+    this.titleService.setTitle(buildTitle(this.Localization.PAGE_TITLE));
   }
 
   ngAfterViewInit(): void {
@@ -62,34 +71,24 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
       switchMap((value: ILoginFormModel) => {
         return fromEvent<InputEvent>(this.submitBtn.nativeElement, 'click')
           .pipe(
-            tap(() => {
-              if (!this.submitted) {
-                this.submitted = true;
-                this.loginForm.markAllAsTouched();
-                Object.keys(this.loginForm.controls).forEach(key => this.loginForm.get(key)?.markAsDirty());
-              }
-            }),
+            tap(() => this.tapSubmit()),
             filter(() => this.loginForm.valid),
-            map(() => {
-              const request: ILoginRequest = {
-                Password: value.password,
-                RememberMe: value.remember
-              };
-
-              if (isEmail(value.userNameEmail))
-                request.Email = value.userNameEmail;
-              else
-                request.UserName = value.userNameEmail;
-
-              return request;
-            }),
+            map(() => this.mapRequest(value)),
             switchMap((request: ILoginRequest) =>
               this.identityService.login(request).pipe(
-                catchError((error) =>of(error))
+                filter((response: ILoginResponse) => response.Success),
+                switchMap(() => this.playerService.get()
+                  .pipe(
+                    catchError(() => {
+                      this._logoutSubscription = this.identityService.logout()
+                        .subscribe();
+                      return of(HttpConstants.FAILED_RESPONSE);
+                    }))),
+                catchError(error => of(error))
               ))
           );
       })
-    ).subscribe((response: ILoginResponse) => {
+    ).subscribe((response: IGetPlayerByUserResponse | BaseResponse) => {
       this.error = response.Success ? null : response as BaseErrorResponse;
 
       if (response.Success)
@@ -99,5 +98,27 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._subscription.unsubscribe();
+    this._logoutSubscription?.unsubscribe();
+  }
+
+  private tapSubmit(): void {
+    if (!this.submitted) {
+      this.submitted = true;
+      markFormTouchedAndDirty(this.loginForm);
+    }
+  }
+
+  private mapRequest(value: ILoginFormModel): ILoginRequest {
+    const request: ILoginRequest = {
+      Password: value.password,
+      RememberMe: value.remember
+    };
+
+    if (isEmail(value.userNameEmail))
+      request.Email = value.userNameEmail;
+    else
+      request.UserName = value.userNameEmail;
+
+    return request;
   }
 }

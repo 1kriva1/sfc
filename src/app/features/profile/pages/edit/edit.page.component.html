@@ -1,1 +1,168 @@
-<h1>Profile edit</h1>
+<div class="container">
+    <div class="side" *ngIf="!headerService.open">
+        <div class="menu-container">
+            <sfc-side-menu [model]="Constants.SIDE_MENU_MODEL">
+            </sfc-side-menu>
+
+            <sfc-theme-toggler [sfcComponentSize] [customSize]="0.8">
+            </sfc-theme-toggler>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="title">
+            <a class="back" routerLink="/home">
+                <fa-icon [icon]="faArrowLeft"></fa-icon>
+                <span i18n="@@core.action.back">Back</span>
+            </a>
+            <sfc-title [sfcComponentSize] [customSize]="2"
+                [label]="sharedPlayerService.playerCreated ? Localization.TITLE.UPDATE.LABEL : Localization.TITLE.CREATE.LABEL"
+                [description]="sharedPlayerService.playerCreated ? Localization.TITLE.UPDATE.DESCRIPTION : Localization.TITLE.CREATE.DESCRIPTION"
+                [tooltip]="sharedPlayerService.playerCreated ? Localization.TITLE.UPDATE.TOOLTIP : Localization.TITLE.CREATE.TOOLTIP">
+            </sfc-title>
+        </div>
+
+        <div class="form">
+            <form [formGroup]="profileForm" autocomplete="off">
+                <div class="parts" *ngIf="((vm$ | async) || $any({})) as vm">
+                    <div class="part left">
+                        <div class="photo">
+                            <sfc-image-input id="photo" formControlName="photo" [label]="Localization.INPUT.PHOTO.LABEL"
+                                [helperText]="Localization.INPUT.PHOTO.HELPER_TEXT" [icon]="faCamera"
+                                [clearButton]="false" [hideOnClickOutside]="true"
+                                [defaultPhoto]="ApplicationCommonConstants.DEFAULT_AVATAR_PATH"
+                                [okLabel]="Localization.BUTTON_OK_LABEL"
+                                [cancelLabel]="Localization.BUTTON_CANCEL_LABEL" [validations]="{
+                                    'sfc-format': Localization.INPUT.PHOTO.VALIDATIONS.INVALID_FORMAT,
+                                    'sfc-file-max-size': PHOTO_MAX_SIZE_VALIDATION
+                                }">
+                            </sfc-image-input>
+                        </div>
+
+                        <div class="info">
+                            <div class="stars">
+                                <sfc-stars [value]="vm.raiting?.stars"></sfc-stars>
+                                <sfc-icon-tooltip [sfcComponentSize] [customSize]="0.6"
+                                    [tooltip]="Localization.STARS_TOOLTIP" [icon]="faQuestionCircle">
+                                </sfc-icon-tooltip>
+                            </div>
+                            <h3>{{vm.personal?.firstName}} {{vm.personal?.lastName}}</h3>
+                            <p>{{vm.personal?.position.value}} • <span>{{vm.personal?.city}}</span></p>
+                        </div>
+
+                        <div [sfcShowHideElement]="error !== null" class="errors">
+                            <span class="error-message">{{error?.Message}}</span>
+                        </div>
+
+                        <div class="actions">
+                            <sfc-button #submitBtn
+                                [text]="sharedPlayerService.playerCreated ? Localization.BUTTON_UPDATE_TEXT : Localization.BUTTON_CREATE_TEXT"
+                                [types]="[ButtonType.Rounded, ButtonType.Filled]" [disabled]="submitDisabled">
+                            </sfc-button>
+                        </div>
+
+                        <div class="progress">
+                            <div class="item">
+                                <sfc-progress-line [labelStart]="Localization.PROGRESS.GENERAL_LABEL"
+                                    [progress]="vm.progress?.general.percentage"
+                                    [labelSuffix]="CommonConstants.PERCENTAGE_SYMBOL">
+                                </sfc-progress-line>
+                                <span>{{vm.progress?.general.filled}} {{Localization.PROGRESS.OF}}
+                                    {{vm.progress?.general.properties}} {{Localization.PROGRESS.FILLED}}</span>
+                            </div>
+
+                            <div class="item">
+                                <sfc-progress-line [labelStart]="Localization.PROGRESS.FOOTBALL_LABEL"
+                                    [progress]="vm.progress?.football.percentage"
+                                    [labelSuffix]="CommonConstants.PERCENTAGE_SYMBOL">
+                                </sfc-progress-line>
+                                <span>{{vm.progress?.football.filled}} {{Localization.PROGRESS.OF}}
+                                    {{vm.progress?.football.properties}} {{Localization.PROGRESS.FILLED}}</span>
+                            </div>
+
+                            <div class="item">
+                                <sfc-progress-line [labelStart]="Localization.PROGRESS.STATS_LABEL"
+                                    [progress]="statsService.stats.percentage"
+                                    [labelSuffix]="CommonConstants.PERCENTAGE_SYMBOL">
+                                </sfc-progress-line>
+                                <span>{{statsService.stats.difference}} {{Localization.PROGRESS.POINTS}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="combined-part">
+                        <div class="part center">
+                            <sfc-tabs [tabs]="Constants.TABS">
+                                <ng-template [sfcTemplateReference]="TabsTemplate.Label" let-label>
+                                    <sfc-tab-label-line [selected]="label.selected" [disabled]="label.disabled"
+                                        label="{{label.label}}" [icon]="label.icon">
+                                        <fa-icon class="invalid-asterisk"
+                                            *ngIf="isSubmitted && profileForm.controls[label.data]?.invalid"
+                                            [icon]="faAsterisk"></fa-icon>
+                                    </sfc-tab-label-line>
+                                </ng-template>
+
+                                <ng-template [sfcTemplateReference]="TabsTemplate.Slider" let-data>
+                                    <sfc-tab-label-line-slider [count]="data.count" [index]="data.index">
+                                    </sfc-tab-label-line-slider>
+                                </ng-template>
+
+                                <ng-template [sfcTemplateReference]="TabsTemplate.Body" let-data>
+                                    <div class="tabs-container">
+                                        <sfc-general-profile-edit [sfcIf]="data === ProfileEditPagePart.General">
+                                        </sfc-general-profile-edit>
+
+                                        <sfc-football-profile-edit [sfcIf]="data === ProfileEditPagePart.Football">
+                                        </sfc-football-profile-edit>
+
+                                        <sfc-stats-profile-edit [sfcIf]="data === ProfileEditPagePart.Stats">
+                                        </sfc-stats-profile-edit>
+                                    </div>
+                                </ng-template>
+                            </sfc-tabs>
+                        </div>
+
+                        <div class="part right">
+                            <div class="element">
+                                <sfc-progress-circle [progress]="vm.raiting?.percentage">
+                                </sfc-progress-circle>
+
+                                <div class="label">
+                                    <h4 i18n="@@feature.profile.edit.page.total-rating-percentage.label">Total rating
+                                        (percentage)</h4>
+                                    <span i18n="@@feature.profile.edit.page.total-rating-percentage.description">Average
+                                        value from
+                                        your stats</span>
+                                </div>
+                            </div>
+
+                            <div class="element">
+                                <sfc-progress-circle [progress]="vm.raiting?.value" [total]="vm.raiting?.total"
+                                    [getColor]="getProgressColorDynamicallyFunc">
+                                </sfc-progress-circle>
+
+                                <div class="label">
+                                    <h4 i18n="@@feature.profile.edit.page.total-rating-absolute.label">Total rating
+                                        (absolute value)</h4>
+                                    <span i18n="@@feature.profile.edit.page.total-rating-absolute.description">Sum of
+                                        your
+                                        all stats</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<sfc-modal *sfcModalOpen [defaultFooterModel]="changesModalFooterModel" [defaultHeaderModel]="changesModalHeaderModel"
+    [hideOnClickOutside]="false">
+    <ng-template [sfcTemplateReference]="ModalTemplate.Body">
+        <div class="changes-warning-body">
+            <fa-icon [icon]="faTriangleExclamation" [sfcComponentSize] [customSize]="3"></fa-icon>
+            <h3 i18n="@@feature.profile.edit.page.changes-modal.text">Are you sure want to leave page without save profile changes?</h3>
+        </div>
+    </ng-template>
+</sfc-modal>

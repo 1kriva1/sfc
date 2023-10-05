@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { MediaLimits, ResizeService } from 'ngx-sfc-common';
 import { filter, map, startWith, Subscription } from 'rxjs';
-import { IdentityService } from 'src/app/share/services/identity/identity.service';
-import { AuthenticatedHeaderComponent } from './content/types/authenticated/authenticated-header.component';
-import { WelcomeHeaderComponent } from './content/types/welcome/welcome-header.component';
+import { IdentityService } from '@share/services/identity/identity.service';
+import { AuthenticatedHeaderComponent } from './types/authenticated/authenticated-header.component';
+import { WelcomeHeaderComponent } from './types/welcome/welcome-header.component';
 import { HeaderService } from './services/header.service';
 
 @Component({
@@ -16,11 +16,11 @@ export class HeaderComponent implements AfterViewInit, OnDestroy {
   welcomeHeader!: ElementRef;
 
   @ViewChild(AuthenticatedHeaderComponent, { static: false, read: ElementRef })
-  authHeader!: ElementRef;
+  authenticatedHeader!: ElementRef;
 
   private get headerHeight(): number {
     return this.identityService.isLoggedIn
-      ? this.authHeader.nativeElement?.offsetHeight
+      ? this.authenticatedHeader.nativeElement?.offsetHeight
       : this.welcomeHeader.nativeElement?.offsetHeight;
   }
 

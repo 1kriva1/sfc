@@ -4,26 +4,29 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MediaLimits, NgxSfcCommonModule, ResizeService, WINDOW } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { of } from 'rxjs';
-import { LogoComponent } from 'src/app/share/components/logo/logo.component';
-import { IdentityService } from 'src/app/share/services/identity/identity.service';
-import { BaseHeaderComponent } from './content/base/base-header.component';
-import { LanguageTogglerComponent } from './content/parts/language-toggler/language-toggler.component';
-import { AuthenticatedHeaderComponent } from './content/types/authenticated/authenticated-header.component';
-import { WelcomeHeaderComponent } from './content/types/welcome/welcome-header.component';
+import { LogoComponent } from '@share/components/logo/logo.component';
+import { IdentityService } from '@share/services/identity/identity.service';
+import { BaseHeaderComponent } from './types/base/base-header.component';
+import { LanguageTogglerComponent } from './parts/language-toggler/language-toggler.component';
+import { AuthenticatedHeaderComponent } from './types/authenticated/authenticated-header.component';
+import { WelcomeHeaderComponent } from './types/welcome/welcome-header.component';
 import { HeaderComponent } from './header.component';
 import { HeaderService } from './services/header.service';
+import { HttpClientModule } from '@angular/common/http';
+import { PlayerService } from '@share/services';
 
 describe('Core.Component:Header', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let windowMock: any = <any>{ location: {} };
   let resizeServiceStub: Partial<ResizeService> = { onResize$: of(windowMock) };
+  let playerServiceStub: any = { player: { value$: of(null) } };
   let identityServiceStub: Partial<IdentityService> = {};
   let headerServiceStub: Partial<HeaderService> = { toggleByValue: () => { } };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FontAwesomeModule, NoopAnimationsModule, NgxSfcCommonModule, NgxSfcComponentsModule],
+      imports: [HttpClientModule, FontAwesomeModule, NoopAnimationsModule, NgxSfcCommonModule, NgxSfcComponentsModule],
       declarations: [
         LogoComponent,
         HeaderComponent,
@@ -36,6 +39,7 @@ describe('Core.Component:Header', () => {
         { provide: IdentityService, useValue: identityServiceStub },
         { provide: ResizeService, useValue: resizeServiceStub },
         { provide: HeaderService, useValue: headerServiceStub },
+        { provide: PlayerService, useValue: playerServiceStub },
         { provide: WINDOW, useFactory: (() => { return windowMock; }) }
       ]
     }).compileComponents();
@@ -140,7 +144,7 @@ describe('Core.Component:Header', () => {
     expect(headerServiceStub.toggleByValue).not.toHaveBeenCalledOnceWith(false);
   });
 
-  fit("Should not toggle header when it not openned", () => {
+  fit("Should not toggle header when not openned", () => {
     spyOn(headerServiceStub as any, 'toggleByValue').and.callThrough();
 
     (headerServiceStub as any).open = false;

@@ -2,3 +2,8 @@ export { RoutKey } from './rout-key.enum';
 export { Locale } from './locale.enum';
 export { HttpMethod } from './http-method.enum';
 export { Feature } from './feature.enum';
+export { FootballPosition } from './logic/football-position.enum';
+export { Foot } from './logic/foot.enum';
+export { GameStyle } from './logic/game-style.enum';
+export { StatCategory } from './logic/stat-category.enum';
+export { StatType } from './logic/stat-type.enum';

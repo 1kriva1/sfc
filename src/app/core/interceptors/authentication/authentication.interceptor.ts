@@ -7,10 +7,10 @@ import {
     HttpContextToken,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { IdentityService } from 'src/app/share/services/identity/identity.service';
-import { TokenService } from 'src/app/share/services/token/token.service';
-import { environment } from 'src/environments/environment';
-import { IToken } from 'src/app/share/services/token/token.model';
+import { IdentityService } from '@share/services/identity/identity.service';
+import { TokenService } from '@share/services/token/token.service';
+import { environment } from '@environments/environment';
+import { IToken } from '@share/services/token/token.model';
 import { HttpConstants } from '../../constants';
 
 export const REQURED_AUTH = new HttpContextToken(() => true);
@@ -22,7 +22,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         private tokenService: TokenService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const requiredAuth: boolean = request.url.startsWith(environment.url)
+        const requiredAuth: boolean = request.url.startsWith(environment.players_url)
             && request.context.get(REQURED_AUTH);
 
         if (requiredAuth && this.identityService.isLoggedIn) {

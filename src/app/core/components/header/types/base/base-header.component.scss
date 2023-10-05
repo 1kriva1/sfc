@@ -1,0 +1,196 @@
+@use "ngx-sfc-common/styles/index" as *;
+@import "mixins";
+
+:host {
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 5em;
+    color: $color-default;
+
+    .logo {
+      @include center-wrap;
+
+      transition: color $transition-duration-default $transition-timing-function-default;
+
+      sfc-hamburger-menu {
+        display: none;
+      }
+    }
+
+    nav {
+      padding: 1em;
+
+      ul {
+        @include center-wrap;
+
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        li {
+          padding: 0.5em 1.875em;
+          text-align: center;
+
+          a {
+            font-size: 0.875em;
+            font-weight: bold;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: color $transition-duration-default $transition-timing-function-default;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .right {
+      @include center;
+    }
+  }
+
+  &.open {
+    height: 100%;
+    bottom: 0;
+    background: $color-11;
+    overflow-y: scroll;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
+
+    header {
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 0 2em;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      max-height: 100%;
+      height: stretch;
+
+      .logo {
+        color: $color-0;
+      }
+
+      nav {
+        ul {
+          flex-direction: column;
+
+          li {
+            padding: 2em 1.875em;
+
+            a {
+              font-size: 0.875em;
+              font-weight: bold;
+              letter-spacing: 0.05em;
+              text-transform: uppercase;
+              transition: color $transition-duration-default $transition-timing-function-default;
+              text-align: center;
+              cursor: pointer;
+
+              @include navigation-color($color-0);
+            }
+          }
+        }
+      }
+
+      .right {
+        flex-direction: column-reverse;
+        padding: 2em 0;
+
+        sfc-delimeter {
+          display: none;
+        }
+      }
+
+      nav,
+      .right {
+        display: flex;
+      }
+    }
+  }
+
+  @media (max-width: 1330px) {
+    header {
+      .logo {
+        ::ng-deep sfc-logo {
+          .container {
+            a {
+              img {
+                padding: 0.5em 0;
+              }
+
+              span {
+                display: none;
+              }
+            }
+          }
+        }
+      }
+
+      .right {
+        sfc-language-toggler {
+          padding-right: 0.5em;
+        }
+
+        sfc-delimeter {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    header {
+      padding: 2em;
+      justify-content: center;
+
+      .right {
+        flex-wrap: wrap;
+
+        sfc-language-toggler {
+          padding-right: 0;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 425px) {
+    header {
+      padding: 1em !important;
+
+      .logo {
+        width: 100%;
+        justify-content: center;
+
+        ::ng-deep sfc-logo {
+          .container {
+            a {
+              span {
+                display: block;
+                padding: 0.5em 1em;
+              }
+            }
+          }
+        }
+
+        sfc-hamburger-menu {
+          display: block;
+        }
+      }
+
+      nav,
+      .right {
+        display: none;
+      }
+    }
+  }
+
+  @media (max-width: 375px) {
+    header {
+      .logo {
+        flex-direction: column;
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+<div class="container" [formGroupName]="ProfileEditPagePart.Stats" *ngIf="vm$ | async as stats">
+  <sfc-title [sfcComponentSize] [customSize]="1.5" [label]="Localization.TITLE.LABEL"
+    [description]="Localization.TITLE.DESCRIPTION" [tooltip]="Localization.TITLE.TOOLTIP">
+  </sfc-title>
+
+  <div class="avarage">
+    <div class="part">
+      <h3 i18n="@@core.stat.type.physical">Physical</h3>
+      <sfc-progress-semi-circle [progress]="stats.types?.physical.value" [max]="stats.types?.physical.total"
+        [getColor]="getProgressColorDynamicallyFunc" [sfcComponentSize] [customSize]="1.5"></sfc-progress-semi-circle>
+    </div>
+
+    <div class="part">
+      <h3 i18n="@@core.stat.type.mental">Mental</h3>
+      <sfc-progress-semi-circle [progress]="stats.types?.mental.value" [max]="stats.types?.mental.total"
+        [getColor]="getProgressColorDynamicallyFunc" [sfcComponentSize] [customSize]="1.5"></sfc-progress-semi-circle>
+    </div>
+
+    <div class="part">
+      <h3 i18n="@@core.stat.type.skill">Skill</h3>
+      <sfc-progress-semi-circle [progress]="stats.types?.skill.value" [max]="stats.types?.skill.total"
+        [getColor]="getProgressColorDynamicallyFunc" [sfcComponentSize] [customSize]="1.5"></sfc-progress-semi-circle>
+    </div>
+  </div>
+
+  <div class="items">
+    <div class="part" *ngFor="let stat of Constants.STATS; let i = index">
+      <div class="header" *ngIf="stats.model[stat.key] as model">
+        <div class="title">
+          <h3>{{stat.label}}</h3>
+          <span [style.color]="model.color">{{model.average}}</span>
+        </div>
+        <sfc-progress-line [progress]="model.average" [hideEnd]="true">
+        </sfc-progress-line>
+      </div>
+
+      <div class="content" [formGroupName]="stat.key">
+        <div class="line" *ngFor="let statItem of stat.items; let i = index">
+          <span class="label">{{statItem.label}}</span>
+          <sfc-number-input id="{{statItem.key}}" [formControlName]="statItem.key" [min]="0" [max]="100"
+            [disableNext]="!isStatIncreaseAvailable" [disablePrevious]="!isStatDecreaseAvailable" [sfcComponentSize]
+            [customSize]="0.7">
+          </sfc-number-input>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,7 +7,7 @@
     <sfc-bounce-loader></sfc-bounce-loader>
     <div *ngIf="notificationService.notifications$ | async as notifications" class="notifications">
         <sfc-notification *ngFor="let notification of notifications" [model]="notification"
-            [autoCloseModel]="notificationAutoCloseModel" (closed)="notificationService.remove(notification)">
+            [autoCloseModel]="notificationAutoCloseModel">
         </sfc-notification>
     </div>
 </div>

@@ -1,6 +1,6 @@
 import { HttpRequest, HttpResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { environment } from 'src/environments/environment';
+import { environment } from '@environments/environment';
 import { RequestCacheWithMap } from './request-cache.service';
 
 describe('Core.Service: RequestCache', () => {
@@ -54,7 +54,7 @@ describe('Core.Service: RequestCache', () => {
         expect(cacheResponse).toBeUndefined();
     });
 
-    fit('Should not found cache if it expired', () => {
+    fit('Should not found cache if expired', () => {
         const request: HttpRequest<any> = { urlWithParams: '/test' } as HttpRequest<any>,
             response: HttpResponse<any> = { body: { value: 1 } } as HttpResponse<any>;
 

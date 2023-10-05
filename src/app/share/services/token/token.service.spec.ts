@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { CommonConstants } from 'src/app/core/constants';
+import { CommonConstants } from '@core/constants';
 import { IToken } from './token.model';
 import { TokenService } from './token.service';
 
@@ -46,7 +46,7 @@ describe('Share.Service: Token', () => {
 
         service.set(token)
 
-        expect(window.localStorage.setItem).toHaveBeenCalledOnceWith(`${CommonConstants.APPLICATION_PREFIX}-Token`,
+        expect(window.localStorage.setItem).toHaveBeenCalledOnceWith(`${CommonConstants.APPLICATION_PREFIX}-token`,
             JSON.stringify(token));
     });
 
@@ -92,6 +92,14 @@ describe('Share.Service: Token', () => {
     });
 
     fit('Should JWT token be null', () => {
+        expect(service.jwt).toBeNull();
+    });
+
+    fit('Should JWT token be null if parsing error', () => {
+        const token: IToken = { Access: 'error_token', Refresh: 'refresh' };
+
+        service.set(token);
+
         expect(service.jwt).toBeNull();
     });
 

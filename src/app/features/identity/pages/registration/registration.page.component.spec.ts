@@ -2,22 +2,28 @@ import { HttpClientModule } from '@angular/common/http';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
+import { By, Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { ButtonType, ComponentSize, Direction, ILoaderEvent, LoaderService, NgxSfcCommonModule, Theme, UIConstants } from 'ngx-sfc-common';
+import {
+  ButtonType, CommonConstants, ComponentSize, Direction, ILoaderEvent, LoaderService,
+  nameof,
+  NgxSfcCommonModule, Theme, UIConstants
+} from 'ngx-sfc-common';
 import { NgxSfcComponentsModule, SliderType } from 'ngx-sfc-components';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
 import { of, throwError } from 'rxjs';
-import { CommonConstants } from 'src/app/core/constants';
-import { RoutKey } from 'src/app/core/enums';
-import { StorageService } from 'src/app/core/services/storage/storage.service';
-import { LogoComponent } from 'src/app/share/components/logo/logo.component';
-import { IdentityService } from 'src/app/share/services/identity/identity.service';
-import { IRegistrationRequest, IRegistrationResponse } from 'src/app/share/services/identity/models';
+import { CommonConstants as ApplicationCommonConstants } from '@core/constants';
+import { RoutKey } from '@core/enums';
+import { StorageService } from '@core/services/storage/storage.service';
+import { LogoComponent } from '@share/components/logo/logo.component';
+import { IdentityService } from '@share/services/identity/identity.service';
+import { IRegistrationRequest, IRegistrationResponse } from '@share/services/identity/models';
 import { IExistenceResponse } from '../../services/existence/existence.response';
 import { ExistenceService } from '../../services/existence/existence.service';
 import { RegistrationPageComponent } from './registration.page.component';
 import { RegistrationPageConstants } from './registration.page.constants';
+import { IRegistrationFormModel } from './registration-form.model';
+import { buildTitle } from '@core/utils';
 
 describe('Features.Identity.Page:Registration', () => {
   let component: RegistrationPageComponent;
@@ -89,6 +95,12 @@ describe('Features.Identity.Page:Registration', () => {
 
       expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
     });
+
+    fit('Should have page title', () => {
+      const titleService = TestBed.inject(Title);
+
+      expect(titleService.getTitle()).toBe(buildTitle('Registration'));
+    });
   });
 
   describe('Left side', () => {
@@ -105,6 +117,11 @@ describe('Features.Identity.Page:Registration', () => {
   describe('Right side', () => {
     fit('Should logo have appropriate size', () => {
       expect(fixture.debugElement.query(By.css('sfc-logo')).attributes['ng-reflect-custom-size']).toEqual('1.3');
+    });
+
+    fit('Should logo have appropriate route link', () => {
+      expect(fixture.debugElement.query(By.css('sfc-logo')).attributes['routerLink'])
+        .toEqual('/');
     });
 
     fit('Should username or email input have appropriate attributes', () => {
@@ -199,16 +216,6 @@ describe('Features.Identity.Page:Registration', () => {
 
         expect(submitBtnEl.componentInstance.disabled).toBeFalse();
       }));
-
-      fit('Should make form touched on submit button click', () => {
-        expect(component.registrationForm.touched).toBeFalse();
-
-        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
-        submitBtnEl.nativeElement.click();
-        fixture.detectChanges();
-
-        expect(component.registrationForm.touched).toBeTrue();
-      });
 
       fit('Should make form controls dirty on submit button click', () => {
         Object.keys(component.registrationForm.controls).forEach(key =>
@@ -404,7 +411,7 @@ describe('Features.Identity.Page:Registration', () => {
         fit('Should be invalid', () => {
           const confirmPasswordControlInputEl = fixture.nativeElement.querySelector('sfc-text-input .sfc-input#sfc-confirm-password'),
             passwordControlInputEl = fixture.nativeElement.querySelector('sfc-text-input .sfc-input#sfc-password'),
-            confirmPasswordControlControl = component.registrationForm.get('confirmPassword');
+            confirmPasswordControlControl = component.registrationForm.get(nameof<IRegistrationFormModel>('confirmPassword'));
 
           passwordControlInputEl.value = 'Test1234!';
           passwordControlInputEl.dispatchEvent(new Event('input'));
@@ -414,7 +421,7 @@ describe('Features.Identity.Page:Registration', () => {
           confirmPasswordControlInputEl.dispatchEvent(new Event('input'));
           fixture.detectChanges();
 
-          expect((confirmPasswordControlControl?.errors as any)['sfcMatch']).toBeTrue();
+          expect((confirmPasswordControlControl?.errors as any)['sfc-match']).toBeTrue();
         });
 
         fit('Should be valid', () => {
@@ -447,13 +454,7 @@ describe('Features.Identity.Page:Registration', () => {
       });
 
       fit('Should call register if form valid when using email', fakeAsync(() => {
-        spyOn(identityServiceStub, 'register' as any).and.returnValue(of({
-          Token: {},
-          UserId: 'user-id',
-          Errors: null,
-          Success: true,
-          Message: 'msg'
-        } as IRegistrationResponse));
+        spyRegister('user-id');
 
         makeFormValid();
 
@@ -471,13 +472,7 @@ describe('Features.Identity.Page:Registration', () => {
       }));
 
       fit('Should call register if form valid when using username', fakeAsync(() => {
-        spyOn(identityServiceStub, 'register' as any).and.returnValue(of({
-          Token: {},
-          UserId: 'user-id',
-          Errors: null,
-          Success: true,
-          Message: 'msg'
-        } as IRegistrationResponse));
+        spyRegister('user-id');
 
         makeFormValid(false);
 
@@ -495,13 +490,7 @@ describe('Features.Identity.Page:Registration', () => {
       }));
 
       fit('Should show error if register failed', fakeAsync(() => {
-        spyOn(identityServiceStub, 'register' as any).and.returnValue(of({
-          Token: {},
-          UserId: '',
-          Errors: null,
-          Success: false,
-          Message: 'Registration error'
-        } as IRegistrationResponse));
+        spyRegister('', false);
 
         makeFormValid();
 
@@ -509,6 +498,7 @@ describe('Features.Identity.Page:Registration', () => {
 
         expect(errorsEl.styles['visibility']).toEqual(UIConstants.CSS_VISIBILITY_HIDDEN);
         expect(errorsEl.styles['opacity']).toEqual('0');
+        expect(fixture.nativeElement.querySelector('.error-message').textContent).toEqual(CommonConstants.EMPTY_STRING);
 
         const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
         submitBtnEl.nativeElement.click();
@@ -516,18 +506,13 @@ describe('Features.Identity.Page:Registration', () => {
 
         expect(errorsEl.styles['visibility']).toEqual(UIConstants.CSS_VISIBILITY_VISIBLE);
         expect(errorsEl.styles['opacity']).toEqual('1');
+        expect(fixture.nativeElement.querySelector('.error-message').textContent).toEqual('msg');
 
         flush();
       }));
 
       fit('Should clear previous error if register success', fakeAsync(() => {
-        const registerSpy = spyOn(identityServiceStub, 'register' as any).and.returnValue(of({
-          Token: {},
-          UserId: '',
-          Errors: null,
-          Success: false,
-          Message: 'Registration error'
-        } as IRegistrationResponse));
+        const registerSpy = spyRegister('', false);
 
         makeFormValid();
 
@@ -558,13 +543,7 @@ describe('Features.Identity.Page:Registration', () => {
       }));
 
       fit("Should navigate to home on success", fakeAsync(() => {
-        spyOn(identityServiceStub, 'register' as any).and.returnValue(of({
-          Token: {},
-          UserId: 'user-id',
-          Errors: null,
-          Success: true,
-          Message: 'msg'
-        } as IRegistrationResponse));
+        spyRegister('user-id');
         spyOn(routerMock, 'navigate');
 
         makeFormValid(false);
@@ -580,13 +559,7 @@ describe('Features.Identity.Page:Registration', () => {
 
       fit("Should set default theme on success", fakeAsync(() => {
         spyOn((storageServiceStub as any), 'set').and.callThrough();
-        spyOn(identityServiceStub, 'register' as any).and.returnValue(of({
-          Token: {},
-          UserId: 'user-id',
-          Errors: null,
-          Success: true,
-          Message: 'msg'
-        } as IRegistrationResponse));
+        spyRegister('user-id');
         spyOn(routerMock, 'navigate');
 
         makeFormValid(false);
@@ -595,7 +568,7 @@ describe('Features.Identity.Page:Registration', () => {
         submitBtnEl.nativeElement.click();
         fixture.detectChanges();
 
-        expect(storageServiceStub.set).toHaveBeenCalledOnceWith(CommonConstants.THEME_KEY, Theme.Default);
+        expect(storageServiceStub.set).toHaveBeenCalledOnceWith(ApplicationCommonConstants.THEME_KEY, Theme.Default);
 
         flush();
       }));
@@ -652,6 +625,16 @@ describe('Features.Identity.Page:Registration', () => {
       confirmPasswordControlInputEl.value = 'Test1234!';
       confirmPasswordControlInputEl.dispatchEvent(new Event('input'));
       fixture.detectChanges();
+    }
+
+    function spyRegister(userId: string, success: boolean = true): jasmine.Spy<any> {
+      return spyOn(identityServiceStub, 'register' as any).and.returnValue(of({
+        Token: {},
+        UserId: userId,
+        Errors: null,
+        Success: success,
+        Message: 'msg'
+      } as IRegistrationResponse));
     }
   });
 });

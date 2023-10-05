@@ -1,0 +1,47 @@
+:host {
+  .container {
+    .row {
+      .column {
+        sfc-text-area-input {
+          ::ng-deep .container .content textarea {
+            max-height: 10em;
+          }
+        }
+
+        sfc-datetime-input {
+          ::ng-deep .container .content sfc-datetime-modal.full-size {
+            min-width: 25em;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      .row {
+        .column {
+          sfc-datetime-input {
+            ::ng-deep .container .content sfc-datetime-modal.full-size {
+              min-width: 20em;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 425px) {
+    .container {
+      .row {
+        .column {
+          sfc-datetime-input {
+            ::ng-deep .container .content sfc-datetime-modal.full-size {
+              min-width: auto;
+            }
+          }
+        }
+      }
+    }
+  }
+}

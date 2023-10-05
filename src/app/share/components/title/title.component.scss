@@ -1,0 +1,40 @@
+@use "ngx-sfc-common/styles/index" as *;
+@import "mixins";
+
+:host {
+  width: 100%;
+
+  .container {
+    .title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      padding: 0.3em 0;
+
+      .label {
+        display: flex;
+        flex-direction: column;
+
+        @include theme-color($color-default, $color-0);
+
+        p {
+          font-size: 1em;
+          font-weight: bold;
+          margin: 0.2em 0;
+        }
+
+        span {
+          @include theme-color($color-7, $color-5);
+
+          margin: 0;
+          font-size: 0.5em;
+        }
+      }
+
+      sfc-icon-tooltip {
+        padding-top: 0.5em;
+      }
+    }
+  }
+}

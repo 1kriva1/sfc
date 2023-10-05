@@ -8,6 +8,8 @@ import { CommonConstants } from "../../constants";
 @Injectable()
 export class LocaleInterceptor implements HttpInterceptor {
 
+    private readonly SERVER_UKRAINE_LOCALE = 'uk-UA';
+
     constructor(private storageService: StorageService) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler) {
@@ -16,7 +18,9 @@ export class LocaleInterceptor implements HttpInterceptor {
 
         const userLocale = this.storageService.get<Locale>(CommonConstants.LOCALE_KEY, Locale.English) as Locale,
             acceptLanguageRequest = request.clone({
-                headers: request.headers.set(HttpConstants.ACCEPT_LANGUAGE, userLocale)
+                headers: request.headers.set(HttpConstants.ACCEPT_LANGUAGE, userLocale == Locale.Ukraine
+                    ? this.SERVER_UKRAINE_LOCALE
+                    : userLocale)
             });
 
         return next.handle(acceptLanguageRequest);

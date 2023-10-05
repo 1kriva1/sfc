@@ -6,7 +6,15 @@ invoke-expression 'cmd /c start powershell -Command {
     dotnet run  --urls=https://localhost:7266/
 }'
 
-Write-Host "Start Angular application"
+Write-Host "Start Players service"
+
+invoke-expression 'cmd /c start powershell -Command { 
+    write-host "Start Players service!"; 
+    set-location "C:\Users\andriik\Documents\SFC_NEW\services\Players\src\API\SFC.Players.Api"; 
+    dotnet run  --urls=https://localhost:7366/
+}'
+
+Write-Host "Start Application"
 
 npm start
 

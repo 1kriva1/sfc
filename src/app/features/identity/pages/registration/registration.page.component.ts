@@ -6,18 +6,19 @@ import { map, filter, switchMap, tap, fromEvent, Subscription, startWith, catchE
 import { ExistenceService } from '../../services/existence/existence.service';
 import { RegistrationPageConstants } from './registration.page.constants';
 import { IdentityValidators } from '../../validators/identity.validators';
-import { BaseErrorResponse } from 'src/app/share/models/base-error.response';
+import { BaseErrorResponse } from '@core/models/http/base-error.response';
 import { Router } from '@angular/router';
-import { RoutKey } from 'src/app/core/enums';
-import { buildPath } from 'src/app/core/utils';
+import { RoutKey } from '@core/enums';
+import { buildPath, buildTitle, markFormTouchedAndDirty } from '@core/utils';
 import { IRegistrationFormModel } from './registration-form.model';
-import { IForm } from 'src/app/core/models/form.model';
-import { IdentityService } from 'src/app/share/services/identity/identity.service';
-import { IRegistrationRequest, IRegistrationResponse } from 'src/app/share/services/identity/models';
+import { IForm } from '@core/models/form.model';
+import { IdentityService } from '@share/services/identity/identity.service';
+import { IRegistrationRequest, IRegistrationResponse } from '@share/services/identity/models';
 import { RegistrationPageLocalization } from './registration.page.localization';
 import { match } from 'ngx-sfc-inputs';
-import { StorageService } from 'src/app/core/services/storage/storage.service';
-import { CommonConstants } from 'src/app/core/constants';
+import { StorageService } from '@core/services/storage/storage.service';
+import { CommonConstants } from '@core/constants';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'sfc-registration.page',
@@ -52,7 +53,8 @@ export class RegistrationPageComponent implements OnInit, AfterViewInit, OnDestr
     private existenceService: ExistenceService,
     private loaderService: LoaderService,
     private storageService: StorageService,
-    private identityService: IdentityService) { }
+    private identityService: IdentityService,
+    private titleService: Title) { }
 
   ngOnInit(): void {
     const controls: IForm<IRegistrationFormModel> = {
@@ -73,6 +75,7 @@ export class RegistrationPageComponent implements OnInit, AfterViewInit, OnDestr
     };
 
     this.registrationForm = this.fb.group(controls);
+    this.titleService.setTitle(buildTitle(this.Localization.PAGE_TITLE));
   }
 
   ngAfterViewInit(): void {
@@ -82,27 +85,9 @@ export class RegistrationPageComponent implements OnInit, AfterViewInit, OnDestr
       switchMap((value: IRegistrationFormModel) => {
         return fromEvent<InputEvent>(this.submitBtn.nativeElement, 'click')
           .pipe(
-            tap(() => {
-              if (!this.submitted) {
-                this.submitted = true;
-                this.registrationForm.markAllAsTouched();
-                Object.keys(this.registrationForm.controls).forEach(key => this.registrationForm.get(key)?.markAsDirty());
-              }
-            }),
+            tap(() => this.tapSubmit()),
             filter(() => this.registrationForm.valid),
-            map(() => {
-              const request: IRegistrationRequest = {
-                Password: value.password,
-                ConfirmPassword: value.confirmPassword
-              };
-
-              if (isEmail(value.userNameEmail))
-                request.Email = value.userNameEmail;
-              else
-                request.UserName = value.userNameEmail;
-
-              return request;
-            }),
+            map(() => this.mapRequest(value)),
             switchMap((request: IRegistrationRequest) =>
               this.identityService.register(request).pipe(
                 catchError((error) => of(error))
@@ -121,5 +106,26 @@ export class RegistrationPageComponent implements OnInit, AfterViewInit, OnDestr
 
   ngOnDestroy(): void {
     this._subscription.unsubscribe();
+  }
+
+  private tapSubmit(): void {
+    if (!this.submitted) {
+      this.submitted = true;
+      markFormTouchedAndDirty(this.registrationForm);
+    }
+  }
+
+  private mapRequest(value: IRegistrationFormModel): IRegistrationRequest {
+    const request: IRegistrationRequest = {
+      Password: value.password,
+      ConfirmPassword: value.confirmPassword
+    };
+
+    if (isEmail(value.userNameEmail))
+      request.Email = value.userNameEmail;
+    else
+      request.UserName = value.userNameEmail;
+
+    return request;
   }
 }

@@ -4,6 +4,7 @@ export enum RoutKey {
     Identity = 'identity',
     Registration = 'registration',
     Login = 'login',
-    Profile = 'profile',
+    Profiles = 'profiles',
+    Create = 'create',
     Edit = 'edit'
 }

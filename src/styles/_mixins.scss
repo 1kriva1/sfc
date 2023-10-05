@@ -1,4 +1,4 @@
-@use "node_modules/ngx-sfc-common/styles/index" as *;
+@use "ngx-sfc-common/styles/index" as *;
 @import "./variables";
 
 @mixin button() {
@@ -28,7 +28,7 @@
   color: $color;
 
   &:hover {
-    color: $color-yellow-0;
+    color: $color-hover-default;
   }
 }
 
@@ -37,8 +37,8 @@
   border-color: $color;
 
   &:hover {
-    color: $color-yellow-0;
-    border-color: $color-yellow-0;
+    color: $color-hover-default;
+    border-color: $color-hover-default;
   }
 }
 
@@ -46,4 +46,19 @@
   @include theme-value(background, $background-default, $background-dark);
 
   transition: background $transition-theme-backround-duration $transition-theme-backround-timing-function;
+}
+
+@mixin theme-color($value-common, $value-dark, $selector: "&") {
+  @include theme-value(color, $value-common, $value-dark, $selector);
+
+  transition: color $transition-duration-default $transition-timing-function-default;
+}
+
+@mixin error-message() {
+  text-align: center;
+  font-weight: bold;
+  color: $color-failed;
+  width: 100%;
+  padding: 0;
+  font-size: 0.8em;
 }

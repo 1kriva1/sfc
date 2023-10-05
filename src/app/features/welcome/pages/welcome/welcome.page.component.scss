@@ -1,5 +1,5 @@
-@use "node_modules/ngx-sfc-common/styles/index" as *;
-@import "../../../../../styles/mixins";
+@use "ngx-sfc-common/styles/index" as *;
+@import "mixins";
 
 :host {
   main {
@@ -18,7 +18,7 @@
         justify-content: initial;
         min-height: 90vh;
         position: relative;
-        background-image: url("/assets/images/welcome/hero/background.jpg");
+        background-image: url("../../assets/images/hero/hero-background.jpg");
         background-size: cover;
         background-position: center center;
 
@@ -224,7 +224,7 @@
 
       &.process {
         flex-wrap: nowrap;
-        background: url("/assets/images/welcome/process/background.svg");
+        background: url("../../assets/images/process/background.svg");
         background-size: cover;
         background-position: center center;
 

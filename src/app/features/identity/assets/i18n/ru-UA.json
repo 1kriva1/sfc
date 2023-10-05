@@ -1,4 +1,5 @@
 {
+  "registration.page-title": "Реєстрація",
   "registration.page.title": "Ласкаво просимо до Street Football Club!",
   "registration.page.description.1": "Вибір теми WordPress для",
   "registration.page.description.2": "Ось ваше найкраще місце для пошуку гравців, створення команд, планування ігор тощо! Ми віримо в пристрасть, радість і почуття спільності, які приносить футбол.",
@@ -20,7 +21,7 @@
   "registration.page.redirect.question.1": "Вже ",
   "registration.page.redirect.question.2": "гравець? ",
   "registration.page.redirect": "Ввійти",
-
+  "login.page-title": "Логін",
   "login.page.title": "Ласкаво просимо до Street Football Club!",
   "login.page.description.1": "Вибір теми WordPress для",
   "login.page.description.2": "Ось ваше найкраще місце для пошуку гравців, створення команд, планування ігор тощо! Ми віримо в пристрасть, радість і почуття спільності, які приносить футбол.",

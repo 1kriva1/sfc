@@ -1,0 +1,102 @@
+<div class="container" [formGroupName]="ProfileEditPagePart.Football">
+  <sfc-title [sfcComponentSize] [customSize]="1.5" [label]="Localization.TITLE.GAME.LABEL"
+    [description]="Localization.TITLE.GAME.DESCRIPTION" [tooltip]="Localization.TITLE.GAME.TOOLTIP">
+  </sfc-title>
+
+  <div class="row">
+    <div class="column">
+      <sfc-select-input id="position" formControlName="position" [label]="Localization.INPUT.POSITION.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.POSITION.LABEL_PLACEHOLDER"
+        [helperText]="Localization.INPUT.POSITION.HELPER_TEXT" [data]="POSITIONS" [multiple]="false"
+        [showDefaultItem]="false" [bordered]="true">
+      </sfc-select-input>
+    </div>
+
+    <div class="column">
+      <sfc-select-input id="additional-position" formControlName="additionalPosition"
+        [label]="Localization.INPUT.ADDITIONAL_POSITION.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.ADDITIONAL_POSITION.LABEL_PLACEHOLDER"
+        [helperText]="Localization.INPUT.ADDITIONAL_POSITION.HELPER_TEXT" [data$]="additionalPositions$"
+        [multiple]="false" [showDefaultItem]="false" [bordered]="true">
+      </sfc-select-input>
+    </div>
+
+    <div class="column">
+      <sfc-select-input id="game-style" formControlName="gameStyle"
+        [label]="Localization.INPUT.GAME_STYLE.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.GAME_STYLE.LABEL_PLACEHOLDER"
+        [helperText]="Localization.INPUT.GAME_STYLE.HELPER_TEXT" [data]="GAME_STYLES" [multiple]="false"
+        [showDefaultItem]="false" [bordered]="true">
+      </sfc-select-input>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <sfc-stars-input id="skill" formControlName="skill" [label]="Localization.INPUT.SKILL.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.SKILL.LABEL_PLACEHOLDER" [helperText]="Localization.INPUT.SKILL.HELPER_TEXT">
+      </sfc-stars-input>
+    </div>
+
+    <div class="column">
+      <sfc-stars-input id="weak-foot" formControlName="weakFoot"
+        [label]="Localization.INPUT.WEAK_FOOT.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.WEAK_FOOT.LABEL_PLACEHOLDER"
+        [helperText]="Localization.INPUT.WEAK_FOOT.HELPER_TEXT">
+      </sfc-stars-input>
+    </div>
+
+    <div class="column">
+      <sfc-number-input id="number" formControlName="number" [label]="Localization.INPUT.NUMBER.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.NUMBER.LABEL_PLACEHOLDER" [helperText]="Localization.INPUT.NUMBER.HELPER_TEXT"
+        [edit]="true" [fixedActions]="true" [fixedWidth]="true" [sign]="false" [min]="Constants.MIN_NUMBER_VALUE"
+        [max]="Constants.MAX_NUMBER_VALUE">
+      </sfc-number-input>
+    </div>
+  </div>
+
+  <sfc-title [sfcComponentSize] [customSize]="1.5" [label]="Localization.TITLE.PHYSICAL.LABEL"
+    [description]="Localization.TITLE.PHYSICAL.DESCRIPTION" [tooltip]="Localization.TITLE.PHYSICAL.TOOLTIP">
+  </sfc-title>
+
+  <div class="row physical">
+    <div class="column">
+      <sfc-number-input id="height" formControlName="height" [label]="Localization.INPUT.HEIGHT.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.HEIGHT.LABEL_PLACEHOLDER" [helperText]="Localization.INPUT.HEIGHT.HELPER_TEXT"
+        [edit]="true" [fixedActions]="true" [fixedWidth]="true" [min]="Constants.MIN_SIZE_VALUE" [sign]="false"
+        [max]="Constants.MAX_SIZE_VALUE" [validations]="{
+          max: MAX_HEIGHT_VALUE_VALIDATION
+        }">
+      </sfc-number-input>
+    </div>
+
+    <div class="column">
+      <sfc-number-input id="weight" formControlName="weight" [label]="Localization.INPUT.WEIGHT.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.WEIGHT.LABEL_PLACEHOLDER" [helperText]="Localization.INPUT.WEIGHT.HELPER_TEXT"
+        [edit]="true" [fixedActions]="true" [fixedWidth]="true" [min]="Constants.MIN_SIZE_VALUE" [sign]="false"
+        [max]="Constants.MAX_SIZE_VALUE" [validations]="{
+          max: MAX_WEIGHT_VALUE_VALIDATION
+        }">
+      </sfc-number-input>
+    </div>
+
+    <div class="column">
+      <sfc-stars-input id="physical-condition" formControlName="physicalCondition"
+        [label]="Localization.INPUT.PHYSICAL_CONDITION.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.PHYSICAL_CONDITION.LABEL_PLACEHOLDER"
+        [helperText]="Localization.INPUT.PHYSICAL_CONDITION.HELPER_TEXT">
+      </sfc-stars-input>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <sfc-select-input id="working-foot" formControlName="workingFoot"
+        [label]="Localization.INPUT.WORKING_FOOT.LABEL_PLACEHOLDER"
+        [placeholder]="Localization.INPUT.WORKING_FOOT.LABEL_PLACEHOLDER"
+        [helperText]="Localization.INPUT.WORKING_FOOT.HELPER_TEXT" [data]="FOOTS" [multiple]="false"
+        [showDefaultItem]="false" [bordered]="true">
+      </sfc-select-input>
+    </div>
+  </div>
+</div>

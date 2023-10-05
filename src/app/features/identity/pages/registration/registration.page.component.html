@@ -13,18 +13,19 @@
         </div>
     </div>
     <div class="right">
-        <sfc-logo [sfcComponentSize] [customSize]="1.3"></sfc-logo>
+        <sfc-logo routerLink="/" [sfcComponentSize] [customSize]="1.3"></sfc-logo>
         <div class="content">
             <form [formGroup]="registrationForm" autocomplete="off">
                 <div class="part">
                     <sfc-text-input [id]="userNameEmailId" formControlName="userNameEmail"
-                        [label]="Localization.USERNAME_EMAIL_LABEL_PLACEHOLDER"
-                        [placeholder]="Localization.USERNAME_EMAIL_LABEL_PLACEHOLDER" [validations]="{
-                            required: Localization.VALIDATIONS.USER_NAME_EMAIL.REQUIRED,
-                            sfcUserName: Localization.VALIDATIONS.USER_NAME_EMAIL.PATTERN,
-                            sfcEmailAlreadyExist: Localization.VALIDATIONS.USER_NAME_EMAIL.EMAIL_ALREADY_EXIST, 
-                            sfcUserNameAlreadyExist: Localization.VALIDATIONS.USER_NAME_EMAIL.USERNAME_ALREADY_EXIST,
-                            sfcCheckError: Localization.VALIDATIONS.USER_NAME_EMAIL.CHECK_ERROR
+                        [label]="Localization.INPUT.USERNAME_EMAIL.LABEL_PLACEHOLDER"
+                        [placeholder]="Localization.INPUT.USERNAME_EMAIL.LABEL_PLACEHOLDER" [bordered]="true"
+                        [validations]="{
+                            required: Localization.INPUT.USERNAME_EMAIL.VALIDATIONS.REQUIRED,
+                            sfcUserName: Localization.INPUT.USERNAME_EMAIL.VALIDATIONS.PATTERN,
+                            sfcEmailAlreadyExist: Localization.INPUT.USERNAME_EMAIL.VALIDATIONS.EMAIL_ALREADY_EXIST, 
+                            sfcUserNameAlreadyExist: Localization.INPUT.USERNAME_EMAIL.VALIDATIONS.USERNAME_ALREADY_EXIST,
+                            sfcCheckError: Localization.INPUT.USERNAME_EMAIL.VALIDATIONS.CHECK_ERROR
                         }">
                         <sfc-bounce-loader [id]="userNameEmailId" [sfcComponentSize]="ComponentSize.Small"
                             [background]="false">
@@ -35,20 +36,22 @@
 
                 <div class="part">
                     <sfc-text-input id="password" formControlName="password"
-                        [label]="Localization.PASSWORD_LABEL_PLACEHOLDER"
-                        [placeholder]="Localization.PASSWORD_LABEL_PLACEHOLDER" type="password" [validations]="{
-                            required: Localization.VALIDATIONS.PASSWORD.REQUIRED, 
-                            pattern: Localization.VALIDATIONS.PASSWORD.PATTERN
+                        [label]="Localization.INPUT.PASSWORD.LABEL_PLACEHOLDER"
+                        [placeholder]="Localization.INPUT.PASSWORD.LABEL_PLACEHOLDER" type="password" [bordered]="true"
+                        [validations]="{
+                            required: Localization.INPUT.PASSWORD.VALIDATIONS.REQUIRED, 
+                            pattern: Localization.INPUT.PASSWORD.VALIDATIONS.PATTERN
                         }">
                     </sfc-text-input>
                 </div>
 
                 <div class="part">
                     <sfc-text-input id="confirm-password" formControlName="confirmPassword"
-                        [label]="Localization.CONFIRM_PASSWORD_LABEL_PLACEHOLDER"
-                        [placeholder]="Localization.CONFIRM_PASSWORD_LABEL_PLACEHOLDER" type="password" [validations]="{
-                            required: Localization.VALIDATIONS.CONFIRM_PASSWORD.REQUIRED, 
-                            sfcMatch: Localization.VALIDATIONS.CONFIRM_PASSWORD.MATCH
+                        [label]="Localization.INPUT.CONFIRM_PASSWORD.LABEL_PLACEHOLDER"
+                        [placeholder]="Localization.INPUT.CONFIRM_PASSWORD.LABEL_PLACEHOLDER" [bordered]="true"
+                        type="password" [validations]="{
+                            required: Localization.INPUT.CONFIRM_PASSWORD.VALIDATIONS.REQUIRED, 
+                            sfcMatch: Localization.INPUT.CONFIRM_PASSWORD.VALIDATIONS.MATCH
                         }">
                     </sfc-text-input>
                 </div>
@@ -69,7 +72,7 @@
                     <div class="sso">
                         <div class="google">
                             <a class="sso-link" href="https://google.com">
-                                <img src="/assets/images/core/providers/google.png">
+                                <img src="app/core/assets/images/providers/google.png">
                                 <p i18n="@@feature.identity.registration.page.sso.google"> Sign up with Google </p>
                             </a>
                         </div>

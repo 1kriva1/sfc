@@ -1,4 +1,5 @@
 {
+  "registration.page-title": "Registration",
   "registration.page.title": "Welcome to Street Football Club!",
   "registration.page.description.1": "Choosing a WordPress Theme for",
   "registration.page.description.2": "Here is your best destination for finding players, creating teams, planning games and more! We believes in the passion, joy and sense of community that football brings.",
@@ -20,7 +21,7 @@
   "registration.page.redirect.question.1": "Already a ",
   "registration.page.redirect.question.2": " player? ",
   "registration.page.redirect": "Sign In",
-
+  "login.page-title": "Login",
   "login.page.title": "Welcome to Street Football Club!",
   "login.page.description.1": "Choosing a WordPress Theme for",
   "login.page.description.2": "Here is your best destination for finding players, creating teams, planning games and more! We believes in the passion, joy and sense of community that football brings.",

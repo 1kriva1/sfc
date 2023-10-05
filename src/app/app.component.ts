@@ -3,10 +3,11 @@ import { ActivationStart, Router } from '@angular/router';
 import { isDefined, nameof, Theme } from 'ngx-sfc-common';
 import { INotificationAutoCloseModel } from 'ngx-sfc-components';
 import { Subscription } from 'rxjs';
-import { IRouteDataModel } from './core/models/route-data.model';
-import { ILayoutModel } from './core/models/layout.model';
-import { NotificationService } from './core/services/notification/notification.service';
-import { ThemeService } from './share/components/theme-toggler/services/theme/theme.service';
+import { IRouteDataModel } from '@core/models/route-data.model';
+import { ILayoutModel } from '@core/models/layout.model';
+import { NotificationService } from '@core/services/notification/notification.service';
+import { ThemeService } from '@share/components/theme-toggler/services/theme/theme.service';
+import { AppComponentConstants } from './app.component.constants';
 
 @Component({
   selector: 'sfc-root',
@@ -20,13 +21,17 @@ export class AppComponent implements OnInit, OnDestroy {
   @HostBinding('class')
   public get theme(): Theme | null { return this.themeEnabled ? this.themeService.theme : null; }
 
-  public notificationAutoCloseModel: INotificationAutoCloseModel = { enabled: true, interval: 3000 };
+  public notificationAutoCloseModel: INotificationAutoCloseModel = {
+    enabled: true,
+    interval: AppComponentConstants.NOTIFICATION_AUTO_CLOSE_INTERVAL
+  };
 
   private themeEnabled: boolean = true;
 
   private _layoutSubscription!: Subscription;
 
-  constructor(public notificationService: NotificationService,
+  constructor(
+    public notificationService: NotificationService,
     private themeService: ThemeService,
     private router: Router) { }
 

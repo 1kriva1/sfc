@@ -3,12 +3,12 @@ import { TestBed } from "@angular/core/testing";
 import { AuthenticationInterceptor, REQURED_AUTH } from "./authentication.interceptor";
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
 import { HttpConstants } from "../../constants/http.constants";
-import { environment } from "src/environments/environment";
-import { IdentityService } from "src/app/share/services/identity/identity.service";
-import { TokenService } from "src/app/share/services/token/token.service";
+import { environment } from "@environments/environment";
+import { IdentityService } from "@share/services/identity/identity.service";
+import { TokenService } from "@share/services/token/token.service";
 
 describe('Core.Interceptor:Authentication', () => {
-    const url = '/test';
+    const urlPart = '/test';
     let client: HttpClient;
     let controller: HttpTestingController;
     let identityServiceStub: Partial<IdentityService> = {};
@@ -39,9 +39,9 @@ describe('Core.Interceptor:Authentication', () => {
     });
 
     fit('Should not add bearer token for not required URI', (done) => {
-        client.get(url).subscribe(_ => done());
+        client.get(urlPart).subscribe(_ => done());
 
-        const testRequest = controller.expectOne(url);
+        const testRequest = controller.expectOne(urlPart);
 
         expect(testRequest.request.headers.has(HttpConstants.AUTHORIZATION_HEADER_KEY)).toBeFalse();
 
@@ -49,7 +49,7 @@ describe('Core.Interceptor:Authentication', () => {
     });
 
     fit('Should not add bearer token for not required context', (done) => {
-        const testUrl = `${environment.url}${url}`;
+        const testUrl = `${environment.identity_url}${urlPart}`;
 
         client.get(testUrl, { context: new HttpContext().set(REQURED_AUTH, false) }).subscribe(_ => done());
 
@@ -62,7 +62,7 @@ describe('Core.Interceptor:Authentication', () => {
 
     fit('Should not add bearer token for not log in player', (done) => {
         (identityServiceStub as any).isLoggedIn = false;
-        const testUrl = `${environment.url}${url}`;
+        const testUrl = `${environment.identity_url}${urlPart}`;
 
         client.get(testUrl).subscribe(_ => done());
 
@@ -76,7 +76,7 @@ describe('Core.Interceptor:Authentication', () => {
     fit('Should not add bearer token for empty token', (done) => {
         (identityServiceStub as any).isLoggedIn = true;
         (tokenServiceStub as any).get = () => { return null };
-        const testUrl = `${environment.url}${url}`;
+        const testUrl = `${environment.identity_url}${urlPart}`;
 
         client.get(testUrl).subscribe(_ => done());
 
@@ -90,7 +90,7 @@ describe('Core.Interceptor:Authentication', () => {
     fit('Should add bearer token', (done) => {
         (identityServiceStub as any).isLoggedIn = true;
         (tokenServiceStub as any).get = () => { return { Access: 'access', Refresh: 'refresh' } };
-        const testUrl = `${environment.url}${url}`;
+        const testUrl = `${environment.players_url}${urlPart}`;
 
         client.get(testUrl).subscribe(_ => done());
 
@@ -102,7 +102,7 @@ describe('Core.Interceptor:Authentication', () => {
     });
 
     fit('Should bearer token has valid value', (done) => {
-        const testUrl = `${environment.url}${url}`,
+        const testUrl = `${environment.players_url}${urlPart}`,
             token = { Access: 'access', Refresh: 'refresh' };
 
         (identityServiceStub as any).isLoggedIn = true;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpResponse } from '@angular/common/http';
 import { IRequestCacheModel } from './request-cache.model';
-import { environment } from 'src/environments/environment';
+import { environment } from '@environments/environment';
 
 export abstract class RequestCache {
     abstract get(request: HttpRequest<any>): HttpResponse<any> | undefined;

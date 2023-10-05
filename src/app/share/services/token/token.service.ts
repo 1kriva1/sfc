@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { isDefined } from 'ngx-sfc-common';
-import { StorageService } from 'src/app/core/services/storage/storage.service';
+import { StorageService } from '@core/services/storage/storage.service';
 import { IToken } from './token.model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class TokenService {
-
-    private readonly TOKEN_KEY = 'Token';
+    private readonly TOKEN_KEY = 'token';
 
     get jwt(): any {
         const token: IToken | null = this.get();
@@ -18,7 +17,11 @@ export class TokenService {
 
         const jwtBase64 = token.Access!.split('.')[1];
 
-        return JSON.parse(atob(jwtBase64));
+        try {
+            return JSON.parse(atob(jwtBase64));
+        } catch (error) {
+            return null;
+        }
     }
 
     get expired(): number | null {

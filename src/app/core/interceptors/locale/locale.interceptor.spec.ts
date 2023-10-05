@@ -65,4 +65,17 @@ describe('Core.Interceptor:Locale', () => {
 
         testRequest.flush({});
     });
+
+    fit('Should replace ukraine locale value', (done) => {
+        spyOn(storageServiceStub, 'get' as any).and.returnValue(Locale.Ukraine);
+
+        client.get(url).subscribe(_ => done());
+
+        const testRequest = controller.expectOne(url);
+
+        expect(testRequest.request.headers.has(HttpConstants.ACCEPT_LANGUAGE)).toBeTrue();
+        expect(testRequest.request.headers.get(HttpConstants.ACCEPT_LANGUAGE)).toEqual('uk-UA');
+
+        testRequest.flush({});
+    });
 })

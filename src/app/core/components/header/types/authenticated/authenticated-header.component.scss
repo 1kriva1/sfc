@@ -1,0 +1,174 @@
+@use "ngx-sfc-common/styles/index" as *;
+@import "index";
+
+:host {
+  sfc-base-header {
+    ::ng-deep header {
+      .logo {
+        @include theme-value(color, $color-default, $color-dark);
+      }
+
+      nav {
+        ul {
+          li {
+            a {
+              @include theme-value(color, $color-default, $color-dark);
+
+              &:hover {
+                color: $color-hover-default;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .notifications {
+      @include center-wrap;
+      @include theme-value(color, $color-default, $color-dark);
+
+      font-size: 1em;
+
+      .notification {
+        height: 1em;
+
+        @include center;
+
+        border: 1px solid;
+
+        @include theme-value(border-color, $color-default, $color-dark);
+
+        border-radius: 50%;
+        padding: 0.3em;
+        margin: 0.5em;
+        cursor: pointer;
+        transition:
+          color $transition-duration-default $transition-timing-function-default,
+          border-color $transition-duration-default $transition-timing-function-default;
+
+        &:hover {
+          color: $color-hover-default;
+          border-color: $color-hover-default;
+        }
+      }
+    }
+
+    .profile {
+      @include center-wrap;
+
+      .create-profile {
+        cursor: pointer;
+        font-size: 0.8em;
+        text-align: center;
+        white-space: nowrap;
+        font-weight: bold;
+
+        @include theme-color($color-default, $color-dark);
+
+        fa-icon {
+          padding: 0 0.5em;
+        }
+
+        &:hover {
+          color: $color-hover-default;
+        }
+      }
+
+      sfc-dropdown-menu {
+        ::ng-deep .dropdown-container {
+          margin-top: 0 !important;
+
+          sfc-dropdown-menu-item li sfc-icon {
+            padding-right: 1.5em;
+          }
+        }
+      }
+
+      sfc-avatar {
+        ::ng-deep .container {
+          @include center;
+
+          flex-direction: row-reverse;
+
+          .avatar-image-container {
+            padding: 0 1em;
+
+            .avatar {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+            }
+          }
+
+          .avatar-data-container {
+            .fullname {
+              max-width: 20em;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+    }
+
+    &.open {
+      ::ng-deep header {
+        background: $background-dark;
+      }
+
+      .notifications {
+        color: $color-0;
+
+        .notification {
+          border-color: $color-0;
+
+          &:hover {
+            border-color: $color-hover-default;
+          }
+        }
+      }
+
+      .profile {
+        .create-profile {
+          color: $color-0;
+
+          fa-icon {
+            padding: 0 0.5em 0 0;
+          }
+
+          &:hover {
+            color: $color-hover-default;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .profile {
+      flex-direction: column-reverse;
+    }
+  }
+
+  @media (max-width: 425px) {
+    sfc-base-header {
+      &.open {
+        ::ng-deep header {
+          .right {
+            padding: 0 !important;
+          }
+        }
+
+        .profile {
+          sfc-avatar {
+            ::ng-deep .container {
+              flex-direction: column;
+            }
+          }
+        }
+      }
+    }
+  }
+}

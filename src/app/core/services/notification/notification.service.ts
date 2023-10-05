@@ -4,18 +4,18 @@ import { removeItemBy } from 'ngx-sfc-common';
 import { INotificationContentModel, NotificationType } from 'ngx-sfc-components';
 import { map, Observable, Subject, tap } from 'rxjs';
 import { MessageSeverity } from '../message/message-severity.enum';
-import { IMessage } from '../message/message.model';
+import { INotification } from './notification.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private notificationSubject: Subject<IMessage> = new Subject<IMessage>();
+  private notificationSubject: Subject<INotification> = new Subject<INotification>();
 
   public notifications$: Observable<INotificationContentModel[]> = this.notificationSubject.asObservable()
     .pipe(
-      map((notification: IMessage) => {
-        const attriutes = this.getNotificationAttributes(notification.severity);
+      map((notification: INotification) => {
+        const attriutes = this.getAttributes(notification.severity);
         return {
           id: Date.now(),
           title: notification.title,
@@ -30,15 +30,16 @@ export class NotificationService {
 
   public notifications: INotificationContentModel[] = [];
 
-  public notify(message: IMessage): void {
-    this.notificationSubject.next(message);
+  public notify(notification: INotification): void {
+    this.notificationSubject.next(notification);
   }
 
   public remove(notification: INotificationContentModel): void {
-    removeItemBy(this.notifications, (item: INotificationContentModel)=>item.id === notification.id);
+    removeItemBy(this.notifications, (item: INotificationContentModel) => item.id === notification.id);
   }
 
-  private getNotificationAttributes(severity: MessageSeverity): { type: NotificationType, icon: IconDefinition } {
+  private getAttributes(severity: MessageSeverity)
+    : { type: NotificationType, icon: IconDefinition } {
     switch (severity) {
       case MessageSeverity.ERROR:
       case MessageSeverity.FATAL:

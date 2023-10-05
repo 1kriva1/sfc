@@ -28,8 +28,18 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/app/core/assets",
+              "src/app/share/assets",
+              "src/app/features/welcome/assets",
+              "src/app/features/identity/assets"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles",
+                "node_modules"
+              ]
+            },
             "styles": [
               "src/styles.scss"
             ],
@@ -49,7 +59,7 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "7kb",
+                  "maximumWarning": "8kb",
                   "maximumError": "11kb"
                 }
               ],
@@ -96,8 +106,18 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/app/core/assets",
+              "src/app/share/assets",
+              "src/app/features/welcome/assets",
+              "src/app/features/identity/assets"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles",
+                "node_modules"
+              ]
+            },
             "styles": [
               "src/styles.scss"
             ],

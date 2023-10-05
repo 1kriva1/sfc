@@ -1,4 +1,4 @@
-@use "node_modules/ngx-sfc-common/styles/index" as *;
+@use "ngx-sfc-common/styles/index" as *;
 
 :host {
   .container {
@@ -20,7 +20,7 @@
                 user-select: none;
 
                 &:hover {
-                  color: $color-yellow-0;
+                  color: $color-hover-default;
                 }
               }
             }

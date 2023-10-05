@@ -1,5 +1,5 @@
-@use "node_modules/ngx-sfc-common/styles/index" as *;
-@import "../../../../../styles/";
+@use "ngx-sfc-common/styles/index" as *;
+@import "variables";
 
 :host {
   .container {

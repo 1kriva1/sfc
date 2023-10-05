@@ -1,8 +1,8 @@
 import { HttpContext } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { CACHE } from 'src/app/core/interceptors/cache/cache.interceptor';
-import { environment } from 'src/environments/environment';
+import { CACHE } from '@core/interceptors/cache/cache.interceptor';
+import { environment } from '@environments/environment';
 import { IExistenceResponse } from './existence.response';
 import { ExistenceService } from './existence.service';
 
@@ -12,9 +12,7 @@ describe('Features.Identity.Service:Existence', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-      ]
+      imports: [HttpClientTestingModule]
     });
 
     httpMock = TestBed.inject(HttpTestingController);
@@ -42,7 +40,7 @@ describe('Features.Identity.Service:Existence', () => {
       done();
     });
 
-    const testRequest = httpMock.expectOne(`${environment.url}/api/existence/name/${userName}`);
+    const testRequest = httpMock.expectOne(`${environment.identity_url}/api/existence/name/${userName}`);
 
     expect(testRequest.request.body).toBeNull();
     expect(testRequest.request.context).toEqual(new HttpContext().set(CACHE, true));
@@ -63,7 +61,7 @@ describe('Features.Identity.Service:Existence', () => {
       done();
     });
 
-    const testRequest = httpMock.expectOne(`${environment.url}/api/existence/email/${email}`);
+    const testRequest = httpMock.expectOne(`${environment.identity_url}/api/existence/email/${email}`);
 
     expect(testRequest.request.body).toBeNull();
     expect(testRequest.request.context).toEqual(new HttpContext().set(CACHE, true));

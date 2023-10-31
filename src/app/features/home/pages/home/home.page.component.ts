@@ -155,7 +155,7 @@ export class HomePageComponent implements OnInit, AfterViewInit {
     public headerService: HeaderService) { }
 
   ngOnInit(): void {
-    this.userId = this.identityService.userId as string;
+    this.userId = this.identityService.userId.value!;
     this.titleService.setTitle(buildTitle(this.Localization.PAGE_TITLE));
   }
 

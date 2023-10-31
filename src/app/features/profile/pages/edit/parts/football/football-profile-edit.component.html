@@ -7,7 +7,7 @@
     <div class="column">
       <sfc-select-input id="position" formControlName="position" [label]="Localization.INPUT.POSITION.LABEL_PLACEHOLDER"
         [placeholder]="Localization.INPUT.POSITION.LABEL_PLACEHOLDER"
-        [helperText]="Localization.INPUT.POSITION.HELPER_TEXT" [data]="POSITIONS" [multiple]="false"
+        [helperText]="Localization.INPUT.POSITION.HELPER_TEXT" [data]="enumService.enums.footballPositions" [multiple]="false"
         [showDefaultItem]="false" [bordered]="true">
       </sfc-select-input>
     </div>
@@ -25,7 +25,7 @@
       <sfc-select-input id="game-style" formControlName="gameStyle"
         [label]="Localization.INPUT.GAME_STYLE.LABEL_PLACEHOLDER"
         [placeholder]="Localization.INPUT.GAME_STYLE.LABEL_PLACEHOLDER"
-        [helperText]="Localization.INPUT.GAME_STYLE.HELPER_TEXT" [data]="GAME_STYLES" [multiple]="false"
+        [helperText]="Localization.INPUT.GAME_STYLE.HELPER_TEXT" [data]="enumService.enums.gameStyles" [multiple]="false"
         [showDefaultItem]="false" [bordered]="true">
       </sfc-select-input>
     </div>
@@ -94,7 +94,7 @@
       <sfc-select-input id="working-foot" formControlName="workingFoot"
         [label]="Localization.INPUT.WORKING_FOOT.LABEL_PLACEHOLDER"
         [placeholder]="Localization.INPUT.WORKING_FOOT.LABEL_PLACEHOLDER"
-        [helperText]="Localization.INPUT.WORKING_FOOT.HELPER_TEXT" [data]="FOOTS" [multiple]="false"
+        [helperText]="Localization.INPUT.WORKING_FOOT.HELPER_TEXT" [data]="enumService.enums.workingFoots" [multiple]="false"
         [showDefaultItem]="false" [bordered]="true">
       </sfc-select-input>
     </div>

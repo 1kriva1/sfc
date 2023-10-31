@@ -1,9 +1,9 @@
-import { CommonConstants, firstOrDefault, sum, where } from "ngx-sfc-common";
+import { IEnumModel } from "@core/models";
+import { EnumService } from "@share/services";
+import { IStatTypeEnumModel } from "@share/services/enum/models/enums.model";
+import { CommonConstants, sum, where } from "ngx-sfc-common";
 import { getProgressColorDefaultFunc } from "ngx-sfc-components";
-import { IStatsValueModel } from "../../../../models/stats-profile.model";
-import { IStatsItemMetadataModel } from "../../parts/stats/models/stats-profile-template.model";
-import { StatComposeType } from "../../parts/stats/stat-compose-type.enum";
-import { StatsProfileEditConstants } from "../../parts/stats/stats-profile-edit.constants";
+import { StatsValueModel } from "../../../../models/stats-profile.model";
 
 export interface EditPageRaitingStatModel {
     total: number;
@@ -13,15 +13,10 @@ export interface EditPageRaitingStatModel {
     color: string;
 }
 
-export interface EditPageRaitingStatTypeItemModel {
+export interface EditPageRaitingStatTypeModel {
+    label: string;
     total: number;
     value: number;
-}
-
-export interface EditPageRaitingStatTypeModel {
-    physical: EditPageRaitingStatTypeItemModel;
-    skill: EditPageRaitingStatTypeItemModel;
-    mental: EditPageRaitingStatTypeItemModel;
 }
 
 export class EditPageRaitingViewModel {
@@ -39,9 +34,9 @@ export class EditPageRaitingViewModel {
 
     public stars: number = 0;
 
-    public types: EditPageRaitingStatTypeModel;
+    public types: EditPageRaitingStatTypeModel[];
 
-    constructor(private stats: IStatsValueModel) {
+    constructor(private stats: StatsValueModel, private enumService: EnumService) {
         this.model = this.buildModel();
         this.total = Object.values(this.model).reduce((accumulator: number, model: EditPageRaitingStatModel) =>
             accumulator += model.total, 0);
@@ -55,7 +50,7 @@ export class EditPageRaitingViewModel {
     private buildModel(): { [key: string]: EditPageRaitingStatModel } {
         return Object.keys(this.stats)
             .reduce((statsAccumulator: any, key: string) => {
-                const valueStats: any = Object.values((this.stats as any)[key]),
+                const valueStats: any[] = Object.values((this.stats as any)[key]),
                     value = sum(valueStats, (value: number) => value),
                     average = Math.ceil(value / valueStats.length);
 
@@ -72,50 +67,36 @@ export class EditPageRaitingViewModel {
             }, {});
     }
 
-    private buildTypes(): EditPageRaitingStatTypeModel {
-        const allStats = StatsProfileEditConstants.STATS.flatMap(model => model.items),
-            physicalStats = where(allStats, (stat: IStatsItemMetadataModel) => stat.type == StatComposeType.Physical)!,
-            skillStats = where(allStats, (stat: IStatsItemMetadataModel) => stat.type == StatComposeType.Skill)!,
-            mentalStats = where(allStats, (stat: IStatsItemMetadataModel) => stat.type == StatComposeType.Mental)!;
+    private buildTypes(): EditPageRaitingStatTypeModel[] {
+        const types: IStatTypeEnumModel<number>[] = this.enumService.enums.statTypes,
+            skills: IEnumModel<number>[] = this.enumService.enums.statSkills,
+            groupedSkills: any = skills.reduce((groups, skill) => {
+                (groups as any)[skill.value] = where(types, t => t.skill === skill.key)?.map(t => t.key)
+                return groups;
+            }, {});
 
         let allStatsList: { [key: string]: number } = {};
 
         Object.values(this.stats).forEach((group: any) => {
-            return Object.keys(group).forEach(key => {
+            Object.keys(group).forEach(key => {
                 allStatsList[key] = group[key];
             });
         });
 
-        let physical: number = 0, skill: number = 0, mental: number = 0;
+        const result: EditPageRaitingStatTypeModel[] = [];
 
-        Object.keys(allStatsList).forEach(key => {
-            const stat = firstOrDefault(allStats, stat => stat.key == key);
-            switch (stat?.type) {
-                case StatComposeType.Physical:
-                    physical += allStatsList[key];
-                    break;
-                case StatComposeType.Skill:
-                    skill += allStatsList[key];
-                    break;
-                case StatComposeType.Mental:
-                    mental += allStatsList[key];
-                    break;
-            }
+        Object.keys(groupedSkills).forEach(skill => {
+            let value = 0;
+            const skillTypes = groupedSkills[skill];
+            skillTypes.forEach((type: string) => value += allStatsList[type]);
+
+            result.push({
+                label: skill,
+                total: skillTypes.length * CommonConstants.FULL_PERCENTAGE,
+                value: value
+            });
         });
 
-        return {
-            physical: {
-                total: physicalStats.length * CommonConstants.FULL_PERCENTAGE,
-                value: physical
-            },
-            skill: {
-                total: skillStats.length * CommonConstants.FULL_PERCENTAGE,
-                value: skill
-            },
-            mental: {
-                total: mentalStats.length * CommonConstants.FULL_PERCENTAGE,
-                value: mental
-            }
-        }
+        return result;
     }
 }

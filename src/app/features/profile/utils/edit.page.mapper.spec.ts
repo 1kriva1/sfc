@@ -1,9 +1,221 @@
-import { StatCategory, StatType } from "@core/enums";
 import { ProfileEditPageMapper } from "./edit.page.mapper";
 import { IGetPlayerModel } from "../services/player/models";
 import { IEditPageFormModel } from "../pages/edit/models/edit-page-form.model";
+import { EnumService } from "@share/services";
 
 describe('Features.Profile.Utils:Mapper', () => {
+    let enumServiceStub: Partial<EnumService> = {
+        enums: {
+            footballPositions: [
+                { key: 0, value: 'Goalkeeper' },
+                { key: 1, value: 'Defender' },
+                { key: 2, value: 'Midfielder' },
+                { key: 3, value: 'Forward' }
+            ],
+            gameStyles: [
+                { key: 0, value: 'Defend' },
+                { key: 1, value: 'Attacking' },
+                { key: 2, value: 'Aggressive' },
+                { key: 3, value: 'Control' },
+                { key: 4, value: 'Counter Attacks' }
+            ],
+            statCategories: [
+                { key: 0, value: 'Defend' },
+                { key: 1, value: 'Shooting' },
+                { key: 2, value: 'Passing' },
+                { key: 3, value: 'Dribbling' },
+                { key: 4, value: 'Defending' },
+                { key: 5, value: 'Physicality' }
+            ],
+            statSkills: [
+                { key: 0, value: 'Physical' },
+                { key: 1, value: 'Mental' },
+                { key: 2, value: 'Skill' },
+            ],
+            statTypes: [
+                {
+                    category: 0,
+                    skill: 0,
+                    key: 0,
+                    value: "Acceleration",
+                },
+                {
+                    category: 0,
+                    skill: 0,
+                    key: 1,
+                    value: "Sprint Speed"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 2,
+                    value: "Positioning"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 3,
+                    value: "Finishing"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 4,
+                    value: "Shot Power"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 5,
+                    value: "Long Shots"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 6,
+                    value: "Volleys"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 7,
+                    value: "Penalties"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 8,
+                    value: "Vision"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 9,
+                    value: "Crossing"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 10,
+                    value: "FK. Accuracy"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 11,
+                    value: "Short Passing"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 12,
+                    value: "Long Passing"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 13,
+                    value: "Curve"
+                },
+                {
+                    category: 3,
+                    skill: 0,
+                    key: 14,
+                    value: "Agility"
+                },
+                {
+                    category: 3,
+                    skill: 0,
+                    key: 15,
+                    value: "Balance"
+                },
+                {
+                    category: 3,
+                    skill: 0,
+                    key: 16,
+                    value: "Reactions"
+                },
+                {
+                    category: 3,
+                    skill: 2,
+                    key: 17,
+                    value: "Ball Control"
+                },
+                {
+                    category: 3,
+                    skill: 2,
+                    key: 18,
+                    value: "Dribbling"
+                },
+                {
+                    category: 3,
+                    skill: 1,
+                    key: 19,
+                    value: "Composure"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 20,
+                    value: "Interceptions"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 21,
+                    value: "Heading Accuracy"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 22,
+                    value: "Def. Awareness"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 23,
+                    value: "Standing Tackle"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 24,
+                    value: "Sliding Tackle"
+                },
+                {
+                    category: 5,
+                    skill: 0,
+                    key: 25,
+                    value: "Jumping"
+                },
+                {
+                    category: 5,
+                    skill: 0,
+                    key: 26,
+                    value: "Stamina"
+                },
+                {
+                    category: 5,
+                    skill: 0,
+                    key: 27,
+                    value: "Strength"
+                },
+                {
+                    category: 5,
+                    skill: 1,
+                    key: 28,
+                    value: "Aggression"
+                }
+            ],
+            workingFoots: [
+                { key: 0, value: "Right" },
+                { key: 1, value: "Left" },
+                { key: 2, value: "Both" }
+            ]
+        }
+    };
+
     describe('To server', () => {
         fit('Should map available days', async () => {
             const model = buildProfileFormValue(null!, null!, null!),
@@ -34,7 +246,7 @@ describe('Features.Profile.Utils:Mapper', () => {
 
             const result = await ProfileEditPageMapper.mapToServer(model, statsModel);
 
-            expect(result.Player.Profile.General.Birthday?.toDateString()).toEqual('Fri Dec 04 1992');
+            expect((result.Player.Profile.General.Birthday as Date).toDateString()).toEqual('Fri Dec 04 1992');
         });
 
         fit('Should map photo', async () => {
@@ -75,7 +287,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             const result = await ProfileEditPageMapper.mapToServer(model, statsModel);
 
             expect(result.Player.Stats.Values.length).toEqual(29);
-            expect(result.Player.Stats.Values[0]).toEqual({ Category: StatCategory.Pace, Type: StatType.Acceleration, Value: 50 });
+            expect(result.Player.Stats.Values[0]).toEqual({ Category: 0, Type: 0, Value: 50 });
         });
     });
 
@@ -84,7 +296,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             const model = getPlayerModel();
             model.Profile.General.Photo = 'data:application/octet-stream;base64,';
 
-            const result = await ProfileEditPageMapper.mapFromServer(model);
+            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
 
             expect(result.general.photo).toBeDefined();
             expect(result.general.photo?.name).toEqual('avatar.ation/octet-stream');
@@ -94,7 +306,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             const model = getPlayerModel();
             model.Profile.General.Availability.Days = [1, 2];
 
-            const result = await ProfileEditPageMapper.mapFromServer(model);
+            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
 
             expect(result.general.availability.days)
                 .toEqual([{ key: 1, value: 'Monday' }, { key: 2, value: 'Tuesday' }]);
@@ -105,12 +317,12 @@ describe('Features.Profile.Utils:Mapper', () => {
             model.Profile.General.Availability.From = '14:10:00';
             model.Profile.General.Availability.To = '16:10:00';
 
-            const result = await ProfileEditPageMapper.mapFromServer(model);
+            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
 
             expect(result.general.availability.from?.toTimeString())
-                .toEqual('14:10:00 GMT+0300 (Eastern European Summer Time)');
+                .toContain('14:10:00');
             expect(result.general.availability.to?.toTimeString())
-                .toEqual('16:10:00 GMT+0300 (Eastern European Summer Time)');
+                .toContain('16:10:00');
         });
 
         fit('Should map enum values', async () => {
@@ -120,7 +332,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             model.Profile.Football.WorkingFoot = 0;
             model.Profile.Football.GameStyle = 0;
 
-            const result = await ProfileEditPageMapper.mapFromServer(model);
+            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
 
             expect(result.football.position).toEqual({ key: 0, value: 'Goalkeeper' });
             expect(result.football.additionalPosition).toEqual({ key: 1, value: 'Defender' });
@@ -131,7 +343,7 @@ describe('Features.Profile.Utils:Mapper', () => {
         fit('Should map pure values', async () => {
             const model = getPlayerModel();
 
-            const result = await ProfileEditPageMapper.mapFromServer(model);
+            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
 
             expect(result.general.firstName).toEqual('First name');
             expect(result.general.lastName).toEqual('Last name');
@@ -141,45 +353,45 @@ describe('Features.Profile.Utils:Mapper', () => {
         fit('Should map stats', async () => {
             const model = getPlayerModel();
 
-            const result = await ProfileEditPageMapper.mapFromServer(model);
+            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
 
-            expect(result.stats.value.pace).toEqual({ acceleration: 50, sprintSpeed: 50 });
-            expect(result.stats.value.defending).toEqual({
-                interceptions: 50,
-                headingAccuracy: 50,
-                defAwarenence: 50,
-                standingTackle: 50,
-                slidingTackle: 50
+            expect(result.stats.value['0']).toEqual({ 0: 50, 1: 50 });
+            expect(result.stats.value['4']).toEqual({
+                20: 50,
+                21: 50,
+                22: 50,
+                23: 50,
+                24: 50
             });
-            expect(result.stats.value.dribbling).toEqual({
-                agility: 50,
-                balance: 50,
-                reactions: 50,
-                ballControl: 50,
-                dribbling: 50,
-                composure: 50
+            expect(result.stats.value['3']).toEqual({
+                14: 50,
+                15: 50,
+                16: 50,
+                17: 50,
+                18: 50,
+                19: 50
             });
-            expect(result.stats.value.passing).toEqual({
-                vision: 50,
-                crossing: 50,
-                fkAccuracy: 50,
-                shortPassing: 50,
-                longPassing: 50,
-                curve: 50
+            expect(result.stats.value['2']).toEqual({
+                8: 50,
+                9: 50,
+                10: 50,
+                11: 50,
+                12: 50,
+                13: 50
             });
-            expect(result.stats.value.physicality).toEqual({
-                jumping: 50,
-                stamina: 50,
-                strength: 50,
-                aggresion: 50
+            expect(result.stats.value['5']).toEqual({
+                25: 50,
+                26: 50,
+                27: 50,
+                28: 50
             });
-            expect(result.stats.value.shooting).toEqual({
-                positioning: 50,
-                finishing: 50,
-                shotPower: 50,
-                longShots: 50,
-                volleys: 50,
-                penalties: 50
+            expect(result.stats.value['1']).toEqual({
+                2: 50,
+                3: 50,
+                4: 50,
+                5: 50,
+                6: 50,
+                7: 50
             });
         });
     });
@@ -215,46 +427,46 @@ describe('Features.Profile.Utils:Mapper', () => {
                 physicalCondition: null,
             },
             stats: {
-                pace: {
-                    acceleration: 50,
-                    sprintSpeed: 50
+                0: {
+                    0: 50,
+                    1: 50
                 },
-                shooting: {
-                    positioning: 50,
-                    finishing: 50,
-                    shotPower: 50,
-                    longShots: 50,
-                    volleys: 50,
-                    penalties: 50
+                1: {
+                    2: 50,
+                    3: 50,
+                    4: 50,
+                    5: 50,
+                    6: 50,
+                    7: 50
                 },
-                passing: {
-                    vision: 50,
-                    crossing: 50,
-                    fkAccuracy: 50,
-                    shortPassing: 50,
-                    longPassing: 50,
-                    curve: 50
+                2: {
+                    8: 50,
+                    9: 50,
+                    10: 50,
+                    11: 50,
+                    12: 50,
+                    13: 50
                 },
-                dribbling: {
-                    agility: 50,
-                    balance: 50,
-                    reactions: 50,
-                    ballControl: 50,
-                    dribbling: 50,
-                    composure: 50
+                3: {
+                    14: 50,
+                    15: 50,
+                    16: 50,
+                    17: 50,
+                    18: 50,
+                    19: 50
                 },
-                defending: {
-                    interceptions: 50,
-                    headingAccuracy: 50,
-                    defAwarenence: 50,
-                    standingTackle: 50,
-                    slidingTackle: 50
+                4: {
+                    20: 50,
+                    21: 50,
+                    22: 50,
+                    23: 50,
+                    24: 50
                 },
-                physicality: {
-                    jumping: 50,
-                    stamina: 50,
-                    strength: 50,
-                    aggresion: 50
+                5: {
+                    25: 50,
+                    26: 50,
+                    27: 50,
+                    28: 50
                 }
             }
         };

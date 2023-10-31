@@ -6,6 +6,7 @@ import { ButtonComponent, ButtonType, ComponentSize, ComponentSizeDirective } fr
 import { ImageSliderComponent } from './image-slider.component';
 import { ImageSliderItemType } from './parts/image-slider-item/image-slider-item-type.enum';
 import { ImageSliderItemComponent } from './parts/image-slider-item/image-slider-item.component';
+import { IImageSliderItemModel } from './parts/image-slider-item/image-slider-item.model';
 
 describe('Features.Welcome.Component: ImageSlider', () => {
   let component: ImageSliderComponent;
@@ -45,25 +46,14 @@ describe('Features.Welcome.Component: ImageSlider', () => {
     });
 
     fit("Should exist defined items", () => {
-      component.items = [
-        { image: 'test1.png', title: 'test1' },
-        { image: 'test2.png', title: 'test2' },
-        { image: 'test3.png', title: 'test3' }
-      ];
+      component.items = buildItems(3);
       fixture.detectChanges();
 
       expect(fixture.nativeElement.querySelectorAll('sfc-image-slider-item').length).toEqual(3);
     });
 
     fit('Should have appropriate attributes', () => {
-      component.items = [
-        { image: 'test1.png', title: 'test1' },
-        { image: 'test2.png', title: 'test2' },
-        { image: 'test3.png', title: 'test3' },
-        { image: 'test4.png', title: 'test4' },
-        { image: 'test5.png', title: 'test5' },
-        { image: 'test6.png', title: 'test6' }
-      ];
+      component.items = buildItems(6);
       fixture.detectChanges();
 
       const itemsEls: DebugElement[] = fixture.debugElement.queryAll(By.css('sfc-image-slider-item'));
@@ -101,14 +91,7 @@ describe('Features.Welcome.Component: ImageSlider', () => {
     });
 
     fit('Should move items to next', () => {
-      component.items = [
-        { image: 'test1.png', title: 'test1' },
-        { image: 'test2.png', title: 'test2' },
-        { image: 'test3.png', title: 'test3' },
-        { image: 'test4.png', title: 'test4' },
-        { image: 'test5.png', title: 'test5' },
-        { image: 'test6.png', title: 'test6' }
-      ];
+      component.items = buildItems(6);
       fixture.detectChanges();
 
       fixture.debugElement.query(By.css('sfc-button.next')).nativeElement.dispatchEvent(new MouseEvent('click'));
@@ -125,14 +108,7 @@ describe('Features.Welcome.Component: ImageSlider', () => {
     });
 
     fit('Should move items to previous', () => {
-      component.items = [
-        { image: 'test1.png', title: 'test1' },
-        { image: 'test2.png', title: 'test2' },
-        { image: 'test3.png', title: 'test3' },
-        { image: 'test4.png', title: 'test4' },
-        { image: 'test5.png', title: 'test5' },
-        { image: 'test6.png', title: 'test6' }
-      ];
+      component.items = buildItems(6);
       fixture.detectChanges();
 
       fixture.debugElement.query(By.css('sfc-button.previous')).nativeElement.dispatchEvent(new MouseEvent('click'));
@@ -148,4 +124,12 @@ describe('Features.Welcome.Component: ImageSlider', () => {
       expect(itemsEls[5].componentInstance.type).toEqual(ImageSliderItemType.Active);
     });
   });
+
+  function buildItems(count: number): IImageSliderItemModel[] {
+    const result: IImageSliderItemModel[] = [];
+    for (let i = 0; i < count; i++) {
+      result.push({ image: 'app/features/welcome/assets/images/locations/test.jpg', title: `test${i}` });
+    }
+    return result;
+  }
 });

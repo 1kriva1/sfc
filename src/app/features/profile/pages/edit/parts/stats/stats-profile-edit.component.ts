@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlContainer, FormBuilder, FormGroup, FormGroupDirective } from '@angular/forms';
-import { Sequence } from 'ngx-sfc-common';
+import { Sequence, where } from 'ngx-sfc-common';
 import { getProgressColorDynamicallyFunc } from 'ngx-sfc-components';
 import { map, Observable, pairwise, startWith, Subscription } from 'rxjs';
 import { ProfileEditPagePart } from '../../edit-page-part.enum';
@@ -10,6 +10,9 @@ import { StatsProfileEditConstants } from './stats-profile-edit.constants';
 import { EditPageRaitingViewModel } from '../../models/view/edit-page-raiting-view.model';
 import { StatsProfileEditLocalization } from './stats-profile-edit.localization';
 import { IStatsProfileTemplateModel, IStatsItemMetadataModel } from './models/stats-profile-template.model';
+import { EnumService } from '@share/services';
+import { IEnumModel } from '@core/models';
+import { IStatTypeEnumModel } from '@share/services/enum/models/enums.model';
 
 @Component({
     selector: 'sfc-stats-profile-edit',
@@ -36,24 +39,29 @@ export class StatsProfileEditComponent
         return (this.statsService.stats.used - this.statsService.initial.used) > 0;
     }
 
+    public statsModel: IStatsProfileTemplateModel[] = [];
+
     private _statsControlsSubscriptions: Subscription[] = [];
 
     constructor(
         parent: FormGroupDirective,
         formBuilder: FormBuilder,
-        private statsService: StatsService) {
+        private statsService: StatsService,
+        private enumService: EnumService) {
         super(parent, formBuilder);
     }
 
     ngOnInit(): void {
-        const statsGroup: FormGroup[] = this.buildStats();
+        this.statsModel = this.buildStatsModel();
+
+        const statsGroup: FormGroup[] = this.buildStatsForm();
 
         this.form.addControl(ProfileEditPagePart.Stats, this.formBuilder.group(statsGroup));
 
         this.vm$ = this.form.valueChanges
             .pipe(
                 startWith(this.form.value),
-                map((model: any) => new EditPageRaitingViewModel(model.stats))
+                map((model: any) => new EditPageRaitingViewModel(model.stats, this.enumService))
             );
 
         this.listenControls();
@@ -85,8 +93,23 @@ export class StatsProfileEditComponent
         });
     }
 
-    private buildStats(): FormGroup[] {
-        return this.Constants.STATS.reduce((groupAccumulator: any, stat: IStatsProfileTemplateModel) => {
+    private buildStatsModel(): IStatsProfileTemplateModel[] {
+        const categories: IEnumModel<number>[] = this.enumService.enums.statCategories,
+            types: IStatTypeEnumModel<number>[] = this.enumService.enums.statTypes;
+
+        return categories.map(category => ({
+            key: category.key,
+            label: category.value,
+            items: where(types, type => type.category === category.key)!.map(type => ({
+                key: type.key,
+                label: type.value,
+                skill: type.skill
+            }))
+        }));
+    }
+
+    private buildStatsForm(): FormGroup[] {
+        return this.statsModel.reduce((groupAccumulator: any, stat: IStatsProfileTemplateModel) => {
             const controls: any =
                 stat.items.reduce((controlAccumulator: any, item: IStatsItemMetadataModel) =>
                     ({ ...controlAccumulator, [item.key]: this.Constants.INITIAL_STAT_VALUE }), {});

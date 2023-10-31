@@ -13,14 +13,15 @@ import { WelcomeHeaderComponent } from './types/welcome/welcome-header.component
 import { HeaderComponent } from './header.component';
 import { HeaderService } from './services/header.service';
 import { HttpClientModule } from '@angular/common/http';
-import { PlayerService } from '@share/services';
+import { IPlayerByUserProfileModel, PlayerService } from '@share/services';
+import { ObservableModel } from '@core/models/observable.model';
 
 describe('Core.Component:Header', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
   let windowMock: any = <any>{ location: {} };
   let resizeServiceStub: Partial<ResizeService> = { onResize$: of(windowMock) };
-  let playerServiceStub: any = { player: { value$: of(null) } };
+  let playerServiceStub: Partial<PlayerService> = { player: new ObservableModel<IPlayerByUserProfileModel>(null) };
   let identityServiceStub: Partial<IdentityService> = {};
   let headerServiceStub: Partial<HeaderService> = { toggleByValue: () => { } };
 

@@ -15,11 +15,8 @@ export class PlayerInitializer {
 
     init(): Observable<any> {
         return this.identityService.isLoggedIn
-            ? this.playerService
-                .get()
-                .pipe(catchError(() => {
-                    return this.identityService.logout();
-                }))
+            ? this.playerService.get()
+                .pipe(catchError(() => this.identityService.logout()))
             : EMPTY;
     }
 }

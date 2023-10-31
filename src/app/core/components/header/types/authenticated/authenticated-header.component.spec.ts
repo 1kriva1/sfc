@@ -17,7 +17,9 @@ import { BaseHeaderComponent } from '../base/base-header.component';
 import { IHeaderNavigationModel } from '../base/header-navigation.model';
 import { AuthenticatedHeaderComponent } from './authenticated-header.component';
 import { HttpClientModule } from '@angular/common/http';
-import { PlayerService } from '@share/services';
+import { EnumService, IPlayerByUserProfileModel, PlayerService } from '@share/services';
+import { ObservableModel } from '@core/models/observable.model';
+import { CommonConstants } from '@core/constants';
 
 describe('Core.Component:AuthenticatedHeader', () => {
   let component: AuthenticatedHeaderComponent;
@@ -25,7 +27,22 @@ describe('Core.Component:AuthenticatedHeader', () => {
   let routerMock = { navigate: jasmine.createSpy('navigate') };
   let identityServiceStub: Partial<IdentityService> = { logout: () => of() };
   let headerServiceStub: Partial<HeaderService> = { toggleByValue: () => { } };
-  let playerServiceStub: any = { player: { value$: of(null) } };
+  let playerServiceStub: Partial<PlayerService> = { player: new ObservableModel<IPlayerByUserProfileModel>(null) };
+  let enumServiceStub: Partial<EnumService> = {
+    enums: {
+      footballPositions: [
+        { key: 0, value: 'Goalkeeper' },
+        { key: 1, value: 'Defender' },
+        { key: 2, value: 'Midfielder' },
+        { key: 3, value: 'Forward' }
+      ],
+      gameStyles: [],
+      statCategories: [],
+      statSkills: [],
+      statTypes: [],
+      workingFoots: []
+    }
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -36,7 +53,8 @@ describe('Core.Component:AuthenticatedHeader', () => {
         { provide: Router, useValue: routerMock },
         { provide: IdentityService, useValue: identityServiceStub },
         { provide: HeaderService, useValue: headerServiceStub },
-        { provide: PlayerService, useValue: playerServiceStub }
+        { provide: PlayerService, useValue: playerServiceStub },
+        { provide: EnumService, useValue: enumServiceStub }
       ]
     }).compileComponents();
 
@@ -67,20 +85,25 @@ describe('Core.Component:AuthenticatedHeader', () => {
       expect(headerServiceStub.toggleByValue).toHaveBeenCalledOnceWith(false);
     });
 
-    fit("Should call unsubscribe on logout subscription, when component destroyed and logout executed", () => {
+    fit("Should call unsubscribe for subscriptions, when component destroyed", () => {
       const dropdownMenuEl: DebugElement = fixture.debugElement.query(By.css('.profile sfc-dropdown-menu')),
         logoutItem: IDropdownMenuItemModel = dropdownMenuEl.componentInstance.items[0];
 
       (logoutItem.click as any)();
 
-      const unsubscribeSpy = spyOn(
+      const logoutUnsubscribeSpy = spyOn(
         (component as any)._logoutSubscription,
         'unsubscribe'
-      ).and.callThrough();
+      ).and.callThrough(),
+        playerUnsubscribeSpy = spyOn(
+          (component as any)._playerSubscription,
+          'unsubscribe'
+        ).and.callThrough();
 
       component?.ngOnDestroy();
 
-      expect(unsubscribeSpy).toHaveBeenCalled();
+      expect(logoutUnsubscribeSpy).toHaveBeenCalled();
+      expect(playerUnsubscribeSpy).toHaveBeenCalled();
     });
   });
 
@@ -267,13 +290,15 @@ describe('Core.Component:AuthenticatedHeader', () => {
     fit('Should have profile and logout action', () => {
       (playerServiceStub as any).playerCreated = true;
       (playerServiceStub as any).player.value$ = of({
-        General: {
-          FirstName: 'FirstName',
-          LastName: '',
-          Photo: null
-        },
-        Football: {
-          Position: 2
+        data: {
+          General: {
+            FirstName: 'FirstName',
+            LastName: '',
+            Photo: null
+          },
+          Football: {
+            Position: 2
+          }
         }
       });
       component.ngOnInit();
@@ -300,7 +325,8 @@ describe('Core.Component:AuthenticatedHeader', () => {
 
       (profilefitem.click as any)();
 
-      expect(routerMock.navigate).toHaveBeenCalledWith([`${RoutKey.Profiles}/${playerServiceStub.playerId.value}/${RoutKey.Edit}`]);
+      expect(routerMock.navigate)
+        .toHaveBeenCalledWith([`${RoutKey.Profiles}/${playerServiceStub.playerId!.value}/${RoutKey.Edit}`]);
     });
 
     fit('Should toggle header for profile action, if header is oppened', () => {
@@ -316,6 +342,42 @@ describe('Core.Component:AuthenticatedHeader', () => {
       (profilefitem.click as any)();
 
       expect(headerServiceStub.toggleByValue).toHaveBeenCalledOnceWith(false);
+    });
+  });
+
+  describe('Avatar', () => {
+    fit('Should have defined values for model', () => {
+      component.avatarModel = { image: CommonConstants.DEFAULT_AVATAR_PATH };
+      (playerServiceStub as any).player.value$ = of({
+        data: {
+          General: {
+            FirstName: 'FirstName',
+            LastName: 'LastName',
+            Photo: null
+          },
+          Football: {
+            Position: 2
+          }
+        }
+      });
+      component.ngOnInit();
+
+      expect(component.avatarModel).toEqual({
+        firstName: 'FirstName',
+        lastName: 'LastName',
+        title: 'Midfielder',
+        image: 'app/core/assets/images/default_avatar.png'
+      });
+    });
+
+    fit('Should have default values for model', () => {
+      component.avatarModel = { image: CommonConstants.DEFAULT_AVATAR_PATH };
+      (playerServiceStub as any).player.value$ = of({ data: null });
+      component.ngOnInit();
+
+      expect(component.avatarModel).toEqual({
+        image: 'app/core/assets/images/default_avatar.png'
+      });
     });
   });
 });

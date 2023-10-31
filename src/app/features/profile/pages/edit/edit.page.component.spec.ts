@@ -16,13 +16,14 @@ import { buildTitle } from '@core/utils';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFutbol, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCamera, faG, faStar } from '@fortawesome/free-solid-svg-icons';
-import { PlayerService as SharePlayerService } from '@share/services';
+import { EnumService, PlayerService as SharePlayerService } from '@share/services';
 import { ShareModule } from '@share/share.module';
 import { ButtonType, CommonConstants, ModalService, nameof, NgxSfcCommonModule, UIConstants } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
 import { of, throwError } from 'rxjs';
-import { IProfileModel } from '../../models';
+import { IProfileModel, StatsValueModel } from '../../models';
+import { ICreatePlayerRequest, IUpdatePlayerRequest } from '../../services/player/models';
 import { ICreatePlayerResponse } from '../../services/player/models/create/create.response';
 import { IUpdatePlayerResponse } from '../../services/player/models/update/update.response';
 import { PlayerService } from '../../services/player/player.service';
@@ -36,7 +37,7 @@ import { IGeneralProfileEditModel } from './parts/general/general-profile-edit.m
 import { StatsService } from './parts/stats/services/stats.service';
 import { StatsProfileEditComponent } from './parts/stats/stats-profile-edit.component';
 
-describe('Features.Profile.Page:ProfileEdfit', () => {
+describe('Features.Profile.Page:ProfileEdit', () => {
     let component: ProfileEditPageComponent;
     let fixture: ComponentFixture<ProfileEditPageComponent>;
     let routerMock = { navigate: (_: string[]) => { } };
@@ -51,6 +52,217 @@ describe('Features.Profile.Page:ProfileEdfit', () => {
     let playerServiceStub: Partial<PlayerService> = {
         create: () => { return of(); },
         update: () => { return of(); }
+    };
+    let enumServiceStub: Partial<EnumService> = {
+        enums: {
+            footballPositions: [
+                { key: 0, value: 'Goalkeeper' },
+                { key: 1, value: 'Defender' },
+                { key: 2, value: 'Midfielder' },
+                { key: 3, value: 'Forward' }
+            ],
+            gameStyles: [
+                { key: 0, value: 'Defend' },
+                { key: 1, value: 'Attacking' },
+                { key: 2, value: 'Aggressive' },
+                { key: 3, value: 'Control' },
+                { key: 4, value: 'Counter Attacks' }
+            ],
+            statCategories: [
+                { key: 0, value: 'Defend' },
+                { key: 1, value: 'Shooting' },
+                { key: 2, value: 'Passing' },
+                { key: 3, value: 'Dribbling' },
+                { key: 4, value: 'Defending' },
+                { key: 5, value: 'Physicality' }
+            ],
+            statSkills: [
+                { key: 0, value: 'Physical' },
+                { key: 1, value: 'Mental' },
+                { key: 2, value: 'Skill' },
+            ],
+            statTypes: [
+                {
+                    category: 0,
+                    skill: 0,
+                    key: 0,
+                    value: "Acceleration",
+                },
+                {
+                    category: 0,
+                    skill: 0,
+                    key: 1,
+                    value: "Sprint Speed"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 2,
+                    value: "Positioning"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 3,
+                    value: "Finishing"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 4,
+                    value: "Shot Power"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 5,
+                    value: "Long Shots"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 6,
+                    value: "Volleys"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 7,
+                    value: "Penalties"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 8,
+                    value: "Vision"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 9,
+                    value: "Crossing"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 10,
+                    value: "FK. Accuracy"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 11,
+                    value: "Short Passing"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 12,
+                    value: "Long Passing"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 13,
+                    value: "Curve"
+                },
+                {
+                    category: 3,
+                    skill: 0,
+                    key: 14,
+                    value: "Agility"
+                },
+                {
+                    category: 3,
+                    skill: 0,
+                    key: 15,
+                    value: "Balance"
+                },
+                {
+                    category: 3,
+                    skill: 0,
+                    key: 16,
+                    value: "Reactions"
+                },
+                {
+                    category: 3,
+                    skill: 2,
+                    key: 17,
+                    value: "Ball Control"
+                },
+                {
+                    category: 3,
+                    skill: 2,
+                    key: 18,
+                    value: "Dribbling"
+                },
+                {
+                    category: 3,
+                    skill: 1,
+                    key: 19,
+                    value: "Composure"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 20,
+                    value: "Interceptions"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 21,
+                    value: "Heading Accuracy"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 22,
+                    value: "Def. Awareness"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 23,
+                    value: "Standing Tackle"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 24,
+                    value: "Sliding Tackle"
+                },
+                {
+                    category: 5,
+                    skill: 0,
+                    key: 25,
+                    value: "Jumping"
+                },
+                {
+                    category: 5,
+                    skill: 0,
+                    key: 26,
+                    value: "Stamina"
+                },
+                {
+                    category: 5,
+                    skill: 0,
+                    key: 27,
+                    value: "Strength"
+                },
+                {
+                    category: 5,
+                    skill: 1,
+                    key: 28,
+                    value: "Aggression"
+                }
+            ],
+            workingFoots: [
+                { key: 0, value: "Right" },
+                { key: 1, value: "Left" },
+                { key: 2, value: "Both" }
+            ]
+        }
     };
 
     beforeEach(async () => {
@@ -70,6 +282,7 @@ describe('Features.Profile.Page:ProfileEdfit', () => {
                 { provide: PlayerService, useValue: playerServiceStub },
                 { provide: NotificationService, useValue: notificationServiceStub },
                 { provide: HeaderService, useValue: headerServiceStub },
+                { provide: EnumService, useValue: enumServiceStub }
             ]
         }).compileComponents();
 
@@ -691,76 +904,7 @@ describe('Features.Profile.Page:ProfileEdfit', () => {
 
             tick();
 
-            expect(playerServiceStub.create).toHaveBeenCalledOnceWith({
-                Player: {
-                    Profile: {
-                        General: {
-                            Availability: {
-                                Days: undefined,
-                                From: undefined,
-                                To: undefined
-                            },
-                            Biography: null,
-                            Birthday: null,
-                            City: 'City',
-                            FirstName: 'First name',
-                            FreePlay: false,
-                            LastName: 'Last name',
-                            Photo: null,
-                            Tags: null
-                        },
-                        Football: {
-                            Position: undefined,
-                            AdditionalPosition: undefined,
-                            GameStyle: undefined,
-                            Height: null,
-                            Weight: null,
-                            Number: null,
-                            PhysicalCondition: null,
-                            Skill: null,
-                            WeakFoot: null,
-                            WorkingFoot: undefined
-                        }
-                    },
-                    Stats: {
-                        Points: {
-                            Available: 3,
-                            Used: 0
-                        },
-                        Values: [
-                            { Category: 0, Type: 0, Value: 50 },
-                            { Category: 0, Type: 1, Value: 50 },
-                            { Category: 1, Type: 3, Value: 50 },
-                            { Category: 1, Type: 2, Value: 50 },
-                            { Category: 1, Type: 4, Value: 50 },
-                            { Category: 1, Type: 5, Value: 50 },
-                            { Category: 1, Type: 6, Value: 50 },
-                            { Category: 1, Type: 7, Value: 50 },
-                            { Category: 2, Type: 8, Value: 50 },
-                            { Category: 2, Type: 9, Value: 50 },
-                            { Category: 2, Type: 10, Value: 50 },
-                            { Category: 2, Type: 11, Value: 50 },
-                            { Category: 2, Type: 12, Value: 50 },
-                            { Category: 2, Type: 13, Value: 50 },
-                            { Category: 3, Type: 14, Value: 50 },
-                            { Category: 3, Type: 15, Value: 50 },
-                            { Category: 3, Type: 16, Value: 50 },
-                            { Category: 3, Type: 17, Value: 50 },
-                            { Category: 3, Type: 18, Value: 50 },
-                            { Category: 3, Type: 19, Value: 50 },
-                            { Category: 4, Type: 20, Value: 50 },
-                            { Category: 4, Type: 21, Value: 50 },
-                            { Category: 4, Type: 22, Value: 50 },
-                            { Category: 4, Type: 23, Value: 50 },
-                            { Category: 4, Type: 24, Value: 50 },
-                            { Category: 5, Type: 25, Value: 50 },
-                            { Category: 5, Type: 26, Value: 50 },
-                            { Category: 5, Type: 27, Value: 50 },
-                            { Category: 5, Type: 28, Value: 50 }
-                        ]
-                    }
-                }
-            });
+            expect(playerServiceStub.create).toHaveBeenCalledOnceWith(buildCreateUpdateModel());
         }));
 
         fit('Should show error if create failed', fakeAsync(() => {
@@ -956,76 +1100,7 @@ describe('Features.Profile.Page:ProfileEdfit', () => {
 
             tick();
 
-            expect(playerServiceStub.update).toHaveBeenCalledOnceWith(100, {
-                Player: {
-                    Profile: {
-                        General: {
-                            Availability: {
-                                Days: undefined,
-                                From: undefined,
-                                To: undefined
-                            },
-                            Biography: null,
-                            Birthday: null,
-                            City: 'City',
-                            FirstName: 'First name',
-                            FreePlay: false,
-                            LastName: 'Last name',
-                            Photo: null,
-                            Tags: null
-                        },
-                        Football: {
-                            Position: undefined,
-                            AdditionalPosition: undefined,
-                            GameStyle: undefined,
-                            Height: null,
-                            Weight: null,
-                            Number: null,
-                            PhysicalCondition: null,
-                            Skill: null,
-                            WeakFoot: null,
-                            WorkingFoot: undefined
-                        }
-                    },
-                    Stats: {
-                        Points: {
-                            Available: 3,
-                            Used: 0
-                        },
-                        Values: [
-                            { Category: 0, Type: 0, Value: 50 },
-                            { Category: 0, Type: 1, Value: 50 },
-                            { Category: 1, Type: 3, Value: 50 },
-                            { Category: 1, Type: 2, Value: 50 },
-                            { Category: 1, Type: 4, Value: 50 },
-                            { Category: 1, Type: 5, Value: 50 },
-                            { Category: 1, Type: 6, Value: 50 },
-                            { Category: 1, Type: 7, Value: 50 },
-                            { Category: 2, Type: 8, Value: 50 },
-                            { Category: 2, Type: 9, Value: 50 },
-                            { Category: 2, Type: 10, Value: 50 },
-                            { Category: 2, Type: 11, Value: 50 },
-                            { Category: 2, Type: 12, Value: 50 },
-                            { Category: 2, Type: 13, Value: 50 },
-                            { Category: 3, Type: 14, Value: 50 },
-                            { Category: 3, Type: 15, Value: 50 },
-                            { Category: 3, Type: 16, Value: 50 },
-                            { Category: 3, Type: 17, Value: 50 },
-                            { Category: 3, Type: 18, Value: 50 },
-                            { Category: 3, Type: 19, Value: 50 },
-                            { Category: 4, Type: 20, Value: 50 },
-                            { Category: 4, Type: 21, Value: 50 },
-                            { Category: 4, Type: 22, Value: 50 },
-                            { Category: 4, Type: 23, Value: 50 },
-                            { Category: 4, Type: 24, Value: 50 },
-                            { Category: 5, Type: 25, Value: 50 },
-                            { Category: 5, Type: 26, Value: 50 },
-                            { Category: 5, Type: 27, Value: 50 },
-                            { Category: 5, Type: 28, Value: 50 }
-                        ]
-                    }
-                }
-            });
+            expect(playerServiceStub.update).toHaveBeenCalledOnceWith(100, buildCreateUpdateModel());
         }));
 
         fit('Should show error if update failed', fakeAsync(() => {
@@ -1202,49 +1277,7 @@ describe('Features.Profile.Page:ProfileEdfit', () => {
                     available: 0,
                     used: 3
                 },
-                value: {
-                    pace: {
-                        acceleration: 50,
-                        sprintSpeed: 50
-                    },
-                    shooting: {
-                        positioning: 50,
-                        finishing: 50,
-                        shotPower: 50,
-                        longShots: 50,
-                        volleys: 50,
-                        penalties: 50
-                    },
-                    passing: {
-                        vision: 50,
-                        crossing: 50,
-                        fkAccuracy: 50,
-                        shortPassing: 50,
-                        longPassing: 50,
-                        curve: 50
-                    },
-                    dribbling: {
-                        agility: 50,
-                        balance: 50,
-                        reactions: 50,
-                        ballControl: 50,
-                        dribbling: 50,
-                        composure: 50
-                    },
-                    defending: {
-                        interceptions: 50,
-                        headingAccuracy: 50,
-                        defAwarenence: 50,
-                        standingTackle: 50,
-                        slidingTackle: 50
-                    },
-                    physicality: {
-                        jumping: 50,
-                        stamina: 50,
-                        strength: 50,
-                        aggresion: 50
-                    }
-                }
+                value: buildStatsValueModel()
             }
         };
     }
@@ -1280,50 +1313,81 @@ describe('Features.Profile.Page:ProfileEdfit', () => {
                 weakFoot: null,
                 physicalCondition: null,
             },
-            stats: {
-                pace: {
-                    acceleration: 50,
-                    sprintSpeed: 50
+            stats: buildStatsValueModel()
+        };
+    }
+
+    function buildCreateUpdateModel(): ICreatePlayerRequest | IUpdatePlayerRequest {
+        return {
+            Player: {
+                Profile: {
+                    General: {
+                        Availability: {
+                            Days: undefined,
+                            From: undefined,
+                            To: undefined
+                        },
+                        Biography: null,
+                        Birthday: null,
+                        City: 'City',
+                        FirstName: 'First name',
+                        FreePlay: false,
+                        LastName: 'Last name',
+                        Photo: null,
+                        Tags: null
+                    },
+                    Football: {
+                        Position: undefined,
+                        AdditionalPosition: undefined,
+                        GameStyle: undefined,
+                        Height: null,
+                        Weight: null,
+                        Number: null,
+                        PhysicalCondition: null,
+                        Skill: null,
+                        WeakFoot: null,
+                        WorkingFoot: undefined
+                    }
                 },
-                shooting: {
-                    positioning: 50,
-                    finishing: 50,
-                    shotPower: 50,
-                    longShots: 50,
-                    volleys: 50,
-                    penalties: 50
-                },
-                passing: {
-                    vision: 50,
-                    crossing: 50,
-                    fkAccuracy: 50,
-                    shortPassing: 50,
-                    longPassing: 50,
-                    curve: 50
-                },
-                dribbling: {
-                    agility: 50,
-                    balance: 50,
-                    reactions: 50,
-                    ballControl: 50,
-                    dribbling: 50,
-                    composure: 50
-                },
-                defending: {
-                    interceptions: 50,
-                    headingAccuracy: 50,
-                    defAwarenence: 50,
-                    standingTackle: 50,
-                    slidingTackle: 50
-                },
-                physicality: {
-                    jumping: 50,
-                    stamina: 50,
-                    strength: 50,
-                    aggresion: 50
+                Stats: {
+                    Points: {
+                        Available: 3,
+                        Used: 0
+                    },
+                    Values: [
+                        { Category: 0, Type: 0, Value: 50 },
+                        { Category: 0, Type: 1, Value: 50 },
+                        { Category: 1, Type: 2, Value: 50 },
+                        { Category: 1, Type: 3, Value: 50 },
+                        { Category: 1, Type: 4, Value: 50 },
+                        { Category: 1, Type: 5, Value: 50 },
+                        { Category: 1, Type: 6, Value: 50 },
+                        { Category: 1, Type: 7, Value: 50 },
+                        { Category: 2, Type: 8, Value: 50 },
+                        { Category: 2, Type: 9, Value: 50 },
+                        { Category: 2, Type: 10, Value: 50 },
+                        { Category: 2, Type: 11, Value: 50 },
+                        { Category: 2, Type: 12, Value: 50 },
+                        { Category: 2, Type: 13, Value: 50 },
+                        { Category: 3, Type: 14, Value: 50 },
+                        { Category: 3, Type: 15, Value: 50 },
+                        { Category: 3, Type: 16, Value: 50 },
+                        { Category: 3, Type: 17, Value: 50 },
+                        { Category: 3, Type: 18, Value: 50 },
+                        { Category: 3, Type: 19, Value: 50 },
+                        { Category: 4, Type: 20, Value: 50 },
+                        { Category: 4, Type: 21, Value: 50 },
+                        { Category: 4, Type: 22, Value: 50 },
+                        { Category: 4, Type: 23, Value: 50 },
+                        { Category: 4, Type: 24, Value: 50 },
+                        { Category: 5, Type: 25, Value: 50 },
+                        { Category: 5, Type: 26, Value: 50 },
+                        { Category: 5, Type: 27, Value: 50 },
+                        { Category: 5, Type: 28, Value: 50 }
+                    ]
                 }
             }
-        };
+        }
     }
 
     function getHugeFile(name: string, size: number): File {
@@ -1380,5 +1444,51 @@ describe('Features.Profile.Page:ProfileEdfit', () => {
         const tabEls: DebugElement[] = fixture.debugElement.queryAll(By.css('div.tab'));
         tabEls[index].nativeElement.dispatchEvent(new KeyboardEvent('click'));
         fixture.detectChanges();
+    }
+
+    function buildStatsValueModel(): StatsValueModel {
+        return {
+            0: {
+                0: 50,
+                1: 50
+            },
+            1: {
+                2: 50,
+                3: 50,
+                4: 50,
+                5: 50,
+                6: 50,
+                7: 50
+            },
+            2: {
+                8: 50,
+                9: 50,
+                10: 50,
+                11: 50,
+                12: 50,
+                13: 50
+            },
+            3: {
+                14: 50,
+                15: 50,
+                16: 50,
+                17: 50,
+                18: 50,
+                19: 50
+            },
+            4: {
+                20: 50,
+                21: 50,
+                22: 50,
+                23: 50,
+                24: 50
+            },
+            5: {
+                25: 50,
+                26: 50,
+                27: 50,
+                28: 50
+            }
+        };
     }
 });

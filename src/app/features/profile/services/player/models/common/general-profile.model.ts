@@ -8,8 +8,8 @@ export interface IGeneralProfile {
     Tags: string[] | null;
     FreePlay: boolean;
     Availability: {
-        Days: number[] | null;
-        From: string | null;
-        To: string | null;
+        Days?: number[] | null;
+        From?: string | null;
+        To?: string | null;
     }
 }

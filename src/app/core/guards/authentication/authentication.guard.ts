@@ -5,6 +5,7 @@ import { IdentityService } from '@share/services/identity/identity.service';
 import { IToken } from '@share/services/token/token.model';
 import { TokenService } from '@share/services/token/token.service';
 import { RoutKey } from '../../enums';
+import { ObservableDataModel } from '@core/models/observable.model';
 
 @Injectable({ providedIn: 'root' })
 export class CanMatchAuthorized implements CanMatch {
@@ -16,10 +17,10 @@ export class CanMatchAuthorized implements CanMatch {
         if (this.tokenService.invalid) {
             // try to refresh existing token
             if (this.identityService.rememberMe) {
-                return this.identityService.token$.pipe(
+                return this.identityService.token.value$.pipe(
                     // if token refreshed - allow
                     // if not - redirect to login
-                    map((_: IToken) => this.handleRedirection(route.path))
+                    map((_: ObservableDataModel<IToken>) => this.handleRedirection(route.path))
                 )
             }
 

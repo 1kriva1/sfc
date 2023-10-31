@@ -5,7 +5,7 @@ import { ButtonType, CheckmarkType, Direction, isEmail } from 'ngx-sfc-common';
 import { SliderType } from 'ngx-sfc-components';
 import { Subscription, startWith, switchMap, fromEvent, tap, map, filter, catchError, of } from 'rxjs';
 import { RoutKey } from '@core/enums';
-import { BaseResponse, IForm } from '@core/models';
+import { IForm } from '@core/models';
 import { buildPath, buildTitle, markFormTouchedAndDirty } from '@core/utils';
 import { BaseErrorResponse } from '@core/models/http/base-error.response';
 import { IdentityService } from '@share/services/identity/identity.service';
@@ -13,10 +13,7 @@ import { ILoginRequest, ILoginResponse } from '@share/services/identity/models';
 import { ILoginFormModel } from './login-form.model';
 import { LoginPageConstants } from './login.page.constants';
 import { LoginPageLocalization } from './login.page.localization';
-import { PlayerService } from '@share/services/player/player.service';
-import { IGetPlayerByUserResponse } from '@share/services';
 import { Title } from '@angular/platform-browser';
-import { HttpConstants } from '@core/constants';
 
 @Component({
   selector: 'sfc-login.page',
@@ -42,15 +39,12 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _subscription!: Subscription;
 
-  private _logoutSubscription!: Subscription;
-
   public loginForm!: FormGroup
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private identityService: IdentityService,
-    private playerService: PlayerService,
     private titleService: Title) { }
 
   ngOnInit(): void {
@@ -76,19 +70,11 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
             map(() => this.mapRequest(value)),
             switchMap((request: ILoginRequest) =>
               this.identityService.login(request).pipe(
-                filter((response: ILoginResponse) => response.Success),
-                switchMap(() => this.playerService.get()
-                  .pipe(
-                    catchError(() => {
-                      this._logoutSubscription = this.identityService.logout()
-                        .subscribe();
-                      return of(HttpConstants.FAILED_RESPONSE);
-                    }))),
                 catchError(error => of(error))
               ))
           );
       })
-    ).subscribe((response: IGetPlayerByUserResponse | BaseResponse) => {
+    ).subscribe((response: ILoginResponse) => {
       this.error = response.Success ? null : response as BaseErrorResponse;
 
       if (response.Success)
@@ -98,7 +84,6 @@ export class LoginPageComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this._subscription.unsubscribe();
-    this._logoutSubscription?.unsubscribe();
   }
 
   private tapSubmit(): void {

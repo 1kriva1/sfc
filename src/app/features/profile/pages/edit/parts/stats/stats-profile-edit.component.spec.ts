@@ -2,16 +2,17 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { EnumService } from '@share/services';
 import { ShareModule } from '@share/share.module';
-import { NgxSfcCommonModule, Sequence } from 'ngx-sfc-common';
+import { NgxSfcCommonModule, Sequence, where } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
 import { StatsService } from './services/stats.service';
 import { StatsProfileEditComponent } from './stats-profile-edit.component';
-import { StatsProfileEditConstants } from './stats-profile-edit.constants';
 import { StatsProfileEditLocalization } from './stats-profile-edit.localization';
+import { StatsValueModel } from "../../../../models/stats-profile.model";
 
-describe('Features.Profile.Page:ProfileEdfit.Part:StatsProfileEdfit', () => {
+describe('Features.Profile.Page:ProfileEdit.Part:StatsProfileEdit', () => {
     let component: StatsProfileEditComponent;
     let fixture: ComponentFixture<StatsProfileEditComponent>;
     let formGroupDirective: FormGroupDirective;
@@ -19,6 +20,202 @@ describe('Features.Profile.Page:ProfileEdfit.Part:StatsProfileEdfit', () => {
         stats: { difference: 0, available: 0, percentage: 0, used: 0 },
         initial: { available: 0, used: 0 },
         toggle: () => { }
+    };
+    let enumServiceStub: Partial<EnumService> = {
+        enums: {
+            footballPositions: [],
+            gameStyles: [],
+            statCategories: [
+                { key: 0, value: 'Defend' },
+                { key: 1, value: 'Shooting' },
+                { key: 2, value: 'Passing' },
+                { key: 3, value: 'Dribbling' },
+                { key: 4, value: 'Defending' },
+                { key: 5, value: 'Physicality' }
+            ],
+            statSkills: [
+                { key: 0, value: 'Physical' },
+                { key: 1, value: 'Mental' },
+                { key: 2, value: 'Skill' },
+            ],
+            statTypes: [
+                {
+                    category: 0,
+                    skill: 0,
+                    key: 0,
+                    value: "Acceleration",
+                },
+                {
+                    category: 0,
+                    skill: 0,
+                    key: 1,
+                    value: "Sprint Speed"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 2,
+                    value: "Positioning"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 3,
+                    value: "Finishing"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 4,
+                    value: "Shot Power"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 5,
+                    value: "Long Shots"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 6,
+                    value: "Volleys"
+                },
+                {
+                    category: 1,
+                    skill: 2,
+                    key: 7,
+                    value: "Penalties"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 8,
+                    value: "Vision"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 9,
+                    value: "Crossing"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 10,
+                    value: "FK. Accuracy"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 11,
+                    value: "Short Passing"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 12,
+                    value: "Long Passing"
+                },
+                {
+                    category: 2,
+                    skill: 2,
+                    key: 13,
+                    value: "Curve"
+                },
+                {
+                    category: 3,
+                    skill: 0,
+                    key: 14,
+                    value: "Agility"
+                },
+                {
+                    category: 3,
+                    skill: 0,
+                    key: 15,
+                    value: "Balance"
+                },
+                {
+                    category: 3,
+                    skill: 0,
+                    key: 16,
+                    value: "Reactions"
+                },
+                {
+                    category: 3,
+                    skill: 2,
+                    key: 17,
+                    value: "Ball Control"
+                },
+                {
+                    category: 3,
+                    skill: 2,
+                    key: 18,
+                    value: "Dribbling"
+                },
+                {
+                    category: 3,
+                    skill: 1,
+                    key: 19,
+                    value: "Composure"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 20,
+                    value: "Interceptions"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 21,
+                    value: "Heading Accuracy"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 22,
+                    value: "Def. Awareness"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 23,
+                    value: "Standing Tackle"
+                },
+                {
+                    category: 4,
+                    skill: 2,
+                    key: 24,
+                    value: "Sliding Tackle"
+                },
+                {
+                    category: 5,
+                    skill: 0,
+                    key: 25,
+                    value: "Jumping"
+                },
+                {
+                    category: 5,
+                    skill: 0,
+                    key: 26,
+                    value: "Stamina"
+                },
+                {
+                    category: 5,
+                    skill: 0,
+                    key: 27,
+                    value: "Strength"
+                },
+                {
+                    category: 5,
+                    skill: 1,
+                    key: 28,
+                    value: "Aggression"
+                }
+            ],
+            workingFoots: []
+        }
     };
 
     beforeEach(async () => {
@@ -31,7 +228,8 @@ describe('Features.Profile.Page:ProfileEdfit.Part:StatsProfileEdfit', () => {
             declarations: [StatsProfileEditComponent],
             providers: [
                 { provide: FormGroupDirective, useValue: formGroupDirective },
-                { provide: StatsService, useValue: statsServiceStub }
+                { provide: StatsService, useValue: statsServiceStub },
+                { provide: EnumService, useValue: enumServiceStub }
             ]
         }).compileComponents();
 
@@ -85,51 +283,7 @@ describe('Features.Profile.Page:ProfileEdfit.Part:StatsProfileEdfit', () => {
 
         fit('Should have form initial value', () => {
             expect((component as any).form.value)
-                .toEqual({
-                    stats: {
-                        pace: {
-                            acceleration: 50,
-                            sprintSpeed: 50
-                        },
-                        shooting: {
-                            positioning: 50,
-                            finishing: 50,
-                            shotPower: 50,
-                            longShots: 50,
-                            volleys: 50,
-                            penalties: 50
-                        },
-                        passing: {
-                            vision: 50,
-                            crossing: 50,
-                            fkAccuracy: 50,
-                            shortPassing: 50,
-                            longPassing: 50,
-                            curve: 50
-                        },
-                        dribbling: {
-                            agility: 50,
-                            balance: 50,
-                            reactions: 50,
-                            ballControl: 50,
-                            dribbling: 50,
-                            composure: 50
-                        },
-                        defending: {
-                            interceptions: 50,
-                            headingAccuracy: 50,
-                            defAwarenence: 50,
-                            standingTackle: 50,
-                            slidingTackle: 50
-                        },
-                        physicality: {
-                            jumping: 50,
-                            stamina: 50,
-                            strength: 50,
-                            aggresion: 50
-                        }
-                    }
-                });
+                .toEqual({ stats: getStats() });
         });
     });
 
@@ -304,7 +458,7 @@ describe('Features.Profile.Page:ProfileEdfit.Part:StatsProfileEdfit', () => {
                 progressEl = partEl.query(By.css('.header sfc-progress-line'));
 
             expect(partEl.query(By.css('.header .title h3')).nativeElement.innerText)
-                .toEqual(StatsProfileEditConstants.STATS[index].label);
+                .toEqual(enumServiceStub.enums?.statCategories[index].value);
             expect(titleEl.nativeElement.innerText).toEqual('50');
             expect(titleEl.nativeElement.style['color']).toEqual('rgb(255, 206, 84)');
             expect(progressEl.componentInstance.progress).toEqual(50);
@@ -314,18 +468,19 @@ describe('Features.Profile.Page:ProfileEdfit.Part:StatsProfileEdfit', () => {
         function expectStat(index: number): void {
             const partEl: DebugElement = fixture.debugElement.queryAll(By.css('.items .part'))[index],
                 statsEls: DebugElement[] = partEl.queryAll(By.css('.content .line')),
-                contentEl = partEl.query(By.css('.content'));
+                contentEl = partEl.query(By.css('.content')),
+                categoryTypes = where(enumServiceStub.enums?.statTypes!, type => type.category === index);
 
             expect(contentEl.attributes['ng-reflect-name'])
-                .toEqual(StatsProfileEditConstants.STATS[index].key);
-            expect(statsEls.length).toEqual(StatsProfileEditConstants.STATS[index].items.length);
+                .toEqual(`${enumServiceStub.enums?.statCategories[index].key}`);
+            expect(statsEls.length).toEqual(categoryTypes!.length);
 
             statsEls.forEach((el: DebugElement, statIndex: number) => {
-                const stat = StatsProfileEditConstants.STATS[index].items[statIndex],
+                const stat = categoryTypes![statIndex],
                     input: DebugElement = el.query(By.css('sfc-number-input'));
 
                 expect(el.query(By.css('.label')).nativeElement.innerText)
-                    .toEqual(stat.label);
+                    .toEqual(stat.value);
                 expect(input.componentInstance.edit).toBeFalse();
                 expect(input.componentInstance.disableNext).toBeTrue();
                 expect(input.componentInstance.disablePrevious).toBeTrue();
@@ -334,4 +489,50 @@ describe('Features.Profile.Page:ProfileEdfit.Part:StatsProfileEdfit', () => {
             });
         }
     });
+
+    function getStats(): StatsValueModel {
+        return {
+            0: {
+                0: 50,
+                1: 50
+            },
+            1: {
+                2: 50,
+                3: 50,
+                4: 50,
+                5: 50,
+                6: 50,
+                7: 50
+            },
+            2: {
+                8: 50,
+                9: 50,
+                10: 50,
+                11: 50,
+                12: 50,
+                13: 50
+            },
+            3: {
+                14: 50,
+                15: 50,
+                16: 50,
+                17: 50,
+                18: 50,
+                19: 50
+            },
+            4: {
+                20: 50,
+                21: 50,
+                22: 50,
+                23: 50,
+                24: 50
+            },
+            5: {
+                25: 50,
+                26: 50,
+                27: 50,
+                28: 50
+            }
+        };
+    }
 });

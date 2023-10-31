@@ -1,13 +1,11 @@
-import { StatComposeType } from "../stat-compose-type.enum";
-
 export interface IStatsItemMetadataModel {
-    key: string;
+    key: number;
     label: string;
-    type: StatComposeType;
+    skill: number;
 }
 
 export interface IStatsProfileTemplateModel {
-    key: string;
+    key: number;
     label: string;
     items: IStatsItemMetadataModel[];
 }

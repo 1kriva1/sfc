@@ -2,7 +2,7 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormGroupDirective, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { FootballPosition } from '@core/enums';
+import { EnumService } from '@share/services';
 import { ShareModule } from '@share/share.module';
 import { hasItemBy, NgxSfcCommonModule } from 'ngx-sfc-common';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
@@ -14,6 +14,31 @@ describe('Features.Profile.Page:ProfileEdit.Part:FootballProfileEdit', () => {
     let component: FootballProfileEditComponent;
     let fixture: ComponentFixture<FootballProfileEditComponent>;
     let formGroupDirective: FormGroupDirective;
+    let enumServiceStub: Partial<EnumService> = {
+        enums: {
+            footballPositions: [
+                { key: 0, value: 'Goalkeeper' },
+                { key: 1, value: 'Defender' },
+                { key: 2, value: 'Midfielder' },
+                { key: 3, value: 'Forward' }
+            ],
+            gameStyles: [
+                { key: 0, value: 'Defend' },
+                { key: 1, value: 'Attacking' },
+                { key: 2, value: 'Aggressive' },
+                { key: 3, value: 'Control' },
+                { key: 4, value: 'Counter Attacks' }
+            ],
+            statCategories: [],
+            statSkills: [],
+            statTypes: [],
+            workingFoots: [
+                { key: 0, value: "Right" },
+                { key: 1, value: "Left" },
+                { key: 2, value: "Both" }
+            ]
+        }
+    };
 
     beforeEach(async () => {
         const formBuilder = new FormBuilder();
@@ -23,7 +48,10 @@ describe('Features.Profile.Page:ProfileEdit.Part:FootballProfileEdit', () => {
         await TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, NgxSfcCommonModule, NgxSfcInputsModule, ShareModule],
             declarations: [FootballProfileEditComponent],
-            providers: [{ provide: FormGroupDirective, useValue: formGroupDirective }]
+            providers: [
+                { provide: FormGroupDirective, useValue: formGroupDirective },
+                { provide: EnumService, useValue: enumServiceStub }
+            ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(FootballProfileEditComponent);
@@ -102,7 +130,7 @@ describe('Features.Profile.Page:ProfileEdit.Part:FootballProfileEdit', () => {
                 expect(positionInput.componentInstance.multiple).toBeFalse();
                 expect(positionInput.componentInstance.showDefaultItem).toBeFalse();
                 expect(positionInput.componentInstance.bordered).toBeTrue();
-                expect(positionInput.componentInstance.data).toEqual(component.POSITIONS);
+                expect(positionInput.componentInstance.data).toEqual(component.enumService.enums.footballPositions);
             });
 
             fit('Should remove position from additional positions list', () => {
@@ -111,13 +139,13 @@ describe('Features.Profile.Page:ProfileEdit.Part:FootballProfileEdit', () => {
                     additionalPositionInput = fixture.debugElement.query(By.css('sfc-select-input#additional-position'));
 
                 expect(hasItemBy(additionalPositionInput.queryAll(By.css('sfc-select-item')),
-                    (p: any) => p.componentInstance.item.key === FootballPosition.Midfielder)).toBeTrue();
+                    (p: any) => p.componentInstance.item.key === 2)).toBeTrue();
 
                 midfielderItemEl.query(By.css('div')).triggerEventHandler('mousedown', new MouseEvent('mousedown'));
                 fixture.detectChanges();
 
                 expect(hasItemBy(additionalPositionInput.queryAll(By.css('sfc-select-item')),
-                    (p: any) => p.componentInstance.item.key === FootballPosition.Midfielder)).toBeFalse();
+                    (p: any) => p.componentInstance.item.key === 2)).toBeFalse();
             });
 
             fit('Should clear selected value for additional position when fit match position value', () => {
@@ -129,7 +157,7 @@ describe('Features.Profile.Page:ProfileEdit.Part:FootballProfileEdit', () => {
                 midfielderAdditionalPositionItemEl.query(By.css('div')).triggerEventHandler('mousedown', new MouseEvent('mousedown'));
                 fixture.detectChanges();
 
-                expect((component as any).form.value.football.additionalPosition).toEqual({ key: FootballPosition.Midfielder, value: 'Midfielder' });
+                expect((component as any).form.value.football.additionalPosition).toEqual({ key: 2, value: 'Midfielder' });
 
                 midfielderPositionItemEl.query(By.css('div')).triggerEventHandler('mousedown', new MouseEvent('mousedown'));
                 fixture.detectChanges();
@@ -162,7 +190,7 @@ describe('Features.Profile.Page:ProfileEdit.Part:FootballProfileEdit', () => {
                 expect(input.componentInstance.multiple).toBeFalse();
                 expect(input.componentInstance.showDefaultItem).toBeFalse();
                 expect(input.componentInstance.bordered).toBeTrue();
-                expect(input.componentInstance.data).toEqual(component.GAME_STYLES);
+                expect(input.componentInstance.data).toEqual(component.enumService.enums.gameStyles);
             });
         });
 
@@ -260,7 +288,7 @@ describe('Features.Profile.Page:ProfileEdit.Part:FootballProfileEdit', () => {
                 expect(input.componentInstance.multiple).toBeFalse();
                 expect(input.componentInstance.showDefaultItem).toBeFalse();
                 expect(input.componentInstance.bordered).toBeTrue();
-                expect(input.componentInstance.data).toEqual(component.FOOTS);
+                expect(input.componentInstance.data).toEqual(component.enumService.enums.workingFoots);
             });
         });
     });

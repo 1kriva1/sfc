@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, ControlContainer, FormGroupDirective, Validators } from '@angular/forms';
+import { AbstractControl, ControlContainer, FormBuilder, FormGroupDirective, Validators } from '@angular/forms';
 import { remove, nameof, CheckmarkType } from 'ngx-sfc-common';
 import { SelectItemModel } from 'ngx-sfc-inputs';
 import { map, Observable, startWith } from 'rxjs';
 import { IForm, IValueModel } from '@core/models';
-import { getFootballPositions, getFoots, getGameStyles } from '@core/utils';
 import { IFootballProfileModel } from '../../../../models/football-profile.model';
 import { ProfileEditPagePart } from '../../edit-page-part.enum';
 import { IEditPageFormModel } from '../../models/edit-page-form.model';
 import { BaseProfileEditComponent } from '../base-profile-edit.component';
 import { FootballProfileEditConstants } from './football-profile-edit.constants';
 import { FootballProfileEditLocalization } from './football-profile-edit.localization';
+import { EnumService } from '@share/services';
 
 @Component({
     selector: 'sfc-football-profile-edit',
@@ -33,10 +33,6 @@ export class FootballProfileEditComponent
     public readonly MAX_WEIGHT_VALUE_VALIDATION: string =
         `${this.Localization.INPUT.WEIGHT.VALIDATIONS.MAX} ${this.Constants.MAX_SIZE_VALUE} ${this.Localization.KILOGRAMS}.`;
 
-    public FOOTS: SelectItemModel[] = getFoots() as SelectItemModel[];
-    public GAME_STYLES: SelectItemModel[] = getGameStyles() as SelectItemModel[];
-    public POSITIONS: SelectItemModel[] = getFootballPositions() as SelectItemModel[];
-
     public additionalPositions$!: Observable<SelectItemModel[]>;
 
     private get positionControl(): AbstractControl | null | undefined {
@@ -47,6 +43,13 @@ export class FootballProfileEditComponent
     private get additionalPositionControl(): AbstractControl | null | undefined {
         return this.form.get(nameof<IEditPageFormModel>(ProfileEditPagePart.Football))
             ?.get(nameof<IFootballProfileModel>('additionalPosition'));
+    }
+    constructor(
+        public enumService: EnumService,
+        parent: FormGroupDirective,
+        formBuilder: FormBuilder
+    ) {
+        super(parent, formBuilder);
     }
 
     ngOnInit(): void {
@@ -91,9 +94,9 @@ export class FootballProfileEditComponent
             startWith(this.positionControl?.value),
             map((value: IValueModel<number> | null) => {
                 if (!value)
-                    return this.POSITIONS;
+                    return this.enumService.enums.footballPositions;
 
-                const newAdditionalPositions: SelectItemModel[] = Array.from(this.POSITIONS);
+                const newAdditionalPositions: SelectItemModel[] = Array.from(this.enumService.enums.footballPositions);
 
                 remove(newAdditionalPositions, (item: SelectItemModel) => item.key === value.key);
 

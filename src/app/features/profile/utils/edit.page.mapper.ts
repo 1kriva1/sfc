@@ -1,21 +1,23 @@
 import {
     any, convertUTCDateToLocalDate, firstOrDefault,
-    isDefined, where, convertTimestampToDate, convertToBase64String, convertFromBase64String
+    isDefined, where, convertTimestampToDate, convertToBase64String, convertFromBase64String, distinct
 } from "ngx-sfc-common";
-import { Locale, StatCategory, StatType } from "@core/enums";
+import { Locale } from "@core/enums";
 import { IStatValueModel } from "../services/player/models/common/stat-value.model";
 import { ICreatePlayerRequest } from "../services/player/models/create/create.request";
 import { IUpdatePlayerRequest } from "../services/player/models/update/update.request";
 import { IEditPageFormModel } from "../pages/edit/models/edit-page-form.model";
 import { IStatsModel } from "../pages/edit/parts/stats/services/stats.model";
-import { IStatsValueModel } from "../models/stats-profile.model";
 import { IGetPlayerModel } from "../services/player/models/get/get-player.model";
 import { IProfileModel as ServiceProfileModel } from "../services/player/models/common/profile.model";
 import { IEnumModel } from "@core/models";
-import { getFootballPositions, getFoots, getGameStyles, getWeekDays } from "@core/utils";
+import { getWeekDays } from "@core/utils";
 import { IProfileModel } from "../models/profile.model";
+import { EnumService } from "@share/services";
+import { StatsValueModel } from "../models";
 
 export class ProfileEditPageMapper {
+
     public static async mapToServer(value: IEditPageFormModel, statPoints: IStatsModel)
         : Promise<ICreatePlayerRequest | IUpdatePlayerRequest> {
         return {
@@ -62,19 +64,23 @@ export class ProfileEditPageMapper {
         }
     }
 
-    public static async mapFromServer(value: IGetPlayerModel): Promise<IProfileModel> {
+    public static async mapFromServer(value: IGetPlayerModel, enumService: EnumService): Promise<IProfileModel> {
         const profile: ServiceProfileModel = value.Profile,
             footballPosition = isDefined(profile.Football.Position)
-                ? getFootballPositions(profile.Football.Position) as IEnumModel<number>
+                ? firstOrDefault(enumService.enums.footballPositions,
+                    p => p.key == profile.Football.Position)
                 : null,
             additionalPosition = isDefined(profile.Football.AdditionalPosition)
-                ? getFootballPositions(profile.Football.AdditionalPosition) as IEnumModel<number>
+                ? firstOrDefault(enumService.enums.footballPositions,
+                    p => p.key == profile.Football.AdditionalPosition)
                 : null,
             workingFoot = isDefined(profile.Football.WorkingFoot)
-                ? getFoots(profile.Football.WorkingFoot) as IEnumModel<number>
+                ? firstOrDefault(enumService.enums.workingFoots,
+                    p => p.key == profile.Football.WorkingFoot)
                 : null,
             gameStyle = isDefined(profile.Football.GameStyle)
-                ? getGameStyles(profile.Football.GameStyle) as IEnumModel<number>
+                ? firstOrDefault(enumService.enums.gameStyles,
+                    p => p.key == profile.Football.GameStyle)
                 : null,
             weekDays = any(profile.General.Availability.Days)
                 ? getWeekDays(profile.General.Availability.Days) as IEnumModel<number>[]
@@ -118,18 +124,16 @@ export class ProfileEditPageMapper {
         }
     }
 
-    private static convertToServerStats(model: IStatsValueModel): IStatValueModel[] {
-        let result: IStatValueModel[] = [];
+    private static convertToServerStats(model: StatsValueModel): IStatValueModel[] {
+        const result: IStatValueModel[] = [];
 
-        Object.keys(model).forEach((key: any) => {
-            const stat: any = (model as any)[key];
+        Object.keys(model).forEach((key: string) => {
+            const stat: any = model[+key];
 
-            Object.keys(stat).forEach((keyStat: any) => {
-                const categoryKey = key[0].toUpperCase() + key.slice(1),
-                    typeKey = keyStat[0].toUpperCase() + keyStat.slice(1);
+            Object.keys(stat).forEach((keyStat: string) => {
                 result.push({
-                    Category: StatCategory[categoryKey],
-                    Type: StatType[typeKey],
+                    Category: +key,
+                    Type: +keyStat,
                     Value: stat[keyStat]
                 })
             });
@@ -138,56 +142,16 @@ export class ProfileEditPageMapper {
         return result;
     }
 
-    private static convertFromServerStats(stats: IStatValueModel[]): IStatsValueModel {
-        const paceStats = where(stats, stat => stat.Category == StatCategory.Pace),
-            defendingStats = where(stats, stat => stat.Category == StatCategory.Defending),
-            dribblingStats = where(stats, stat => stat.Category == StatCategory.Dribbling),
-            passingStats = where(stats, stat => stat.Category == StatCategory.Passing),
-            physicalityStats = where(stats, stat => stat.Category == StatCategory.Physicality),
-            shootingStats = where(stats, stat => stat.Category == StatCategory.Shooting);
+    private static convertFromServerStats(stats: IStatValueModel[]): StatsValueModel {
+        const categories = distinct(stats.map(stat => stat.Category)),
+            result: StatsValueModel = {};
 
-        return {
-            pace: {
-                acceleration: firstOrDefault(paceStats, s => s.Type == StatType.Acceleration)?.Value!,
-                sprintSpeed: firstOrDefault(paceStats, s => s.Type == StatType.SprintSpeed)?.Value!
-            },
-            defending: {
-                defAwarenence: firstOrDefault(defendingStats, s => s.Type == StatType.DefAwarenence)?.Value!,
-                headingAccuracy: firstOrDefault(defendingStats, s => s.Type == StatType.HeadingAccuracy)?.Value!,
-                interceptions: firstOrDefault(defendingStats, s => s.Type == StatType.Interceptions)?.Value!,
-                slidingTackle: firstOrDefault(defendingStats, s => s.Type == StatType.SlidingTackle)?.Value!,
-                standingTackle: firstOrDefault(defendingStats, s => s.Type == StatType.StandingTackle)?.Value!
-            },
-            dribbling: {
-                agility: firstOrDefault(dribblingStats, s => s.Type == StatType.Agility)?.Value!,
-                balance: firstOrDefault(dribblingStats, s => s.Type == StatType.Balance)?.Value!,
-                ballControl: firstOrDefault(dribblingStats, s => s.Type == StatType.BallControl)?.Value!,
-                composure: firstOrDefault(dribblingStats, s => s.Type == StatType.Composure)?.Value!,
-                dribbling: firstOrDefault(dribblingStats, s => s.Type == StatType.Dribbling)?.Value!,
-                reactions: firstOrDefault(dribblingStats, s => s.Type == StatType.Reactions)?.Value!
-            },
-            passing: {
-                crossing: firstOrDefault(passingStats, s => s.Type == StatType.Crossing)?.Value!,
-                curve: firstOrDefault(passingStats, s => s.Type == StatType.Curve)?.Value!,
-                fkAccuracy: firstOrDefault(passingStats, s => s.Type == StatType.FkAccuracy)?.Value!,
-                longPassing: firstOrDefault(passingStats, s => s.Type == StatType.LongPassing)?.Value!,
-                shortPassing: firstOrDefault(passingStats, s => s.Type == StatType.ShortPassing)?.Value!,
-                vision: firstOrDefault(passingStats, s => s.Type == StatType.Vision)?.Value!
-            },
-            physicality: {
-                aggresion: firstOrDefault(physicalityStats, s => s.Type == StatType.Aggresion)?.Value!,
-                jumping: firstOrDefault(physicalityStats, s => s.Type == StatType.Jumping)?.Value!,
-                stamina: firstOrDefault(physicalityStats, s => s.Type == StatType.Stamina)?.Value!,
-                strength: firstOrDefault(physicalityStats, s => s.Type == StatType.Strength)?.Value!
-            },
-            shooting: {
-                finishing: firstOrDefault(shootingStats, s => s.Type == StatType.Finishing)?.Value!,
-                longShots: firstOrDefault(shootingStats, s => s.Type == StatType.LongShots)?.Value!,
-                penalties: firstOrDefault(shootingStats, s => s.Type == StatType.Penalties)?.Value!,
-                positioning: firstOrDefault(shootingStats, s => s.Type == StatType.Positioning)?.Value!,
-                shotPower: firstOrDefault(shootingStats, s => s.Type == StatType.ShotPower)?.Value!,
-                volleys: firstOrDefault(shootingStats, s => s.Type == StatType.Volleys)?.Value!
-            }
-        };
+        categories.forEach(category => {
+            const types = where(stats, stat => stat.Category === category)!;
+            result[category] = types.reduce((controlAccumulator: any, item: IStatValueModel) =>
+                ({ ...controlAccumulator, [item.Type]: item.Value }), {});
+        });
+
+        return result;
     }
 }

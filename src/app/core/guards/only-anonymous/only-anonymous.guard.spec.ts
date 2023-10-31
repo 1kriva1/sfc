@@ -6,12 +6,13 @@ import { RoutKey } from "../../enums";
 import { IToken } from '@share/services/token/token.model';
 import { CanMatchOnlyAnonymous } from "./only-anonymous.guard";
 import { buildPath } from "../../utils";
+import { ObservableModel } from "@core/models/observable.model";
 
 describe('Core.Guard:CanMatchOnlyAnonymous', () => {
     const dummyRoute = { path: '/home' } as Route;
     let guard: CanMatchOnlyAnonymous;
     let routerSpy: jasmine.SpyObj<Router>;
-    let identityServiceStub: Partial<IdentityService> = {};
+    let identityServiceStub: Partial<IdentityService> = { token: new ObservableModel<IToken>() };
     let tokenServiceStub: Partial<TokenService> = {};
 
     beforeEach(() => {
@@ -52,7 +53,7 @@ describe('Core.Guard:CanMatchOnlyAnonymous', () => {
         (identityServiceStub as any).rememberMe = true;
         const subject = new BehaviorSubject<IToken>({ Access: 'acess token', Refresh: 'refresh token' }),
             token$ = subject.asObservable();
-        (identityServiceStub as any).token$ = token$;
+        (identityServiceStub as any).token.value$ = token$;
         (tokenServiceStub as any).invalid = true;
 
         const access$: Observable<boolean> = guard.canMatch(dummyRoute, []) as Observable<boolean>;
@@ -70,7 +71,7 @@ describe('Core.Guard:CanMatchOnlyAnonymous', () => {
         (identityServiceStub as any).rememberMe = true;
         const subject = new BehaviorSubject<IToken>({ Access: 'acess token', Refresh: 'refresh token' }),
             token$ = subject.asObservable();
-        (identityServiceStub as any).token$ = token$;
+        (identityServiceStub as any).token.value$ = token$;
         (tokenServiceStub as any).invalid = true;
 
         const access$: Observable<boolean> = guard.canMatch(dummyRoute, []) as Observable<boolean>;

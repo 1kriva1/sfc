@@ -2,8 +2,8 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonConstants, isDefined, isNullOrEmptyString, parseBoolean } from 'ngx-sfc-common';
-import { BehaviorSubject, catchError, map, Observable, of, Subject, Subscription } from 'rxjs';
-import { RoutKey } from '@core/enums';
+import { catchError, map, Observable, of, Subscription } from 'rxjs';
+import { Process, RoutKey } from '@core/enums';
 import { LOADER } from '@core/interceptors/loader/loader.interceptor';
 import { StorageService } from '@core/services/storage/storage.service';
 import { buildPath } from '@core/utils';
@@ -16,38 +16,29 @@ import {
   ILoginRequest, ILoginResponse, ILogoutResponse,
   IRegistrationRequest, IRegistrationResponse, IRefreshTokenRequest, IRefreshTokenResponse
 } from './models';
+import { ObservableModel } from '@core/models/observable.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IdentityService {
 
-  private userSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  public userId: ObservableModel<string> = new ObservableModel(this.storageService.get(IdentityServiceConstants.USER_ID_KEY));
 
-  private tokenSubject: Subject<IToken> = new Subject<IToken>();
+  public get isLoggedIn() { return !isNullOrEmptyString(this.userId.value) && this.tokenService.valid; }
+
+  public token: ObservableModel<IToken> = new ObservableModel();
+
+  public get rememberMe(): boolean {
+    return parseBoolean(this.storageService.get<string>(IdentityServiceConstants.REMEMBER_ME_KEY)
+      || CommonConstants.EMPTY_STRING);
+  }
 
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
     private storageService: StorageService,
     private router: Router) { }
-
-  public userId$: Observable<string | null> = this.userSubject.asObservable();
-
-  public token$: Observable<IToken> = this.tokenSubject.asObservable();
-
-  public get userId(): string | null {
-    return this.userSubject.value || this.storageService.get(IdentityServiceConstants.USER_ID_KEY);
-  }
-
-  public get isLoggedIn() {
-    return !isNullOrEmptyString(this.userId) && this.tokenService.valid;
-  }
-
-  public get rememberMe(): boolean {
-    return parseBoolean(this.storageService.get<string>(IdentityServiceConstants.REMEMBER_ME_KEY)
-      || CommonConstants.EMPTY_STRING);
-  }
 
   private refreshTokenTimeout?: NodeJS.Timeout;
 
@@ -60,7 +51,7 @@ export class IdentityService {
       { context: new HttpContext().set(LOADER, true) }
     ).pipe(
       map(response => {
-        this.setIdentity(response.Token, response.UserId as string);
+        this.setIdentity(response.Token, response.UserId!, Process.Registration);
         return response;
       })
     );
@@ -73,7 +64,7 @@ export class IdentityService {
       { context: new HttpContext().set(LOADER, true) }
     ).pipe(
       map(response => {
-        this.setIdentity(response.Token, response.UserId as string);
+        this.setIdentity(response.Token, response.UserId!, Process.Login);
         this.storageService.set(IdentityServiceConstants.REMEMBER_ME_KEY, request.RememberMe);
         return response;
       })
@@ -95,15 +86,17 @@ export class IdentityService {
   public logout(): Observable<ILogoutResponse> {
     return this.http.post<ILogoutResponse>(
       `${environment.identity_url}${IdentityServiceConstants.URI_PART}/logout`,
-      { UserId: this.userId as string },
+      { UserId: this.userId.value! },
       { context: new HttpContext().set(LOADER, true) }
     ).pipe(
       map(response => {
         this.tokenService.remove();
 
+        this.token.subject.next({ data: null });
+
         this.storageService.remove(IdentityServiceConstants.USER_ID_KEY);
 
-        this.userSubject.next(null);
+        this.userId.subject.next({ data: null });
 
         this.clearTokenSubscriptions();
 
@@ -121,7 +114,7 @@ export class IdentityService {
     this.clearTokenSubscriptions();
 
     this.refreshTokenTimeout = setTimeout(() => {
-      this._refreshSubscription = this.refreshToken({ Token: token as IToken })
+      this._refreshSubscription = this.refreshToken({ Token: token! })
         .pipe(catchError((error) => of(error)))
         .subscribe((response: BaseErrorResponse) => {
           if (!response.Success)
@@ -131,20 +124,20 @@ export class IdentityService {
     }, timeout);
   }
 
-  private setIdentity(token: IToken, userId: string) {
+  private setIdentity(token: IToken, userId: string, process: Process) {
     this.setToken(token);
-    this.setUserId(userId);
+    this.setUserId(userId, process);
   }
 
   private setToken(token: IToken): void {
     this.tokenService.set(token);
     this.setAutoRefresh(token);
-    this.tokenSubject.next(token);
+    this.token.subject.next({ data: token });
   }
 
-  private setUserId(userId: string): void {
+  private setUserId(userId: string, process: Process): void {
     this.storageService.set(IdentityServiceConstants.USER_ID_KEY, userId);
-    this.userSubject.next(userId);
+    this.userId.subject.next({ data: userId, process: process });
   }
 
   private clearTokenSubscriptions(): void {

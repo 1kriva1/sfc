@@ -41,6 +41,7 @@ import { IPlayerByUserModel } from '@share/services/player/models/get-player-by-
 import { INotification } from '@core/services/notification/notification.model';
 import { CommonConstants as ApplicationCommonConstants } from '@core/constants/common.constants';
 import { fileMaxSize } from 'ngx-sfc-inputs';
+import { EnumService } from '@share/services';
 
 @Component({
   templateUrl: './edit.page.component.html',
@@ -124,6 +125,9 @@ export class ProfileEditPageComponent
   private _subscription!: Subscription;
 
   constructor(
+    public headerService: HeaderService,
+    public statsService: StatsService,
+    public sharedPlayerService: SharedPlayerService,
     private formBuilder: FormBuilder,
     private playerService: PlayerService,
     private router: Router,
@@ -131,9 +135,7 @@ export class ProfileEditPageComponent
     private changeDetectorRef: ChangeDetectorRef,
     private titleService: Title,
     private notificationService: NotificationService,
-    public headerService: HeaderService,
-    public statsService: StatsService,
-    public sharedPlayerService: SharedPlayerService
+    private enumService: EnumService
   ) { }
 
   ngOnInit(): void {
@@ -195,7 +197,7 @@ export class ProfileEditPageComponent
           // only main page
           progress: new EditPageProgressViewModel(model),
           // main page (total, value, percentage and stars)
-          raiting: new EditPageRaitingViewModel(model.stats)
+          raiting: new EditPageRaitingViewModel(model.stats, this.enumService)
         };
       }));
 

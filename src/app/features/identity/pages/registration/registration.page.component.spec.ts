@@ -421,7 +421,7 @@ describe('Features.Identity.Page:Registration', () => {
           confirmPasswordControlInputEl.dispatchEvent(new Event('input'));
           fixture.detectChanges();
 
-          expect((confirmPasswordControlControl?.errors as any)['sfc-match']).toBeTrue();
+          expect((confirmPasswordControlControl?.errors!)['sfc-match']).toBeTrue();
         });
 
         fit('Should be valid', () => {

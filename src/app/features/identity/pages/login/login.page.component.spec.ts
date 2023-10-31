@@ -4,7 +4,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By, Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { ButtonType, CheckmarkType, CommonConstants, Direction, nameof, NgxSfcCommonModule, UIConstants } from 'ngx-sfc-common';
+import {
+  ButtonType,
+  CheckmarkType,
+  CommonConstants,
+  Direction,
+  nameof,
+  NgxSfcCommonModule,
+  UIConstants
+} from 'ngx-sfc-common';
 import { NgxSfcComponentsModule, SliderType } from 'ngx-sfc-components';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
 import { of, throwError } from 'rxjs';
@@ -13,11 +21,9 @@ import { IdentityService } from '@share/services/identity/identity.service';
 import { ILoginRequest, ILoginResponse } from '@share/services/identity/models';
 import { LoginPageComponent } from './login.page.component';
 import { LoginPageConstants } from './login.page.constants';
-import { IGetPlayerByUserResponse, PlayerService } from '@share/services';
+import { PlayerService } from '@share/services';
 import { ILoginFormModel } from './login-form.model';
 import { ShareModule } from '@share/share.module';
-import { HttpConstants } from '@core/constants';
-import { BaseResponse } from '@core/models';
 import { buildTitle } from '@core/utils';
 
 describe('Features.Identity.Page:Login', () => {
@@ -85,26 +91,6 @@ describe('Features.Identity.Page:Login', () => {
       component.ngOnDestroy();
 
       expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
-    });
-
-    fit('Should call unsubscribe for logout subscription', () => {
-      spyLogin('user-id');
-      (playerServiceStub as any).get = () => throwError(() => new Error());
-
-      makeFormValid();
-
-      const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
-      submitBtnEl.nativeElement.click();
-      fixture.detectChanges();
-
-      const logoutUnsubscribeSpy = spyOn(
-        (component as any)._logoutSubscription,
-        'unsubscribe'
-      ).and.callThrough();
-
-      component.ngOnDestroy();
-
-      expect(logoutUnsubscribeSpy).toHaveBeenCalledTimes(1);
     });
 
     fit('Should have page title', () => {
@@ -370,9 +356,7 @@ describe('Features.Identity.Page:Login', () => {
       });
 
       fit('Should show error if login failed', () => {
-        spyLogin('');
-
-        spyPlayerGet(false);
+        spyLogin('', false);
 
         makeFormValid();
 
@@ -388,12 +372,11 @@ describe('Features.Identity.Page:Login', () => {
 
         expect(errorsEl.styles['visibility']).toEqual(UIConstants.CSS_VISIBILITY_VISIBLE);
         expect(errorsEl.styles['opacity']).toEqual('1');
-        expect(fixture.nativeElement.querySelector('.error-message').textContent).toEqual('Message');
+        expect(fixture.nativeElement.querySelector('.error-message').textContent).toEqual('msg');
       });
 
       fit('Should clear previous error if login success', () => {
-        const loginSpy = spyLogin(''),
-          playerGetSpy = spyPlayerGet(false);
+        const loginSpy = spyLogin('', false);
 
         makeFormValid();
 
@@ -414,13 +397,6 @@ describe('Features.Identity.Page:Login', () => {
           Message: 'Success'
         } as ILoginResponse));
 
-        playerGetSpy.and.returnValue(of({
-          Player: {},
-          Errors: null,
-          Success: true,
-          Message: 'Success'
-        } as IGetPlayerByUserResponse));
-
         submitBtnEl.nativeElement.click();
         fixture.detectChanges();
 
@@ -430,7 +406,6 @@ describe('Features.Identity.Page:Login', () => {
 
       fit("Should navigate to home on success", () => {
         spyLogin('user-id');
-        spyPlayerGet(true);
         spyOn(routerMock, 'navigate');
 
         makeFormValid(false);
@@ -443,7 +418,7 @@ describe('Features.Identity.Page:Login', () => {
       });
 
       fit("Should not navigate to home on failure", () => {
-        spyOn(identityServiceStub, 'login' as any).and.returnValue(throwError(() => new Error('Registration error')));
+        spyOn(identityServiceStub, 'login' as any).and.returnValue(throwError(() => new Error('Login error')));
         spyOn(routerMock, 'navigate');
 
         makeFormValid(false);
@@ -453,59 +428,6 @@ describe('Features.Identity.Page:Login', () => {
         fixture.detectChanges();
 
         expect(routerMock.navigate).not.toHaveBeenCalledWith([`/${RoutKey.Home}`]);
-      });
-
-      fit('Should call player get after success login', () => {
-        spyLogin('user-id');
-        spyPlayerGet(true);
-
-        makeFormValid(false);
-
-        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
-        submitBtnEl.nativeElement.click();
-        fixture.detectChanges();
-
-        expect(playerServiceStub.get).toHaveBeenCalledTimes(1);
-      });
-
-      fit('Should not call player get after failed login', () => {
-        spyLogin('', false);
-        spyPlayerGet(true);
-
-        makeFormValid(false);
-
-        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
-        submitBtnEl.nativeElement.click();
-        fixture.detectChanges();
-
-        expect(playerServiceStub.get).not.toHaveBeenCalled();
-      });
-
-      fit('Should call logout on error for player get call', () => {
-        spyLogin('user-id');
-        (playerServiceStub as any).get = () => throwError(() => new Error());
-        spyOn(identityServiceStub, 'logout' as any);
-
-        makeFormValid(false);
-
-        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
-        submitBtnEl.nativeElement.click();
-        fixture.detectChanges();
-
-        expect(identityServiceStub.logout).toHaveBeenCalledTimes(1);
-      });
-
-      fit('Should return failed response on error for player get call', () => {
-        spyLogin('user-id');
-        (playerServiceStub as any).get = () => throwError(() => new Error());
-
-        makeFormValid();
-
-        const submitBtnEl = fixture.debugElement.query(By.css('sfc-button'));
-        submitBtnEl.nativeElement.click();
-        fixture.detectChanges();
-
-        expect(component.error as BaseResponse).toEqual(HttpConstants.FAILED_RESPONSE);
       });
     });
   });
@@ -525,15 +447,6 @@ describe('Features.Identity.Page:Login', () => {
     passwordControlInputEl.value = 'Test1234!';
     passwordControlInputEl.dispatchEvent(new Event('input'));
     fixture.detectChanges();
-  }
-
-  function spyPlayerGet(success: boolean): jasmine.Spy<any> {
-    return spyOn(playerServiceStub, 'get' as any).and.returnValue(of({
-      Player: {},
-      Errors: null,
-      Success: success,
-      Message: 'Message'
-    }));
   }
 
   function spyLogin(userId: string, success: boolean = true): jasmine.Spy<any> {

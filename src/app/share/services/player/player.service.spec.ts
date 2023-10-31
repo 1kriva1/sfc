@@ -2,9 +2,9 @@ import { HttpContext } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { LOADER } from '@core/interceptors/loader/loader.interceptor';
+import { ObservableModel } from '@core/models/observable.model';
 import { StorageService } from '@core/services';
 import { environment } from '@environments/environment';
-import { of } from 'rxjs';
 import { IdentityService } from '../identity/identity.service';
 import { IGetPlayerByUserResponse, IPlayerByUserModel } from './models/get-player-by-user.response';
 import { PlayerServiceConstants } from './player.constants';
@@ -16,7 +16,7 @@ describe('Share.Service:Player', () => {
         set: () => { },
         remove: () => { }
     };
-    let identityServiceStub: Partial<IdentityService> = { userId$: of('test_id') };
+    let identityServiceStub: Partial<IdentityService> = { userId: new ObservableModel<string>('test_id') };
     let httpMock: HttpTestingController;
 
     beforeEach(() => {
@@ -111,24 +111,6 @@ describe('Share.Service:Player', () => {
         expect(service.player.value).toEqual(model.Profile);
 
         done();
-    });
-
-    fit('Should remove player id if user id is null', () => {
-        spyOn(storageServiceStub, 'remove' as any);
-        identityServiceStub.userId$ = of(null);
-
-        new PlayerService(null!, storageServiceStub as StorageService, identityServiceStub as IdentityService);
-
-        expect(storageServiceStub.remove).toHaveBeenCalledOnceWith(PlayerServiceConstants.PLAYER_ID_KEY);
-    });
-
-    fit('Should not remove player id if user id is not null', () => {
-        spyOn(storageServiceStub, 'remove' as any);
-        identityServiceStub.userId$ = of('test_user_id');
-
-        new PlayerService(null!, storageServiceStub as StorageService, identityServiceStub as IdentityService);
-
-        expect(storageServiceStub.remove).not.toHaveBeenCalled();
     });
 
     fit('Should player be created', (done) => {

@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, Router } from "@angular/router";
 import { RoutKey } from "@core/enums";
 import { IResolverModel } from "@core/models";
 import { buildPath } from "@core/utils";
+import { EnumService } from "@share/services";
 import { LoaderService } from "ngx-sfc-common";
 import { EMPTY, finalize, of, throwError } from "rxjs";
 import { IProfileModel } from "../models";
@@ -24,16 +25,18 @@ describe('Features.Profile.Resolver:Profile', () => {
         }
     };
     let loaderServiceStub: Partial<LoaderService> = {
-        show: (id?: string, register?: boolean) => { return null; },
+        show: (_id?: string, _register?: boolean) => { return null; },
         hide: () => { }
     };
+    let enumServiceStub: EnumService;
 
     beforeEach(() => {
         routerSpy = jasmine.createSpyObj<Router>('Router', ['navigate']);
         resolver = new ProfileResolver(
             playerServiceStub as PlayerService,
             routerSpy,
-            loaderServiceStub as LoaderService
+            loaderServiceStub as LoaderService,
+            enumServiceStub
         );
     });
 

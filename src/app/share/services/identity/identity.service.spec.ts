@@ -3,11 +3,13 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { CommonConstants } from '@core/constants';
-import { RoutKey } from '@core/enums';
+import { Process, RoutKey } from '@core/enums';
 import { LOADER } from '@core/interceptors/loader/loader.interceptor';
+import { ObservableDataModel } from '@core/models/observable.model';
+import { StorageService } from '@core/services';
 import { buildPath } from '@core/utils';
 import { environment } from '@environments/environment';
-import { of, throwError } from 'rxjs';
+import { filter, of, throwError } from 'rxjs';
 import { IToken } from '../token/token.model';
 import { TokenService } from '../token/token.service';
 import { IdentityServiceConstants } from './identity.constants';
@@ -82,20 +84,19 @@ describe('Share.Service:Identity', () => {
             UserName: 'username',
             Password: 'pass',
             ConfirmPassword: 'pass'
-        },
-            response: IRegistrationResponse = {
-                Token: { Access: 'access', Refresh: 'refresh' },
-                UserId: 'userid',
-                Success: true,
-                Errors: null,
-                Message: 'msg'
-            };
+        }, response: IRegistrationResponse = {
+            Token: { Access: 'access', Refresh: 'refresh' },
+            UserId: 'userid',
+            Success: true,
+            Errors: null,
+            Message: 'msg'
+        };
 
         service.register(request).subscribe((registrationResponse: IRegistrationResponse) =>
             expect(registrationResponse).toEqual(response));
 
-        service.token$.subscribe((token: IToken) =>
-            expect(token).toEqual(response.Token));
+        service.token.value$.pipe(filter((model: ObservableDataModel<IToken>) => model.process !== Process.Init))
+            .subscribe((model: ObservableDataModel<IToken>) => expect(model.data).toEqual(response.Token));
 
         const testRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/register`);
 
@@ -104,8 +105,8 @@ describe('Share.Service:Identity', () => {
 
         testRequest.flush(response);
 
-        service.userId$.subscribe((userId: string | null) => {
-            expect(userId).toEqual(response.UserId);
+        service.userId.value$.subscribe((model: ObservableDataModel<string>) => {
+            expect(model.data).toEqual(response.UserId);
             done();
         });
 
@@ -135,8 +136,9 @@ describe('Share.Service:Identity', () => {
         service.login(request).subscribe((loginResponse: ILoginResponse) =>
             expect(loginResponse).toEqual(response));
 
-        service.token$.subscribe((token: IToken) =>
-            expect(token).toEqual(response.Token));
+        service.token.value$.pipe(filter((model: ObservableDataModel<IToken>) => model.process !== Process.Init))
+            .subscribe((model: ObservableDataModel<IToken>) =>
+                expect(model.data).toEqual(response.Token));
 
         const testRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/login`);
 
@@ -145,8 +147,8 @@ describe('Share.Service:Identity', () => {
 
         testRequest.flush(response);
 
-        service.userId$.subscribe((userId: string | null) => {
-            expect(userId).toEqual(response.UserId);
+        service.userId.value$.subscribe((model: ObservableDataModel<string>) => {
+            expect(model.data).toEqual(response.UserId);
             done();
         });
 
@@ -176,10 +178,11 @@ describe('Share.Service:Identity', () => {
         service.refreshToken(request).subscribe((refreshTokenResponse: IRefreshTokenResponse) =>
             expect(refreshTokenResponse).toEqual(response));
 
-        service.token$.subscribe((token: IToken) => {
-            expect(token).toEqual(response.Token);
-            done();
-        });
+        service.token.value$.pipe(filter((model: ObservableDataModel<IToken>) => model.process !== Process.Init))
+            .subscribe((model: ObservableDataModel<IToken>) => {
+                expect(model.data).toEqual(response.Token);
+                done();
+            });
 
         const testRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/refresh`);
 
@@ -212,8 +215,15 @@ describe('Share.Service:Identity', () => {
         service.logout().subscribe((logoutResponse: ILogoutResponse) =>
             expect(logoutResponse).toEqual(response));
 
-        service.token$.subscribe((token: IToken) =>
-            expect(token).toBeNull());
+        let tokenCount = 0;
+        service.token.value$.pipe(filter((model: ObservableDataModel<IToken>) => model.process !== Process.Init))
+            .subscribe((model: ObservableDataModel<IToken>) => {
+                if (tokenCount == 0)
+                    expect(model.data).toEqual(loginResponse.Token)
+                else
+                    expect(model.data).toBeNull();
+                tokenCount++;
+            });
 
         const testRequest = httpMock.expectOne(`${environment.identity_url}${IdentityServiceConstants.URI_PART}/logout`);
 
@@ -222,8 +232,8 @@ describe('Share.Service:Identity', () => {
 
         testRequest.flush(response);
 
-        service.userId$.subscribe((userId: string | null) => {
-            expect(userId).toBeNull();
+        service.userId.value$.subscribe((model: ObservableDataModel<string>) => {
+            expect(model.data).toBeNull();
             done();
         });
 
@@ -328,7 +338,7 @@ describe('Share.Service:Identity', () => {
     fit('Should return user id', () => {
         const loginResponse: ILoginResponse = loginPlayer();
 
-        expect(service.userId).toEqual(loginResponse.UserId);
+        expect(service.userId.value).toEqual(loginResponse.UserId);
     });
 
     fit('Should return user id from local storage', () => {
@@ -337,7 +347,8 @@ describe('Share.Service:Identity', () => {
         window.localStorage.setItem(`${CommonConstants.APPLICATION_PREFIX}-${IdentityServiceConstants.USER_ID_KEY}`,
             assertUserId);
 
-        expect(service.userId).toEqual(assertUserId);
+        expect(new IdentityService(null!, tokenServiceStub as TokenService, new StorageService(), null!).userId.value)
+            .toEqual(assertUserId);
     });
 
     fit('Should be log in', () => {

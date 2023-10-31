@@ -62,7 +62,7 @@ describe('Features.Welcome.Component: ImageSliderItem', () => {
     });
 
     fit("Should have defined src value", () => {
-      component.item.image = 'test.png';
+      component.item.image = 'app/features/welcome/assets/images/locations/4a.jpg';
       fixture.detectChanges();
 
       expect(fixture.nativeElement.querySelector('img').src).toContain(component.item.image);

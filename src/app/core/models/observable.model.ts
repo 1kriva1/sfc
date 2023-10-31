@@ -1,9 +1,19 @@
+import { Process } from "@core/enums";
 import { BehaviorSubject, Observable } from "rxjs";
 
+export interface ObservableDataModel<T> {
+    data: T | null;
+    process?: Process;
+}
+
 export class ObservableModel<T>{
-    public subject: BehaviorSubject<T | null> = new BehaviorSubject<T | null>(null);
 
-    public value$: Observable<T | null> = this.subject.asObservable();
+    constructor(private defaultValue: T | null = null) { }
 
-    public get value(): T | null { return this.subject.value; }
+    public subject: BehaviorSubject<ObservableDataModel<T>> =
+        new BehaviorSubject<ObservableDataModel<T>>({ data: null, process: Process.Init });
+
+    public value$: Observable<ObservableDataModel<T>> = this.subject.asObservable();
+
+    public get value(): T | null { return this.subject.value.data || this.defaultValue }
 }

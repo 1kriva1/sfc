@@ -4,27 +4,15 @@
   </sfc-title>
 
   <div class="avarage">
-    <div class="part">
-      <h3 i18n="@@core.stat.type.physical">Physical</h3>
-      <sfc-progress-semi-circle [progress]="stats.types?.physical.value" [max]="stats.types?.physical.total"
-        [getColor]="getProgressColorDynamicallyFunc" [sfcComponentSize] [customSize]="1.5"></sfc-progress-semi-circle>
-    </div>
-
-    <div class="part">
-      <h3 i18n="@@core.stat.type.mental">Mental</h3>
-      <sfc-progress-semi-circle [progress]="stats.types?.mental.value" [max]="stats.types?.mental.total"
-        [getColor]="getProgressColorDynamicallyFunc" [sfcComponentSize] [customSize]="1.5"></sfc-progress-semi-circle>
-    </div>
-
-    <div class="part">
-      <h3 i18n="@@core.stat.type.skill">Skill</h3>
-      <sfc-progress-semi-circle [progress]="stats.types?.skill.value" [max]="stats.types?.skill.total"
-        [getColor]="getProgressColorDynamicallyFunc" [sfcComponentSize] [customSize]="1.5"></sfc-progress-semi-circle>
+    <div class="part" *ngFor="let type of stats.types">
+      <h3>{{type.label}}</h3>
+      <sfc-progress-semi-circle [progress]="type.value" [max]="type.total" [getColor]="getProgressColorDynamicallyFunc"
+        [sfcComponentSize] [customSize]="1.5"></sfc-progress-semi-circle>
     </div>
   </div>
 
   <div class="items">
-    <div class="part" *ngFor="let stat of Constants.STATS; let i = index">
+    <div class="part" *ngFor="let stat of statsModel; let i = index">
       <div class="header" *ngIf="stats.model[stat.key] as model">
         <div class="title">
           <h3>{{stat.label}}</h3>

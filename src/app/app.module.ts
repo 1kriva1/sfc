@@ -5,7 +5,11 @@ import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from '@core/core.module';
-import { I18nModule, PlayerModule, TokenRefreshModule } from '@core/initializers';
+import {
+  DataModule,
+  I18nModule,
+  PlayerModule, TokenRefreshModule
+} from '@core/initializers';
 import { HttpInterceptorProviders } from '@core/interceptors';
 import { HomeModule } from './features/home/home.module';
 import { WelcomeModule } from './features/welcome/welcome.module';
@@ -26,6 +30,7 @@ import { WelcomeModule } from './features/welcome/welcome.module';
   providers: [
     I18nModule.setLocale(),
     I18nModule.setLocaleId(),
+    DataModule.init(),
     TokenRefreshModule.init(),
     PlayerModule.init(),
     HttpInterceptorProviders

@@ -5,12 +5,13 @@ import { TokenService } from "@share/services/token/token.service";
 import { RoutKey } from "../../enums";
 import { CanMatchAuthorized } from "./authentication.guard";
 import { IToken } from '@share/services/token/token.model';
+import { ObservableModel } from "@core/models/observable.model";
 
 describe('Core.Guard:CanMatchAuthorized', () => {
     const dummyRoute = { path: '/home' } as Route;
     let guard: CanMatchAuthorized;
     let routerSpy: jasmine.SpyObj<Router>;
-    let identityServiceStub: Partial<IdentityService> = {};
+    let identityServiceStub: Partial<IdentityService> = { token: new ObservableModel<IToken>() };
     let tokenServiceStub: Partial<TokenService> = {};
 
     beforeEach(() => {
@@ -54,7 +55,7 @@ describe('Core.Guard:CanMatchAuthorized', () => {
         (identityServiceStub as any).rememberMe = true;
         const subject = new BehaviorSubject<IToken>({ Access: 'acess token', Refresh: 'refresh token' }),
             token$ = subject.asObservable();
-        (identityServiceStub as any).token$ = token$;
+        (identityServiceStub as any).token.value$ = token$;
         (tokenServiceStub as any).invalid = true;
 
         const access$: Observable<boolean> = guard.canMatch(dummyRoute, []) as Observable<boolean>;
@@ -72,7 +73,7 @@ describe('Core.Guard:CanMatchAuthorized', () => {
         (identityServiceStub as any).rememberMe = true;
         const subject = new BehaviorSubject<IToken>({ Access: 'acess token', Refresh: 'refresh token' }),
             token$ = subject.asObservable();
-        (identityServiceStub as any).token$ = token$;
+        (identityServiceStub as any).token.value$ = token$;
         (tokenServiceStub as any).invalid = true;
 
         const access$: Observable<boolean> = guard.canMatch(dummyRoute, []) as Observable<boolean>;

@@ -8,8 +8,8 @@ import { buildPath } from "@core/utils";
 import { IProfileModel } from "../models/profile.model";
 import { IGetPlayerResponse } from "../services/player/models/get/get.response";
 import { PlayerService } from "../services/player/player.service";
-import { ProfileEditPageMapper } from "../utils/edit.page.mapper";
 import { EnumService } from "@share/services";
+import { mapProfileModel } from "../utils/edit.page.mapper";
 
 @Injectable({ providedIn: 'root' })
 export class ProfileResolver implements Resolve<IResolverModel<IProfileModel>> {
@@ -30,7 +30,7 @@ export class ProfileResolver implements Resolve<IResolverModel<IProfileModel>> {
                 return {
                     success: response.Success,
                     result: response.Success
-                        ? await ProfileEditPageMapper.mapFromServer(response.Player, this.enumService)
+                        ? await mapProfileModel(response.Player, this.enumService)
                         : null
                 };
             }),

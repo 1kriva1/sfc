@@ -1,7 +1,7 @@
-import { IEnumModel } from "@core/models";
+import { IEnumModel } from "@core/types";
 
-export type IStatTypeEnumModel<T> = {
-    key: T;
+export type IStatTypeEnumModel = {
+    key: number;
     value: string;
     category: number;
     skill: number;
@@ -12,6 +12,6 @@ export interface IEnumsModel {
     gameStyles: IEnumModel<number>[];
     statCategories: IEnumModel<number>[];
     statSkills: IEnumModel<number>[];
-    statTypes: IStatTypeEnumModel<number>[];
+    statTypes: IStatTypeEnumModel[];
     workingFoots: IEnumModel<number>[];
 }

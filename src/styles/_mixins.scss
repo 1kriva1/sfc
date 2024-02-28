@@ -24,24 +24,6 @@
   }
 }
 
-@mixin navigation-color($color) {
-  color: $color;
-
-  &:hover {
-    color: $color-hover-default;
-  }
-}
-
-@mixin navigation-color-border($color) {
-  color: $color;
-  border-color: $color;
-
-  &:hover {
-    color: $color-hover-default;
-    border-color: $color-hover-default;
-  }
-}
-
 @mixin theme-background() {
   @include theme-value(background, $background-default, $background-dark);
 
@@ -50,8 +32,6 @@
 
 @mixin theme-color($value-common, $value-dark, $selector: "&") {
   @include theme-value(color, $value-common, $value-dark, $selector);
-
-  transition: color $transition-duration-default $transition-timing-function-default;
 }
 
 @mixin error-message() {
@@ -61,4 +41,60 @@
   width: 100%;
   padding: 0;
   font-size: 0.8em;
+}
+
+@mixin base-page() {
+  :host {
+    .container {
+      display: flex;
+
+      .side {
+        .menu-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-direction: column;
+          position: sticky;
+          top: 1em;
+          bottom: 0;
+
+          sfc-side-menu {
+            ::ng-deep .container {
+              transition:
+                background $transition-theme-backround-duration $transition-theme-backround-timing-function,
+                width $transition-duration-default ease-in-out;
+            }
+          }
+
+          sfc-theme-toggler {
+            @include center-wrap;
+
+            padding: 3em 0;
+          }
+        }
+      }
+
+      .content {
+        width: 100%;
+        padding: 0 2em 2em;
+        overflow: hidden;
+
+        .form {
+          form {
+            display: flex;
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin part() {
+  @include theme-value(background, #fcfcfc, #232527);
+
+  transition: background $transition-theme-backround-duration $transition-theme-backround-timing-function;
+  border-radius: 1em;
+  padding: 1em 2em;
+  margin: 0.5em;
 }

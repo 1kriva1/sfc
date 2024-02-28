@@ -2,3 +2,8 @@ export { IconTooltipComponent } from "./icon-tooltip/icon-tooltip.component";
 export { LogoComponent } from "./logo/logo.component";
 export { ThemeTogglerComponent } from "./theme-toggler/theme-toggler.component";
 export { TitleComponent } from "./title/title.component";
+export { InfoPanelComponent } from "./info-panel/info-panel.component";
+export { IInfoPanelModel } from "./info-panel/info-panel.model";
+export { PlayerInfoPanelComponent } from "./player-info-panel/player-info-panel.component";
+export { IPlayerInfoPanelModel } from "./player-info-panel/player-info-panel.model";
+export { NoDataComponent } from "./no-data/no-data.component";

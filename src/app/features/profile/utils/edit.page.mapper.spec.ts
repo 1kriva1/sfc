@@ -1,228 +1,17 @@
-import { ProfileEditPageMapper } from "./edit.page.mapper";
 import { IGetPlayerModel } from "../services/player/models";
 import { IEditPageFormModel } from "../pages/edit/models/edit-page-form.model";
 import { EnumService } from "@share/services";
+import { mapPlayerRequest, mapProfileModel } from "./edit.page.mapper";
+import { ENUM_SERVICE } from "@test/stubs";
 
-describe('Features.Profile.Utils:Mapper', () => {
-    let enumServiceStub: Partial<EnumService> = {
-        enums: {
-            footballPositions: [
-                { key: 0, value: 'Goalkeeper' },
-                { key: 1, value: 'Defender' },
-                { key: 2, value: 'Midfielder' },
-                { key: 3, value: 'Forward' }
-            ],
-            gameStyles: [
-                { key: 0, value: 'Defend' },
-                { key: 1, value: 'Attacking' },
-                { key: 2, value: 'Aggressive' },
-                { key: 3, value: 'Control' },
-                { key: 4, value: 'Counter Attacks' }
-            ],
-            statCategories: [
-                { key: 0, value: 'Defend' },
-                { key: 1, value: 'Shooting' },
-                { key: 2, value: 'Passing' },
-                { key: 3, value: 'Dribbling' },
-                { key: 4, value: 'Defending' },
-                { key: 5, value: 'Physicality' }
-            ],
-            statSkills: [
-                { key: 0, value: 'Physical' },
-                { key: 1, value: 'Mental' },
-                { key: 2, value: 'Skill' },
-            ],
-            statTypes: [
-                {
-                    category: 0,
-                    skill: 0,
-                    key: 0,
-                    value: "Acceleration",
-                },
-                {
-                    category: 0,
-                    skill: 0,
-                    key: 1,
-                    value: "Sprint Speed"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 2,
-                    value: "Positioning"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 3,
-                    value: "Finishing"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 4,
-                    value: "Shot Power"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 5,
-                    value: "Long Shots"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 6,
-                    value: "Volleys"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 7,
-                    value: "Penalties"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 8,
-                    value: "Vision"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 9,
-                    value: "Crossing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 10,
-                    value: "FK. Accuracy"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 11,
-                    value: "Short Passing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 12,
-                    value: "Long Passing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 13,
-                    value: "Curve"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 14,
-                    value: "Agility"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 15,
-                    value: "Balance"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 16,
-                    value: "Reactions"
-                },
-                {
-                    category: 3,
-                    skill: 2,
-                    key: 17,
-                    value: "Ball Control"
-                },
-                {
-                    category: 3,
-                    skill: 2,
-                    key: 18,
-                    value: "Dribbling"
-                },
-                {
-                    category: 3,
-                    skill: 1,
-                    key: 19,
-                    value: "Composure"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 20,
-                    value: "Interceptions"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 21,
-                    value: "Heading Accuracy"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 22,
-                    value: "Def. Awareness"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 23,
-                    value: "Standing Tackle"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 24,
-                    value: "Sliding Tackle"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 25,
-                    value: "Jumping"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 26,
-                    value: "Stamina"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 27,
-                    value: "Strength"
-                },
-                {
-                    category: 5,
-                    skill: 1,
-                    key: 28,
-                    value: "Aggression"
-                }
-            ],
-            workingFoots: [
-                { key: 0, value: "Right" },
-                { key: 1, value: "Left" },
-                { key: 2, value: "Both" }
-            ]
-        }
-    };
-
+describe('Features.Profile.Edit.Utils:Mapper', () => {
     describe('To server', () => {
         fit('Should map available days', async () => {
             const model = buildProfileFormValue(null!, null!, null!),
                 statsModel = { available: 2, used: 1 };
             model.general.availability.days = [{ key: 1, value: 'Monday' }, { key: 2, value: 'Tuesday' }];
 
-            const result = await ProfileEditPageMapper.mapToServer(model, statsModel);
+            const result = await mapPlayerRequest(model, statsModel);
 
             expect(result.Player.Profile.General.Availability.Days).toEqual([1, 2]);
         });
@@ -233,7 +22,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             model.general.availability.from = new Date(2023, 10, 4, 14, 10);
             model.general.availability.to = new Date(2023, 10, 4, 16, 10);
 
-            const result = await ProfileEditPageMapper.mapToServer(model, statsModel);
+            const result = await mapPlayerRequest(model, statsModel);
 
             expect(result.Player.Profile.General.Availability.From).toEqual('14:10:00');
             expect(result.Player.Profile.General.Availability.To).toEqual('16:10:00');
@@ -244,7 +33,7 @@ describe('Features.Profile.Utils:Mapper', () => {
                 statsModel = { available: 2, used: 1 };
             model.general.birthday = new Date(1992, 11, 4, 0, 0, 0);
 
-            const result = await ProfileEditPageMapper.mapToServer(model, statsModel);
+            const result = await mapPlayerRequest(model, statsModel);
 
             expect((result.Player.Profile.General.Birthday as Date).toDateString()).toEqual('Fri Dec 04 1992');
         });
@@ -254,7 +43,7 @@ describe('Features.Profile.Utils:Mapper', () => {
                 statsModel = { available: 2, used: 1 };
             model.photo = new File([''], 'Avatar.png');
 
-            const result = await ProfileEditPageMapper.mapToServer(model, statsModel);
+            const result = await mapPlayerRequest(model, statsModel);
 
             expect(result.Player.Profile.General.Photo).toBeDefined();
         });
@@ -264,7 +53,7 @@ describe('Features.Profile.Utils:Mapper', () => {
                 statsModel = { available: 2, used: 1 };
             model.football.position = { key: 0, value: 'Goalkeeper' };
 
-            const result = await ProfileEditPageMapper.mapToServer(model, statsModel);
+            const result = await mapPlayerRequest(model, statsModel);
 
             expect(result.Player.Profile.Football.Position).toEqual(0);
         });
@@ -273,7 +62,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             const model = buildProfileFormValue('First name', 'Last name', 'City'),
                 statsModel = { available: 2, used: 1 };
 
-            const result = await ProfileEditPageMapper.mapToServer(model, statsModel);
+            const result = await mapPlayerRequest(model, statsModel);
 
             expect(result.Player.Profile.General.FirstName).toEqual('First name');
             expect(result.Player.Profile.General.LastName).toEqual('Last name');
@@ -284,10 +73,10 @@ describe('Features.Profile.Utils:Mapper', () => {
             const model = buildProfileFormValue('First name', 'Last name', 'City'),
                 statsModel = { available: 2, used: 1 };
 
-            const result = await ProfileEditPageMapper.mapToServer(model, statsModel);
+            const result = await mapPlayerRequest(model, statsModel);
 
             expect(result.Player.Stats.Values.length).toEqual(29);
-            expect(result.Player.Stats.Values[0]).toEqual({ Category: 0, Type: 0, Value: 50 });
+            expect(result.Player.Stats.Values[0]).toEqual({ Type: 0, Value: 50 });
         });
     });
 
@@ -296,7 +85,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             const model = getPlayerModel();
             model.Profile.General.Photo = 'data:application/octet-stream;base64,';
 
-            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
+            const result = await mapProfileModel(model, ENUM_SERVICE as EnumService);
 
             expect(result.general.photo).toBeDefined();
             expect(result.general.photo?.name).toEqual('avatar.ation/octet-stream');
@@ -306,7 +95,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             const model = getPlayerModel();
             model.Profile.General.Availability.Days = [1, 2];
 
-            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
+            const result = await mapProfileModel(model, ENUM_SERVICE as EnumService);
 
             expect(result.general.availability.days)
                 .toEqual([{ key: 1, value: 'Monday' }, { key: 2, value: 'Tuesday' }]);
@@ -317,7 +106,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             model.Profile.General.Availability.From = '14:10:00';
             model.Profile.General.Availability.To = '16:10:00';
 
-            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
+            const result = await mapProfileModel(model, ENUM_SERVICE as EnumService);
 
             expect(result.general.availability.from?.toTimeString())
                 .toContain('14:10:00');
@@ -332,7 +121,7 @@ describe('Features.Profile.Utils:Mapper', () => {
             model.Profile.Football.WorkingFoot = 0;
             model.Profile.Football.GameStyle = 0;
 
-            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
+            const result = await mapProfileModel(model, ENUM_SERVICE as EnumService);
 
             expect(result.football.position).toEqual({ key: 0, value: 'Goalkeeper' });
             expect(result.football.additionalPosition).toEqual({ key: 1, value: 'Defender' });
@@ -343,7 +132,7 @@ describe('Features.Profile.Utils:Mapper', () => {
         fit('Should map pure values', async () => {
             const model = getPlayerModel();
 
-            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
+            const result = await mapProfileModel(model, ENUM_SERVICE as EnumService);
 
             expect(result.general.firstName).toEqual('First name');
             expect(result.general.lastName).toEqual('Last name');
@@ -353,7 +142,7 @@ describe('Features.Profile.Utils:Mapper', () => {
         fit('Should map stats', async () => {
             const model = getPlayerModel();
 
-            const result = await ProfileEditPageMapper.mapFromServer(model, enumServiceStub as EnumService);
+            const result = await mapProfileModel(model, ENUM_SERVICE as EnumService);
 
             expect(result.stats.value['0']).toEqual({ 0: 50, 1: 50 });
             expect(result.stats.value['4']).toEqual({
@@ -510,35 +299,35 @@ describe('Features.Profile.Utils:Mapper', () => {
                     Used: 1
                 },
                 Values: [
-                    { Category: 0, Type: 0, Value: 50 },
-                    { Category: 0, Type: 1, Value: 50 },
-                    { Category: 1, Type: 3, Value: 50 },
-                    { Category: 1, Type: 2, Value: 50 },
-                    { Category: 1, Type: 4, Value: 50 },
-                    { Category: 1, Type: 5, Value: 50 },
-                    { Category: 1, Type: 6, Value: 50 },
-                    { Category: 1, Type: 7, Value: 50 },
-                    { Category: 2, Type: 8, Value: 50 },
-                    { Category: 2, Type: 9, Value: 50 },
-                    { Category: 2, Type: 10, Value: 50 },
-                    { Category: 2, Type: 11, Value: 50 },
-                    { Category: 2, Type: 12, Value: 50 },
-                    { Category: 2, Type: 13, Value: 50 },
-                    { Category: 3, Type: 14, Value: 50 },
-                    { Category: 3, Type: 15, Value: 50 },
-                    { Category: 3, Type: 16, Value: 50 },
-                    { Category: 3, Type: 17, Value: 50 },
-                    { Category: 3, Type: 18, Value: 50 },
-                    { Category: 3, Type: 19, Value: 50 },
-                    { Category: 4, Type: 20, Value: 50 },
-                    { Category: 4, Type: 21, Value: 50 },
-                    { Category: 4, Type: 22, Value: 50 },
-                    { Category: 4, Type: 23, Value: 50 },
-                    { Category: 4, Type: 24, Value: 50 },
-                    { Category: 5, Type: 25, Value: 50 },
-                    { Category: 5, Type: 26, Value: 50 },
-                    { Category: 5, Type: 27, Value: 50 },
-                    { Category: 5, Type: 28, Value: 50 }
+                    { Type: 0, Value: 50 },
+                    { Type: 1, Value: 50 },
+                    { Type: 3, Value: 50 },
+                    { Type: 2, Value: 50 },
+                    { Type: 4, Value: 50 },
+                    { Type: 5, Value: 50 },
+                    { Type: 6, Value: 50 },
+                    { Type: 7, Value: 50 },
+                    { Type: 8, Value: 50 },
+                    { Type: 9, Value: 50 },
+                    { Type: 10, Value: 50 },
+                    { Type: 11, Value: 50 },
+                    { Type: 12, Value: 50 },
+                    { Type: 13, Value: 50 },
+                    { Type: 14, Value: 50 },
+                    { Type: 15, Value: 50 },
+                    { Type: 16, Value: 50 },
+                    { Type: 17, Value: 50 },
+                    { Type: 18, Value: 50 },
+                    { Type: 19, Value: 50 },
+                    { Type: 20, Value: 50 },
+                    { Type: 21, Value: 50 },
+                    { Type: 22, Value: 50 },
+                    { Type: 23, Value: 50 },
+                    { Type: 24, Value: 50 },
+                    { Type: 25, Value: 50 },
+                    { Type: 26, Value: 50 },
+                    { Type: 27, Value: 50 },
+                    { Type: 28, Value: 50 }
                 ]
             }
         }

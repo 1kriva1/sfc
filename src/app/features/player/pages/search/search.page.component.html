@@ -1,0 +1,162 @@
+<div class="container">
+    <div class="side" *ngIf="!headerService.open">
+        <div class="menu-container">
+            <sfc-side-menu [model]="Constants.SIDE_MENU_MODEL">
+            </sfc-side-menu>
+
+            <sfc-theme-toggler [sfcComponentSize] [customSize]="0.8">
+            </sfc-theme-toggler>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="title">
+            <sfc-title [sfcComponentSize]="ComponentSize.Large" [label]="Localization.TITLE.LABEL"
+                [description]="Localization.TITLE.DESCRIPTION" [tooltip]="Localization.TITLE.TOOLTIP">
+            </sfc-title>
+        </div>
+
+        <ng-template #recommendations let-mobile>
+            <div *ngIf="recommendationsVisability.search && (!mobile || searchRecommendations.length)"
+                class="recommendation searching">
+                <sfc-close (click)="recommendationsVisability.search = !recommendationsVisability.search"></sfc-close>
+                <sfc-title [label]="Localization.RECOMMENDATION.SEARCHING.TITLE.LABEL"
+                    [description]="Localization.RECOMMENDATION.SEARCHING.TITLE.DESCRIPTION"
+                    [tooltip]="Localization.RECOMMENDATION.SEARCHING.TITLE.TOOLTIP">
+                </sfc-title>
+
+                <sfc-players-recommendation [items]="searchRecommendations"></sfc-players-recommendation>
+            </div>
+
+            <div *ngIf="recommendationsVisability.location && (!mobile || locationRecommendations.length)"
+                class="recommendation location">
+                <sfc-close (click)="recommendationsVisability.location = !recommendationsVisability.location">
+                </sfc-close>
+                <sfc-title [label]="Localization.RECOMMENDATION.LOCATION.TITLE.LABEL"
+                    [description]="Localization.RECOMMENDATION.LOCATION.TITLE.DESCRIPTION"
+                    [tooltip]="Localization.RECOMMENDATION.LOCATION.TITLE.TOOLTIP">
+                </sfc-title>
+
+                <sfc-players-recommendation [items]="locationRecommendations"></sfc-players-recommendation>
+            </div>
+        </ng-template>
+
+        <div class="additional">
+            <div class="statistics">
+                <sfc-collapse-expand-container [expand]="showStatistic"
+                    [labelExpand]="Localization.STATISTIC.LABEL.EXPAND"
+                    [labelCollapse]="Localization.STATISTIC.LABEL.COLLAPSE">
+                    <div class="statistic-content">
+                        <sfc-info-panel *ngFor="let model of statistics" [model]="model"></sfc-info-panel>
+                    </div>
+                </sfc-collapse-expand-container>
+            </div>
+
+            <div class="recommendations">
+                <ng-container *ngTemplateOutlet="recommendations;context:{$implicit: true}"></ng-container>
+            </div>
+        </div>
+
+        <div class="form">
+            <form [formGroup]="searchForm" autocomplete="off" (keydown.enter)="$event.preventDefault()">
+                <ng-template #filters>
+                    <sfc-collapse-expand-container [expand]="filtersVisability.general"
+                        [labelExpand]="Localization.FILTER.GENERAL.LABEL"
+                        [labelCollapse]="Localization.FILTER.GENERAL.LABEL" [delimeter]="true">
+                        <sfc-general-filter></sfc-general-filter>
+                    </sfc-collapse-expand-container>
+
+                    <sfc-collapse-expand-container [expand]="filtersVisability.football"
+                        [labelExpand]="Localization.FILTER.FOOTBALL.LABEL"
+                        [labelCollapse]="Localization.FILTER.FOOTBALL.LABEL" [delimeter]="true">
+                        <sfc-football-filter></sfc-football-filter>
+                    </sfc-collapse-expand-container>
+
+                    <sfc-collapse-expand-container [expand]="filtersVisability.stats"
+                        [labelExpand]="Localization.FILTER.STATS.LABEL"
+                        [labelCollapse]="Localization.FILTER.STATS.LABEL" [delimeter]="false">
+                        <sfc-stats-filter></sfc-stats-filter>
+                    </sfc-collapse-expand-container>
+                </ng-template>
+
+                <div class="filters">
+                    <sfc-title [sfcComponentSize] [customSize]="1.3" [label]="Localization.FILTER.TITLE.LABEL"
+                        [description]="Localization.FILTER.TITLE.DESCRIPTION"
+                        [tooltip]="Localization.FILTER.TITLE.TOOLTIP" [delimeter]="false">
+                    </sfc-title>
+
+                    <ng-container *ngTemplateOutlet="filters"></ng-container>
+                </div>
+
+                <div class="main">
+                    <div class="name">
+                        <sfc-title [sfcComponentSize] [customSize]="1.3" [label]="Localization.INPUT.NAME.TITLE.LABEL"
+                            [description]="Localization.INPUT.NAME.TITLE.DESCRIPTION" [delimeter]="false">
+                        </sfc-title>
+
+                        <sfc-text-input id="name" formControlName="name" [sfcFocusInput]="true"
+                            [showPlaceholderOnFocus]="true" [label]="''"
+                            [placeholder]="Localization.INPUT.NAME.PLACEHOLDER" [bordered]="false" [sfcComponentSize]
+                            [customSize]="4">
+                        </sfc-text-input>
+
+                        <sfc-delimeter></sfc-delimeter>
+                    </div>
+
+                    <div class="modal">
+                        <sfc-button sfcComponentReference #modalButton="componentRef"
+                            [text]="Localization.FILTER.MODAL.BUTTON.TEXT" [disabled]="table.loading"
+                            [types]="[ButtonType.Rounded, ButtonType.Filled]" [sfcComponentSize] [customSize]="0.9">
+                        </sfc-button>
+
+                        <sfc-modal *sfcModalOpenOnClick="modalButton.elementRef.nativeElement"
+                            [hideOnClickOutside]="true" [hideOnEsc]="false"
+                            [defaultHeaderModel]="filtersModalHeaderModel"
+                            [defaultFooterModel]="filtersModalFooterModel">
+                            <ng-template [sfcTemplateReference]="ModalTemplate.Body">
+                                <div class="modal-filters">
+                                    <ng-container *ngTemplateOutlet="filters"></ng-container>
+                                </div>
+                            </ng-template>
+                        </sfc-modal>
+                    </div>
+
+                    <sfc-table #table [columns]="columns" [predicate$]="predicate$" [loader]="loader.bind(this)"
+                        [pagination]="pagination" [position]="Position.Center" [showColumns]="true"
+                        [columnsToggle]="true" [showTotal]="true" [showLoading]="showLoading"
+                        [paginationCount]="Constants.TABLE_PAGINATION_COUNT" [paginationLimits]="true"
+                        [showColumnsLabel]="Localization.TABLE.COLUMNS_SHOW_LABEL"
+                        [hideColumnsLabel]="Localization.TABLE.COLUMNS_HIDE_LABEL"
+                        [totalLabel]="Localization.TABLE.TOTAL_LABEL"
+                        [dataListLabel]="Localization.TABLE.DATA_LIST_LABEL"
+                        [dataCardsLabel]="Localization.TABLE.DATA_CARDS_LABEL"
+                        [notFoundLabel]="Localization.TABLE.NOT_FOUND_LABEL">
+                        <ng-template [sfcTemplateReference]="TableTemplate.Row" let-row>
+                            <sfc-expanded-table-row [model]="row.model" [columns]="row.columns"
+                                [position]="row.position">
+                                <ng-template [sfcTemplateReference]="ExpandedTableRowTemplate.Row" let-expandedRow>
+                                    <sfc-players-row [model]="expandedRow.model.data" [expanded]="expandedRow.expanded"
+                                        [columns]="expandedRow.columns">
+                                    </sfc-players-row>
+                                </ng-template>
+                                <ng-template [sfcTemplateReference]="ExpandedTableRowTemplate.Content"
+                                    let-expandedContent>
+                                    <sfc-players-row-content [model]="expandedContent.model.data">
+                                    </sfc-players-row-content>
+                                </ng-template>
+                            </sfc-expanded-table-row>
+                        </ng-template>
+
+                        <ng-template [sfcTemplateReference]="TableTemplate.Card" let-card>
+                            <sfc-players-card [model]="card.model.data"></sfc-players-card>
+                        </ng-template>
+                    </sfc-table>
+                </div>
+
+                <div class="recommendations">
+                    <ng-container *ngTemplateOutlet="recommendations"></ng-container>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

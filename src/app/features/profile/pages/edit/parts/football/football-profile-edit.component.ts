@@ -3,7 +3,7 @@ import { AbstractControl, ControlContainer, FormBuilder, FormGroupDirective, Val
 import { remove, nameof, CheckmarkType } from 'ngx-sfc-common';
 import { SelectItemModel } from 'ngx-sfc-inputs';
 import { map, Observable, startWith } from 'rxjs';
-import { IForm, IValueModel } from '@core/models';
+import { IForm, IValueModel } from '@core/types';
 import { IFootballProfileModel } from '../../../../models/football-profile.model';
 import { ProfileEditPagePart } from '../../edit-page-part.enum';
 import { IEditPageFormModel } from '../../models/edit-page-form.model';

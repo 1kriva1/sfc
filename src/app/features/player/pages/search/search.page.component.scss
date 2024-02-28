@@ -1,0 +1,473 @@
+@use "ngx-sfc-common/styles/index" as *;
+@use "ngx-sfc-common/components/close/close.component.mixins.scss" as close;
+@use "ngx-sfc-common/components/delimeter/delimeter.component.mixins.scss" as delimeter;
+@use "ngx-sfc-common/components/collapse-expand/collapse-expand.component.mixins.scss" as collapse-expand;
+@use "ngx-sfc-inputs/styles/input.component.mixins.scss" as input;
+@use "ngx-sfc-inputs/components/tags/tags-input.component.mixins.scss" as tags-input;
+@use "ngx-sfc-inputs/components/range/range-input.component.mixins.scss" as range-input;
+@use "ngx-sfc-inputs/components/bubbles/bubbles-input.component.mixins.scss" as bubbles-input;
+@use "ngx-sfc-inputs/components/radio/radio-input.component.mixins.scss" as radio-input;
+@use "ngx-sfc-inputs/components/stars/stars-input.component.mixins.scss" as stars-input;
+@import "index";
+@import "mixins";
+@include base-page;
+
+:host {
+  .container {
+    .content {
+      .additional {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+
+        .statistics {
+          .statistic-content {
+            display: flex;
+            justify-content: space-evenly;
+            flex-wrap: wrap;
+          }
+
+          sfc-info-panel {
+            margin: 0.5em;
+            flex-grow: 1;
+          }
+        }
+
+        .recommendations {
+          display: none;
+          width: 100%;
+          flex-wrap: wrap;
+          justify-content: space-evenly;
+
+          .recommendation {
+            padding: 0.5em 1em;
+            width: 100%;
+
+            sfc-players-recommendation {
+              ::ng-deep > .container {
+                justify-content: space-evenly;
+
+                sfc-player-recommendation {
+                  > .container {
+                    text-align: center;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .form {
+        form {
+          .filters {
+            @include part;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            width: 25%;
+
+            sfc-collapse-expand-container {
+              width: 100%;
+              padding: 0.5em 0;
+
+              ::ng-deep > .container {
+                align-items: normal;
+
+                sfc-collapse-expand {
+                  font-size: 0.9em;
+                }
+              }
+            }
+          }
+
+          .main {
+            width: 100%;
+            padding: 0 0.5em;
+
+            .modal {
+              @include button;
+
+              sfc-button {
+                width: 100%;
+                padding: 1em 0;
+                display: none;
+
+                ::ng-deep > {
+                  .button {
+                    font-weight: bold;
+                  }
+                }
+              }
+
+              sfc-modal {
+                ::ng-deep sfc-collapse-expand-container {
+                  sfc-collapse-expand {
+                    @include collapse-expand.sfc-collapse-expand-as-default;
+                  }
+
+                  sfc-delimeter {
+                    @include delimeter.sfc-delimeter-as-default;
+                  }
+
+                  sfc-text-input {
+                    @include input.sfc-input-as-default;
+                  }
+
+                  sfc-tags-input {
+                    @include input.sfc-input-as-default;
+                    @include tags-input.sfc-tags-input-as-default;
+                  }
+
+                  sfc-range-input {
+                    @include input.sfc-input-as-default;
+                    @include range-input.sfc-range-input-as-default;
+                  }
+
+                  sfc-bubbles-input {
+                    @include input.sfc-input-as-default;
+                    @include bubbles-input.sfc-bubbles-input-as-default;
+                  }
+
+                  sfc-datetime-input {
+                    @include input.sfc-input-as-default;
+                  }
+
+                  sfc-radio-input {
+                    @include input.sfc-input-as-default;
+                    @include radio-input.sfc-radio-input-as-default;
+                  }
+
+                  sfc-stars-input {
+                    @include input.sfc-input-as-default;
+                    @include stars-input.sfc-stars-input-as-default;
+                  }
+
+                  sfc-select-input {
+                    @include input.sfc-input-as-default;
+                  }
+                }
+              }
+
+              .modal-filters {
+                padding: 0 1em 1em;
+
+                sfc-collapse-expand-container {
+                  ::ng-deep > .container {
+                    padding: 0.5em 0;
+
+                    sfc-collapse-expand {
+                      width: 100%;
+                      font-size: 1em !important;
+                    }
+                  }
+                }
+              }
+            }
+
+            .name {
+              sfc-text-input {
+                ::ng-deep input {
+                  border: none !important;
+                  box-shadow: none !important;
+                }
+              }
+            }
+
+            sfc-table {
+              ::ng-deep > .container {
+                width: auto;
+
+                .columns-container {
+                  .columns-actions {
+                    .left {
+                      sfc-columns-toggle {
+                        .container .label {
+                          text-transform: none;
+                        }
+                      }
+                    }
+
+                    .right {
+                      sfc-toggle-switcher {
+                        font-size: 0.8em;
+                      }
+                    }
+                  }
+
+                  .columns {
+                    .column {
+                      sfc-default-table-column {
+                        .container {
+                          text-transform: none;
+                        }
+                      }
+                    }
+                  }
+                }
+
+                .rows-container {
+                  sfc-load-container {
+                    .container {
+                      .content {
+                        overflow: visible;
+
+                        .items {
+                          display: flex;
+                          justify-content: center;
+                          flex-wrap: wrap;
+
+                          sfc-expanded-table-row {
+                            margin: 1em 0.5em 0;
+
+                            &.expanded {
+                              box-shadow: 0.06em 0.06em 0.31em 0.125em $color-shadow-1;
+                              border-radius: 3.125em;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .recommendations {
+        width: 25%;
+
+        .recommendation {
+          @include part;
+
+          display: flex;
+          flex-direction: column;
+          padding: 1em;
+
+          sfc-close {
+            align-self: flex-end;
+          }
+
+          &.location {
+            padding-top: 1em;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1440px) {
+    .container {
+      .content {
+        .form {
+          form {
+            .filters {
+              width: 35%;
+            }
+
+            .recommendations {
+              display: none;
+            }
+          }
+        }
+
+        .additional {
+          .recommendations {
+            display: flex;
+            flex-wrap: nowrap;
+
+            sfc-players-recommendation {
+              ::ng-deep > .container {
+                flex-direction: row;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .container {
+      .content {
+        .form {
+          form {
+            .filters {
+              display: none;
+            }
+
+            .main {
+              .modal {
+                sfc-button {
+                  display: inline-block;
+                }
+              }
+            }
+          }
+        }
+
+        .additional {
+          .recommendations {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      .content {
+        .form {
+          form {
+            .main {
+              sfc-table {
+                ::ng-deep > .container {
+                  .columns-container {
+                    .columns {
+                      justify-content: center;
+                    }
+                  }
+                }
+              }
+
+              .modal {
+                sfc-modal {
+                  ::ng-deep > .overlay {
+                    > .content {
+                      padding: 0.9em 1em;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 425px) {
+    .container {
+      .content {
+        .additional {
+          .statistics {
+            sfc-collapse-expand-container {
+              ::ng-deep .container {
+                sfc-collapse-expand {
+                  width: 100%;
+                }
+              }
+            }
+
+            sfc-info-panel {
+              ::ng-deep > .container {
+                flex-wrap: wrap;
+                justify-content: center;
+                text-align: center;
+              }
+            }
+          }
+        }
+
+        .form {
+          form {
+            .main {
+              sfc-table {
+                ::ng-deep > .container {
+                  > .columns-container {
+                    > .columns {
+                      flex-direction: column;
+                    }
+                  }
+
+                  sfc-players-card {
+                    font-size: 0.8em;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 375px) {
+    .container {
+      .content {
+        .additional {
+          .statistics {
+            sfc-info-panel {
+              ::ng-deep > .container {
+                padding: 0.5em 1em;
+              }
+            }
+          }
+        }
+
+        .form {
+          form {
+            .main {
+              sfc-table {
+                ::ng-deep > .container {
+                  > .columns-container {
+                    > .columns-actions {
+                      flex-direction: column-reverse;
+
+                      .right {
+                        margin-left: initial;
+
+                        sfc-toggle-switcher {
+                          margin-left: initial;
+                          padding: 0.5em 0;
+                        }
+                      }
+                    }
+                  }
+
+                  sfc-players-card {
+                    font-size: 0.7em;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 320px) {
+    .container {
+      .content {
+        .additional {
+          .statistics {
+            sfc-info-panel {
+              min-width: 10em;
+            }
+          }
+        }
+
+        .form {
+          form {
+            .main {
+              margin: 0;
+              padding: 0;
+
+              .modal {
+                .modal-filters {
+                  width: 90%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

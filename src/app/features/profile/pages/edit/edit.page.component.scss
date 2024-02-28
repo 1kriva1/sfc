@@ -1,5 +1,6 @@
 @use "ngx-sfc-common/styles/index" as *;
 @import "index";
+@include base-page;
 
 :host {
   sfc-modal {
@@ -23,39 +24,7 @@
   }
 
   .container {
-    display: flex;
-
-    .side {
-      .menu-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-direction: column;
-        position: sticky;
-        top: 1em;
-        bottom: 0;
-
-        sfc-side-menu {
-          ::ng-deep .container {
-            transition:
-              background $transition-theme-backround-duration $transition-theme-backround-timing-function,
-              width $transition-duration-default ease-in-out;
-          }
-        }
-
-        sfc-theme-toggler {
-          @include center-wrap;
-
-          padding: 3em 0;
-        }
-      }
-    }
-
     .content {
-      width: 100%;
-      padding: 0 2em 2em;
-      overflow: hidden;
-
       .title {
         .back {
           @include theme-value(color, $color-default, $color-0);
@@ -84,14 +53,10 @@
       .form {
         .parts {
           display: flex;
+          width: 100%;
 
           .part {
-            @include theme-value(background, #fcfcfc, #0e0d0d);
-
-            transition: background $transition-theme-backround-duration $transition-theme-backround-timing-function;
-            border-radius: 1em;
-            padding: 2em;
-            margin: 0.5em;
+            @include part;
           }
 
           .left {

@@ -1,0 +1,19 @@
+@use "ngx-sfc-common/styles/index" as *;
+
+@mixin navigation-color($color) {
+  color: $color;
+
+  &:hover {
+    color: $color-hover-default;
+  }
+}
+
+@mixin navigation-color-border($color) {
+  color: $color;
+  border-color: $color;
+
+  &:hover {
+    color: $color-hover-default;
+    border-color: $color-hover-default;
+  }
+}

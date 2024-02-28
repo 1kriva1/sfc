@@ -11,8 +11,7 @@ import { EditPageRaitingViewModel } from '../../models/view/edit-page-raiting-vi
 import { StatsProfileEditLocalization } from './stats-profile-edit.localization';
 import { IStatsProfileTemplateModel, IStatsItemMetadataModel } from './models/stats-profile-template.model';
 import { EnumService } from '@share/services';
-import { IEnumModel } from '@core/models';
-import { IStatTypeEnumModel } from '@share/services/enum/models/enums.model';
+import { getModel } from '@share/utils';
 
 @Component({
     selector: 'sfc-stats-profile-edit',
@@ -52,7 +51,8 @@ export class StatsProfileEditComponent
     }
 
     ngOnInit(): void {
-        this.statsModel = this.buildStatsModel();
+        this.statsModel = getModel(this.enumService.enums.statTypes,
+            this.enumService.enums.statCategories);
 
         const statsGroup: FormGroup[] = this.buildStatsForm();
 
@@ -91,21 +91,6 @@ export class StatsProfileEditComponent
                 }));
             })
         });
-    }
-
-    private buildStatsModel(): IStatsProfileTemplateModel[] {
-        const categories: IEnumModel<number>[] = this.enumService.enums.statCategories,
-            types: IStatTypeEnumModel<number>[] = this.enumService.enums.statTypes;
-
-        return categories.map(category => ({
-            key: category.key,
-            label: category.value,
-            items: where(types, type => type.category === category.key)!.map(type => ({
-                key: type.key,
-                label: type.value,
-                skill: type.skill
-            }))
-        }));
     }
 
     private buildStatsForm(): FormGroup[] {

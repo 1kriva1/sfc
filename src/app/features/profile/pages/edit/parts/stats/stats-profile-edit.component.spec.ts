@@ -4,13 +4,14 @@ import { FormBuilder, FormGroupDirective, ReactiveFormsModule } from '@angular/f
 import { By } from '@angular/platform-browser';
 import { EnumService } from '@share/services';
 import { ShareModule } from '@share/share.module';
+import { StatsValue } from '@share/types';
+import { ENUM_SERVICE } from '@test/stubs';
 import { NgxSfcCommonModule, Sequence, where } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
 import { StatsService } from './services/stats.service';
 import { StatsProfileEditComponent } from './stats-profile-edit.component';
 import { StatsProfileEditLocalization } from './stats-profile-edit.localization';
-import { StatsValueModel } from "../../../../models/stats-profile.model";
 
 describe('Features.Profile.Page:ProfileEdit.Part:StatsProfileEdit', () => {
     let component: StatsProfileEditComponent;
@@ -20,202 +21,6 @@ describe('Features.Profile.Page:ProfileEdit.Part:StatsProfileEdit', () => {
         stats: { difference: 0, available: 0, percentage: 0, used: 0 },
         initial: { available: 0, used: 0 },
         toggle: () => { }
-    };
-    let enumServiceStub: Partial<EnumService> = {
-        enums: {
-            footballPositions: [],
-            gameStyles: [],
-            statCategories: [
-                { key: 0, value: 'Defend' },
-                { key: 1, value: 'Shooting' },
-                { key: 2, value: 'Passing' },
-                { key: 3, value: 'Dribbling' },
-                { key: 4, value: 'Defending' },
-                { key: 5, value: 'Physicality' }
-            ],
-            statSkills: [
-                { key: 0, value: 'Physical' },
-                { key: 1, value: 'Mental' },
-                { key: 2, value: 'Skill' },
-            ],
-            statTypes: [
-                {
-                    category: 0,
-                    skill: 0,
-                    key: 0,
-                    value: "Acceleration",
-                },
-                {
-                    category: 0,
-                    skill: 0,
-                    key: 1,
-                    value: "Sprint Speed"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 2,
-                    value: "Positioning"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 3,
-                    value: "Finishing"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 4,
-                    value: "Shot Power"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 5,
-                    value: "Long Shots"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 6,
-                    value: "Volleys"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 7,
-                    value: "Penalties"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 8,
-                    value: "Vision"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 9,
-                    value: "Crossing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 10,
-                    value: "FK. Accuracy"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 11,
-                    value: "Short Passing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 12,
-                    value: "Long Passing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 13,
-                    value: "Curve"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 14,
-                    value: "Agility"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 15,
-                    value: "Balance"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 16,
-                    value: "Reactions"
-                },
-                {
-                    category: 3,
-                    skill: 2,
-                    key: 17,
-                    value: "Ball Control"
-                },
-                {
-                    category: 3,
-                    skill: 2,
-                    key: 18,
-                    value: "Dribbling"
-                },
-                {
-                    category: 3,
-                    skill: 1,
-                    key: 19,
-                    value: "Composure"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 20,
-                    value: "Interceptions"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 21,
-                    value: "Heading Accuracy"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 22,
-                    value: "Def. Awareness"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 23,
-                    value: "Standing Tackle"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 24,
-                    value: "Sliding Tackle"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 25,
-                    value: "Jumping"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 26,
-                    value: "Stamina"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 27,
-                    value: "Strength"
-                },
-                {
-                    category: 5,
-                    skill: 1,
-                    key: 28,
-                    value: "Aggression"
-                }
-            ],
-            workingFoots: []
-        }
     };
 
     beforeEach(async () => {
@@ -229,7 +34,7 @@ describe('Features.Profile.Page:ProfileEdit.Part:StatsProfileEdit', () => {
             providers: [
                 { provide: FormGroupDirective, useValue: formGroupDirective },
                 { provide: StatsService, useValue: statsServiceStub },
-                { provide: EnumService, useValue: enumServiceStub }
+                { provide: EnumService, useValue: ENUM_SERVICE }
             ]
         }).compileComponents();
 
@@ -458,7 +263,7 @@ describe('Features.Profile.Page:ProfileEdit.Part:StatsProfileEdit', () => {
                 progressEl = partEl.query(By.css('.header sfc-progress-line'));
 
             expect(partEl.query(By.css('.header .title h3')).nativeElement.innerText)
-                .toEqual(enumServiceStub.enums?.statCategories[index].value);
+                .toEqual(ENUM_SERVICE.enums?.statCategories[index].value);
             expect(titleEl.nativeElement.innerText).toEqual('50');
             expect(titleEl.nativeElement.style['color']).toEqual('rgb(255, 206, 84)');
             expect(progressEl.componentInstance.progress).toEqual(50);
@@ -469,10 +274,10 @@ describe('Features.Profile.Page:ProfileEdit.Part:StatsProfileEdit', () => {
             const partEl: DebugElement = fixture.debugElement.queryAll(By.css('.items .part'))[index],
                 statsEls: DebugElement[] = partEl.queryAll(By.css('.content .line')),
                 contentEl = partEl.query(By.css('.content')),
-                categoryTypes = where(enumServiceStub.enums?.statTypes!, type => type.category === index);
+                categoryTypes = where(ENUM_SERVICE.enums?.statTypes!, type => type.category === index);
 
             expect(contentEl.attributes['ng-reflect-name'])
-                .toEqual(`${enumServiceStub.enums?.statCategories[index].key}`);
+                .toEqual(`${ENUM_SERVICE.enums?.statCategories[index].key}`);
             expect(statsEls.length).toEqual(categoryTypes!.length);
 
             statsEls.forEach((el: DebugElement, statIndex: number) => {
@@ -490,7 +295,7 @@ describe('Features.Profile.Page:ProfileEdit.Part:StatsProfileEdit', () => {
         }
     });
 
-    function getStats(): StatsValueModel {
+    function getStats(): StatsValue {
         return {
             0: {
                 0: 50,

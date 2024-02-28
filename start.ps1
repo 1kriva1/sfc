@@ -1,4 +1,14 @@
-Write-Host "Start Identity service"
+Write-Host "Starting Data service"
+
+invoke-expression 'cmd /c start powershell -Command { 
+    write-host "Start Data service!"; 
+    set-location "C:\Users\andriik\Documents\SFC_NEW\services\Data\src\API\SFC.Data.Api"; 
+    dotnet run  --urls=https://localhost:7466/
+}'
+
+Start-Sleep -Seconds 60
+
+Write-Host "Starting Identity service"
 
 invoke-expression 'cmd /c start powershell -Command { 
     write-host "Start Identity service!"; 
@@ -6,7 +16,9 @@ invoke-expression 'cmd /c start powershell -Command {
     dotnet run  --urls=https://localhost:7266/
 }'
 
-Write-Host "Start Players service"
+Start-Sleep -Seconds 60
+
+Write-Host "Starting Players service"
 
 invoke-expression 'cmd /c start powershell -Command { 
     write-host "Start Players service!"; 
@@ -14,13 +26,7 @@ invoke-expression 'cmd /c start powershell -Command {
     dotnet run  --urls=https://localhost:7366/
 }'
 
-Write-Host "Start Data service"
-
-invoke-expression 'cmd /c start powershell -Command { 
-    write-host "Start Data service!"; 
-    set-location "C:\Users\andriik\Documents\SFC_NEW\services\Data\src\API\SFC.Data.Api"; 
-    dotnet run  --urls=https://localhost:7466/
-}'
+Start-Sleep -Seconds 60
 
 Write-Host "Start Application"
 

@@ -5,9 +5,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
-import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { NgxSfcCommonModule, Position } from 'ngx-sfc-common';
-import { IDropdownMenuItemModel, NgxSfcComponentsModule } from 'ngx-sfc-components';
+import { faExclamation, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { ComponentSize, NgxSfcCommonModule, Position } from 'ngx-sfc-common';
+import { AvatarBadgePosition, IDropdownMenuItemModel, NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { of } from 'rxjs';
 import { HeaderService, LanguageTogglerComponent } from '@core/components';
 import { RoutKey } from '@core/enums';
@@ -20,6 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { EnumService, IPlayerByUserProfileModel, PlayerService } from '@share/services';
 import { ObservableModel } from '@core/models/observable.model';
 import { CommonConstants } from '@core/constants';
+import { ENUM_SERVICE } from "@test/stubs";
 
 describe('Core.Component:AuthenticatedHeader', () => {
   let component: AuthenticatedHeaderComponent;
@@ -28,21 +29,6 @@ describe('Core.Component:AuthenticatedHeader', () => {
   let identityServiceStub: Partial<IdentityService> = { logout: () => of() };
   let headerServiceStub: Partial<HeaderService> = { toggleByValue: () => { } };
   let playerServiceStub: Partial<PlayerService> = { player: new ObservableModel<IPlayerByUserProfileModel>(null) };
-  let enumServiceStub: Partial<EnumService> = {
-    enums: {
-      footballPositions: [
-        { key: 0, value: 'Goalkeeper' },
-        { key: 1, value: 'Defender' },
-        { key: 2, value: 'Midfielder' },
-        { key: 3, value: 'Forward' }
-      ],
-      gameStyles: [],
-      statCategories: [],
-      statSkills: [],
-      statTypes: [],
-      workingFoots: []
-    }
-  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -54,7 +40,7 @@ describe('Core.Component:AuthenticatedHeader', () => {
         { provide: IdentityService, useValue: identityServiceStub },
         { provide: HeaderService, useValue: headerServiceStub },
         { provide: PlayerService, useValue: playerServiceStub },
-        { provide: EnumService, useValue: enumServiceStub }
+        { provide: EnumService, useValue: ENUM_SERVICE }
       ]
     }).compileComponents();
 
@@ -185,7 +171,7 @@ describe('Core.Component:AuthenticatedHeader', () => {
 
       playersNavigation.click();
 
-      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Profiles}`]);
+      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Players}`]);
       expect(headerServiceStub.toggleByValue).toHaveBeenCalledOnceWith(false);
     });
 
@@ -199,7 +185,7 @@ describe('Core.Component:AuthenticatedHeader', () => {
 
       playersNavigation.click();
 
-      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Profiles}`]);
+      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Players}`]);
       expect(headerServiceStub.toggleByValue).toHaveBeenCalledOnceWith(false);
     });
 
@@ -213,7 +199,7 @@ describe('Core.Component:AuthenticatedHeader', () => {
 
       playersNavigation.click();
 
-      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Profiles}`]);
+      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Players}`]);
       expect(headerServiceStub.toggleByValue).toHaveBeenCalledOnceWith(false);
     });
 
@@ -227,7 +213,7 @@ describe('Core.Component:AuthenticatedHeader', () => {
 
       playersNavigation.click();
 
-      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Profiles}`]);
+      expect(routerMock.navigate).toHaveBeenCalledWith([`/${RoutKey.Players}`]);
       expect(headerServiceStub.toggleByValue).toHaveBeenCalledOnceWith(false);
     });
   });
@@ -290,16 +276,7 @@ describe('Core.Component:AuthenticatedHeader', () => {
     fit('Should have profile and logout action', () => {
       (playerServiceStub as any).playerCreated = true;
       (playerServiceStub as any).player.value$ = of({
-        data: {
-          General: {
-            FirstName: 'FirstName',
-            LastName: '',
-            Photo: null
-          },
-          Football: {
-            Position: 2
-          }
-        }
+        data: getPlayerModel()
       });
       component.ngOnInit();
       fixture.detectChanges();
@@ -346,19 +323,22 @@ describe('Core.Component:AuthenticatedHeader', () => {
   });
 
   describe('Avatar', () => {
+    fit("Should have appropriate attributes", () => {
+      const avatarEl = fixture.debugElement.query(By.css('sfc-avatar'));
+
+      expect(avatarEl.componentInstance.data).toEqual(component.avatarModel);
+      expect(avatarEl.componentInstance.radius).toEqual(40);
+      expect(avatarEl.componentInstance.stroke).toEqual(1);
+      expect(avatarEl.componentInstance.progressModel.filledColor)
+        .toEqual(component.avatarProgressModel.filledColor);
+      expect(avatarEl.componentInstance.badges).toEqual(component.avatarBadges);
+      expect(avatarEl.attributes['ng-reflect-size']).toEqual(ComponentSize.Small);
+    });
+
     fit('Should have defined values for model', () => {
       component.avatarModel = { image: CommonConstants.DEFAULT_AVATAR_PATH };
       (playerServiceStub as any).player.value$ = of({
-        data: {
-          General: {
-            FirstName: 'FirstName',
-            LastName: 'LastName',
-            Photo: null
-          },
-          Football: {
-            Position: 2
-          }
-        }
+        data: getPlayerModel()
       });
       component.ngOnInit();
 
@@ -379,5 +359,43 @@ describe('Core.Component:AuthenticatedHeader', () => {
         image: 'app/core/assets/images/default_avatar.png'
       });
     });
+
+    describe('Badges', () => {
+      fit('Should have default badges', () => {
+        expect(component.avatarBadges).toEqual([
+          {
+            position: AvatarBadgePosition.RightTop,
+            icon: faExclamation,
+            background: '#fcbb42',
+            tooltip: {
+              position: Position.Bottom,
+              value: 'Please create profile!'
+            }
+          }
+        ]);
+      });
+
+      fit('Should not have create profile badge', () => {
+        (playerServiceStub as any).player.value$ = of({
+          data: getPlayerModel()
+        });
+        component.ngOnInit();
+
+        expect(component.avatarBadges.length).toEqual(0);
+      });
+    });
   });
+
+  function getPlayerModel(): IPlayerByUserProfileModel {
+    return {
+      General: {
+        FirstName: 'FirstName',
+        LastName: 'LastName',
+        Photo: null
+      },
+      Football: {
+        Position: 2
+      }
+    };
+  }
 });

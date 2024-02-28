@@ -1,0 +1,4 @@
+<div class="container">
+    <sfc-player-recommendation *ngFor="let model of items" [model]="model"></sfc-player-recommendation>
+    <sfc-no-data *ngIf="!items.length"></sfc-no-data>
+</div>

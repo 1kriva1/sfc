@@ -4,6 +4,7 @@ import { RoutKey } from "@core/enums";
 import { IResolverModel } from "@core/models";
 import { buildPath } from "@core/utils";
 import { EnumService } from "@share/services";
+import { ENUM_SERVICE } from "@test/stubs";
 import { LoaderService } from "ngx-sfc-common";
 import { EMPTY, finalize, of, throwError } from "rxjs";
 import { IProfileModel } from "../models";
@@ -28,7 +29,6 @@ describe('Features.Profile.Resolver:Profile', () => {
         show: (_id?: string, _register?: boolean) => { return null; },
         hide: () => { }
     };
-    let enumServiceStub: EnumService;
 
     beforeEach(() => {
         routerSpy = jasmine.createSpyObj<Router>('Router', ['navigate']);
@@ -36,7 +36,7 @@ describe('Features.Profile.Resolver:Profile', () => {
             playerServiceStub as PlayerService,
             routerSpy,
             loaderServiceStub as LoaderService,
-            enumServiceStub
+            ENUM_SERVICE as EnumService
         );
     });
 
@@ -90,8 +90,6 @@ describe('Features.Profile.Resolver:Profile', () => {
         const snapshot: ActivatedRouteSnapshot = new ActivatedRouteSnapshot();
         snapshot.paramMap.get = () => { return '1' };
 
-        resolver.resolve(snapshot);
-
         tick();
 
         resolver.resolve(snapshot).subscribe((model: IResolverModel<IProfileModel>) => {
@@ -105,8 +103,6 @@ describe('Features.Profile.Resolver:Profile', () => {
         (playerServiceStub as any).get = () => throwError(() => new Error('Test error'));
         const snapshot: ActivatedRouteSnapshot = new ActivatedRouteSnapshot();
         snapshot.paramMap.get = () => { return '1' };
-
-        resolver.resolve(snapshot);
 
         tick();
 
@@ -128,8 +124,6 @@ describe('Features.Profile.Resolver:Profile', () => {
         const snapshot: ActivatedRouteSnapshot = new ActivatedRouteSnapshot();
         snapshot.paramMap.get = () => { return '1' };
 
-        resolver.resolve(snapshot);
-
         tick();
 
         resolver.resolve(snapshot).subscribe((model: IResolverModel<IProfileModel>) => {
@@ -142,8 +136,6 @@ describe('Features.Profile.Resolver:Profile', () => {
         (playerServiceStub as any).get = () => throwError(() => new Error('Test error'));
         const snapshot: ActivatedRouteSnapshot = new ActivatedRouteSnapshot();
         snapshot.paramMap.get = () => { return '1' };
-
-        resolver.resolve(snapshot);
 
         tick();
 
@@ -188,7 +180,7 @@ describe('Features.Profile.Resolver:Profile', () => {
                     Available: 2,
                     Used: 1
                 },
-                Values: [{ Type: 0, Category: 0, Value: 50 }]
+                Values: [{ Type: 0, Value: 50 }]
             }
         }
     }

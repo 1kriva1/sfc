@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ControlContainer, FormBuilder, FormGroupDirective, Validators } from '@angular/forms';
 import { CheckmarkType, getPreviousDate, nameof, Compare } from 'ngx-sfc-common';
 import { SelectItemModel, IDateTimeModalButtonsModel, maxArrayLength, compareThan } from 'ngx-sfc-inputs';
-import { IForm } from '@core/models';
+import { IForm } from '@core/types';
 import { getWeekDays } from '@core/utils';
 import { BaseProfileEditComponent } from '../base-profile-edit.component';
 import { IGeneralProfileEditModel } from './general-profile-edit.model';

@@ -1,0 +1,91 @@
+<div class="container">
+    <ng-container *ngFor="let column of columns">
+        <ng-container [ngSwitch]="column.field">
+            <ng-container *ngSwitchCase="'photo'">
+                <div class="column photo" [style.width]="column.calculatedWidth">
+                    <sfc-player-info-panel [radius]="Constants.AVATAR_RADIUS" [info]="false" [model]="{
+                        photo: vm.photo,
+                        raiting: vm.raiting
+                    }"></sfc-player-info-panel>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'name'">
+                <div class="column name" [style.width]="column.calculatedWidth">
+                    <sfc-player-info-panel [info]="true" [avatar]="false" [model]="{                      
+                        firstName: vm.firstName,
+                        lastName: vm.lastName,
+                        age: vm.age,
+                        city: vm.city,
+                        raiting: vm.raiting                 
+                    }"></sfc-player-info-panel>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'available'">
+                <div class="column available" [style.width]="column.calculatedWidth">
+                    <span class="title mobile">{{PlayersRowLocalization.AVAILABILITY}}:</span>
+
+                    <div *ngIf="vm.hasAvailableDays" class="days">
+                        <span class="title">{{PlayersRowLocalization.DAYS}}:</span>
+                        <sfc-tags [tags]="vm.days" [sfcComponentSize] [customSize]="0.7"></sfc-tags>
+                    </div>
+
+                    <div *ngIf="vm.hasAvailableTime" class="time">
+                        <span class="title">{{PlayersRowLocalization.HOURS}}:</span>
+                        <div class="icon-content">
+                            <fa-icon [icon]="faClock"></fa-icon>
+                            <p>{{vm.availableTime}}</p>
+                        </div>
+                    </div>
+                    <sfc-no-data *ngIf="vm.hasNoAvailableData"></sfc-no-data>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'position'">
+                <div class="column position" [style.width]="column.calculatedWidth">
+                    <span class="title mobile">{{PlayersRowLocalization.POSITION}}:</span>
+                    <div *ngIf="vm.position" class="mark image">
+                        <sfc-icon [imageSrc]="vm.position.image" [sfcComponentSize]="ComponentSize.Large">
+                        </sfc-icon>
+                        <span>{{vm.position.value}}</span>
+                    </div>
+                    <sfc-no-data *ngIf="!vm.position"></sfc-no-data>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'physicalCondition'">
+                <div class="column physical-condition" [style.width]="column.calculatedWidth">
+                    <span class="title mobile">{{PlayersRowLocalization.PHYSICAL_CONDITION}}:</span>
+                    <sfc-stars [value]="vm.physicalCondition!" [sfcComponentSize] [customSize]="0.6">
+                    </sfc-stars>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'size'">
+                <div class="column size" [style.width]="column.calculatedWidth">
+                    <span class="title mobile">{{PlayersRowLocalization.SIZE}}:</span>
+                    <div class="size-container">
+                        <div *ngIf="vm.height" class="content height">
+                            <span class="title">{{PlayersRowLocalization.HEIGHT}}:</span>
+                            <div class="icon-content">
+                                <fa-icon [icon]="faRulerVertical"></fa-icon>
+                                <p>{{vm.height}} {{PlayersRowLocalization.CM}}</p>
+                            </div>
+                        </div>
+                        <div *ngIf="vm.weight" class="content weight">
+                            <span class="title">{{PlayersRowLocalization.WEIGHT}}:</span>
+                            <div class="icon-content">
+                                <fa-icon [icon]="faWeightScale"></fa-icon>
+                                <p>{{vm.weight}} {{PlayersRowLocalization.KG}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <sfc-no-data *ngIf="!vm.hasSize"></sfc-no-data>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'actions'">
+                <div class="column actions" [style.width]="column.calculatedWidth">
+                    <sfc-dropdown-menu [items]="ACTION_ITEMS" [bordered]="false" [filled]="true"
+                        [position]="[Position.Bottom, Position.Center]" [sfcComponentSize] [customSize]="0.9">
+                    </sfc-dropdown-menu>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</div>

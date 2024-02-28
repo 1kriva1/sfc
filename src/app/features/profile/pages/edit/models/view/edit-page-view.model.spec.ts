@@ -1,225 +1,14 @@
 import { EditPagePersonalViewModel } from "./edit-page-personal-view.model";
 import { IEditPageFormModel } from "../edit-page-form.model";
-import { IValueModel } from "@core/models";
 import { EditPageLocalization } from "../../edit.page.localization";
 import { EditPageProgressViewModel } from "./edit-page-progress-view.model";
 import { EditPageRaitingViewModel } from "./edit-page-raiting-view.model";
 import { EnumService } from "@share/services";
-import { StatsValueModel } from "../../../../models/stats-profile.model";
+import { IValueModel } from "@core/types";
+import { StatsValue } from "@share/types";
+import { ENUM_SERVICE } from "@test/stubs";
 
 describe('Features.Profile.Page:ProfileEdit.ViewModels', () => {
-    let enumServiceStub: Partial<EnumService> = {
-        enums: {
-            footballPositions: [
-                { key: 0, value: 'Goalkeeper' },
-                { key: 1, value: 'Defender' },
-                { key: 2, value: 'Midfielder' },
-                { key: 3, value: 'Forward' }
-            ],
-            gameStyles: [
-                { key: 0, value: 'Defend' },
-                { key: 1, value: 'Attacking' },
-                { key: 2, value: 'Aggressive' },
-                { key: 3, value: 'Control' },
-                { key: 4, value: 'Counter Attacks' }
-            ],
-            statCategories: [
-                { key: 0, value: 'Defend' },
-                { key: 1, value: 'Shooting' },
-                { key: 2, value: 'Passing' },
-                { key: 3, value: 'Dribbling' },
-                { key: 4, value: 'Defending' },
-                { key: 5, value: 'Physicality' }
-            ],
-            statSkills: [
-                { key: 0, value: 'Physical' },
-                { key: 1, value: 'Mental' },
-                { key: 2, value: 'Skill' },
-            ],
-            statTypes: [
-                {
-                    category: 0,
-                    skill: 0,
-                    key: 0,
-                    value: "Acceleration",
-                },
-                {
-                    category: 0,
-                    skill: 0,
-                    key: 1,
-                    value: "Sprint Speed"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 2,
-                    value: "Positioning"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 3,
-                    value: "Finishing"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 4,
-                    value: "Shot Power"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 5,
-                    value: "Long Shots"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 6,
-                    value: "Volleys"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 7,
-                    value: "Penalties"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 8,
-                    value: "Vision"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 9,
-                    value: "Crossing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 10,
-                    value: "FK. Accuracy"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 11,
-                    value: "Short Passing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 12,
-                    value: "Long Passing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 13,
-                    value: "Curve"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 14,
-                    value: "Agility"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 15,
-                    value: "Balance"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 16,
-                    value: "Reactions"
-                },
-                {
-                    category: 3,
-                    skill: 2,
-                    key: 17,
-                    value: "Ball Control"
-                },
-                {
-                    category: 3,
-                    skill: 2,
-                    key: 18,
-                    value: "Dribbling"
-                },
-                {
-                    category: 3,
-                    skill: 1,
-                    key: 19,
-                    value: "Composure"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 20,
-                    value: "Interceptions"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 21,
-                    value: "Heading Accuracy"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 22,
-                    value: "Def. Awareness"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 23,
-                    value: "Standing Tackle"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 24,
-                    value: "Sliding Tackle"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 25,
-                    value: "Jumping"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 26,
-                    value: "Stamina"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 27,
-                    value: "Strength"
-                },
-                {
-                    category: 5,
-                    skill: 1,
-                    key: 28,
-                    value: "Aggression"
-                }
-            ],
-            workingFoots: [
-                { key: 0, value: "Right" },
-                { key: 1, value: "Left" },
-                { key: 2, value: "Both" }
-            ]
-        }
-    };
-
     describe('Personal', () => {
         fit('Should first name has placeholder value', () => {
             const model: IEditPageFormModel = buildProfileFormValue('', '', '', null);
@@ -333,7 +122,7 @@ describe('Features.Profile.Page:ProfileEdit.ViewModels', () => {
 
     describe('Raiting', () => {
         fit('Should raiting has valid model value', () => {
-            const result = new EditPageRaitingViewModel(buildStatsValue(), enumServiceStub as EnumService),
+            const result = new EditPageRaitingViewModel(buildStatsValue(), ENUM_SERVICE as EnumService),
                 paceResult = result.model['0'];
 
             expect(paceResult.total).toEqual(200);
@@ -344,7 +133,7 @@ describe('Features.Profile.Page:ProfileEdit.ViewModels', () => {
         });
 
         fit('Should raiting has valid types value', () => {
-            const result = new EditPageRaitingViewModel(buildStatsValue(), enumServiceStub as EnumService);
+            const result = new EditPageRaitingViewModel(buildStatsValue(), ENUM_SERVICE as EnumService);
 
             expect(result.types['0']).toEqual({ label: 'Physical', total: 800, value: 400 });
             expect(result.types['1']).toEqual({ label: 'Mental', total: 200, value: 100 });
@@ -352,27 +141,27 @@ describe('Features.Profile.Page:ProfileEdit.ViewModels', () => {
         });
 
         fit('Should raiting has valid total value', () => {
-            const result = new EditPageRaitingViewModel(buildStatsValue(), enumServiceStub as EnumService);
+            const result = new EditPageRaitingViewModel(buildStatsValue(), ENUM_SERVICE as EnumService);
 
             expect(result.total).toEqual(2900);
         });
 
         fit('Should raiting has valid value', () => {
-            const result = new EditPageRaitingViewModel(buildStatsValue(), enumServiceStub as EnumService);
+            const result = new EditPageRaitingViewModel(buildStatsValue(), ENUM_SERVICE as EnumService);
 
             expect(result.value).toEqual(1450);
         });
 
         fit('Should raiting has valid percentage value', () => {
-            const result = new EditPageRaitingViewModel(buildStatsValue(), enumServiceStub as EnumService);
+            const result = new EditPageRaitingViewModel(buildStatsValue(), ENUM_SERVICE as EnumService);
 
             expect(result.percentage).toEqual(50);
         });
 
         fit('Should raiting has valid stars value', () => {
-            const result = new EditPageRaitingViewModel(buildStatsValue(), enumServiceStub as EnumService);
+            const result = new EditPageRaitingViewModel(buildStatsValue(), ENUM_SERVICE as EnumService);
 
-            expect(result.stars).toEqual(3);
+            expect(result.stars).toEqual(2.5);
         });
     });
 
@@ -411,7 +200,7 @@ describe('Features.Profile.Page:ProfileEdit.ViewModels', () => {
         };
     }
 
-    function buildStatsValue(): StatsValueModel {
+    function buildStatsValue(): StatsValue {
         return {
             0: {
                 0: 50,

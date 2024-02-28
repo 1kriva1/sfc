@@ -1,0 +1,87 @@
+<div class="container" [formGroupName]="SearchPageFilterPart.General">
+    <div class="row">
+        <div class="column">
+            <sfc-text-input id="city" formControlName="city" [label]="Localization.INPUT.CITY.LABEL"
+                [placeholder]="Localization.INPUT.CITY.PLACEHOLDER" [bordered]="true"
+                [helperText]="Localization.INPUT.CITY.HELPER_TEXT" [validations]="{
+                    maxlength: Localization.INPUT.CITY.VALIDATIONS.MAX_LENGTH
+                  }">
+            </sfc-text-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-tags-input id="tags" formControlName="tags" [label]="Localization.INPUT.TAGS.LABEL"
+                [placeholder]="Localization.INPUT.TAGS.PLACEHOLDER" [helperText]="Localization.INPUT.TAGS.HELPER_TEXT"
+                [bordered]="true" [maxTagLength]="Constants.MAX_TAG_VALUE_LENGTH"
+                [newTagPlaceholder]="'+ '+Localization.INPUT.TAGS.NEW_TAG_PLACEHOLDER" [validations]="{
+                    'sfc-empty': Localization.INPUT.TAGS.VALIDATIONS.EMPTY, 
+                    'sfc-duplicate': Localization.INPUT.TAGS.VALIDATIONS.DUPLICATE, 
+                    'sfc-tags-length': Constants.MAX_TAG_VALUE_VALIDATION, 
+                    'sfc-max-array-length': Localization.INPUT.TAGS.VALIDATIONS.TAGS_LENGTH
+                  }">
+            </sfc-tags-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-range-input id="years" formControlName="years" [label]="Localization.INPUT.YEARS.LABEL"
+                [helperText]="Localization.INPUT.YEARS.HELPER_TEXT" [multiple]="true" [showValue]="true"
+                [generateMultipleLabel]="generateYearsLabel">
+            </sfc-range-input>
+        </div>
+    </div>
+
+    <ng-container formGroupName="availability">
+        <div class="row">
+            <div class="column">
+                <sfc-bubbles-input id="available-days" formControlName="days" [items]="weekDays"
+                    [label]="Localization.INPUT.AVAILABLE_DAYS.LABEL"
+                    [helperText]="Localization.INPUT.AVAILABLE_DAYS.HELPER_TEXT">
+                </sfc-bubbles-input>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <sfc-datetime-input id="from-time" formControlName="from" [time]="true" [date]="false"
+                    [label]="Localization.INPUT.AVAILABLE_FROM.LABEL"
+                    [placeholder]="Localization.INPUT.AVAILABLE_FROM.PLACEHOLDER"
+                    [helperText]="Localization.INPUT.AVAILABLE_FROM.HELPER_TEXT" [switchOnClick]="true"
+                    [fullSize]="true" [bordered]="true" [hideOnClickOutside]="true" [clearButton]="true"
+                    [locale]="locale" [modalButtonsModel]="Constants.DATE_INPUT_MODAL_BUTTONS_MODEL"
+                    [validations]="{'sfc-compare-than': Localization.INPUT.AVAILABLE_FROM.VALIDATIONS.COMPARE}">
+                </sfc-datetime-input>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="column">
+                <sfc-datetime-input id="to-time" formControlName="to" [time]="true" [date]="false"
+                    [label]="Localization.INPUT.AVAILABLE_TO.LABEL"
+                    [placeholder]="Localization.INPUT.AVAILABLE_TO.PLACEHOLDER"
+                    [helperText]="Localization.INPUT.AVAILABLE_TO.HELPER_TEXT" [switchOnClick]="true" [fullSize]="true"
+                    [bordered]="true" [hideOnClickOutside]="true" [clearButton]="true" [locale]="locale"
+                    [modalButtonsModel]="Constants.DATE_INPUT_MODAL_BUTTONS_MODEL"
+                    [validations]="{'sfc-compare-than': Localization.INPUT.AVAILABLE_TO.VALIDATIONS.COMPARE}">
+                </sfc-datetime-input>
+            </div>
+        </div>
+    </ng-container>
+
+    <div class="row photo-and-free">
+        <div class="column">
+            <sfc-radio-input id="has-photo" formControlName="hasPhoto" [items]="Constants.HAS_PHOTO_RADIO_ITEMS"
+                [direction]="Direction.Vertical" [label]="Localization.INPUT.HAS_PHOTO.LABEL"
+                [helperText]="Localization.INPUT.HAS_PHOTO.HELPER_TEXT">
+            </sfc-radio-input>
+
+            <sfc-radio-input id="free-play" formControlName="freePlay" [items]="Constants.FREE_PLAY_RADIO_ITEMS"
+                [direction]="Direction.Vertical" [label]="Localization.INPUT.FREE_PLAY.LABEL"
+                [helperText]="Localization.INPUT.FREE_PLAY.HELPER_TEXT">
+            </sfc-radio-input>
+        </div>
+    </div>
+</div>

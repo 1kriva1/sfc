@@ -1,27 +1,12 @@
 @use "ngx-sfc-common/styles/index" as *;
-@import "mixins";
+@use "ngx-sfc-common/components/delimeter/delimeter.component.mixins.scss" as delimeter;
+@import "../base/mixins";
 
 @mixin delimeter-color($stick, $direction, $slice) {
   @if $stick {
-    border-image:
-      linear-gradient(
-        to $direction,
-        rgb(0 0 0 / 0%) 0%,
-        rgb(0 0 0 / 30%) 47%,
-        rgb(0 0 0 / 30%) 53%,
-        rgb(0 0 0 / 30%) 100%
-      )
-      $slice;
+    @include delimeter.sfc-delimeter-color($direction, $slice, $delimeter-common-color, $delimeter-common-color);
   } @else {
-    border-image:
-      linear-gradient(
-        to $direction,
-        rgb(255 255 255 / 0%) 0%,
-        rgb(255 255 255 / 40%) 47%,
-        rgb(255 255 255 / 40%) 53%,
-        rgb(255 255 255 / 40%) 100%
-      )
-      $slice;
+    @include delimeter.sfc-delimeter-color($direction, $slice, $delimeter-dark-color, $delimeter-dark-color);
   }
 }
 

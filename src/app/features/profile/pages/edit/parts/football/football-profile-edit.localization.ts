@@ -23,7 +23,7 @@ export class FootballProfileEditLocalization {
         },
         WEIGHT: {
             LABEL_PLACEHOLDER: $localize`:@@feature.profile.edit.page.football.weight.label-placeholder:Weight`,
-            HELPER_TEXT: $localize`:@@feature.profile.edit.page.football.weight.helper-text:Your weight in centimeters`,
+            HELPER_TEXT: $localize`:@@feature.profile.edit.page.football.weight.helper-text:Your weight in kilograms`,
             VALIDATIONS: {
                 MAX: $localize`:@@feature.profile.edit.page.football.weight.validation.max:Max value for weight is`
             }

@@ -1,0 +1,165 @@
+<div class="container">
+    <ng-template #actions>
+        <div class="actions">
+            <sfc-dropdown-menu [items]="ACTION_ITEMS" [bordered]="false" [filled]="true"
+                [position]="[Position.Bottom, Position.Center]" [sfcComponentSize] [customSize]="0.9">
+            </sfc-dropdown-menu>
+        </div>
+    </ng-template>
+
+    <div class="front">
+        <ng-container *ngTemplateOutlet="actions"></ng-container>
+
+        <div class="column name">
+            <sfc-player-info-panel [radius]="45" [model]="{
+                firstName: vm.firstName,
+                lastName: vm.lastName,
+                age: vm.age,
+                city: vm.city,
+                raiting: vm.raiting,
+                photo:vm.photo             
+            }"></sfc-player-info-panel>
+        </div>
+
+        <sfc-delimeter></sfc-delimeter>
+
+        <div class="scroll-part">
+            <div class="column available">
+                <div *ngIf="vm.hasAvailableDays" class="days">
+                    <span class="title">{{PlayersCardLocalization.DAYS}}:</span>
+                    <sfc-tags [tags]="vm.days" [sfcComponentSize] [customSize]="0.7"></sfc-tags>
+                </div>
+                <div *ngIf="vm.hasAvailableTime" class="time">
+                    <span class="title">{{PlayersCardLocalization.HOURS}}:</span>
+                    <div class="icon-content">
+                        <fa-icon [icon]="faClock"></fa-icon>
+                        <p>{{vm.availableTime}}</p>
+                    </div>
+                </div>
+                <div class="no-data" *ngIf="vm.hasNoAvailableData">
+                    <span class="title">{{PlayersCardLocalization.AVAILABILITY}}:</span>
+                    <sfc-no-data></sfc-no-data>
+                </div>
+            </div>
+
+            <div class="column combined">
+                <div class="position">
+                    <div *ngIf="vm.position" class="mark image">
+                        <sfc-icon [imageSrc]="vm.position.image" [sfcComponentSize]="ComponentSize.Large">
+                        </sfc-icon>
+                        <span>{{vm.position.value}}</span>
+                    </div>
+                    <div class="no-data" *ngIf="!vm.position">
+                        <span class="title">{{PlayersCardLocalization.POSITION}}:</span>
+                        <sfc-no-data></sfc-no-data>
+                    </div>
+                </div>
+                <div class="game-style">
+                    <div *ngIf="vm.gameStyle" class="mark image">
+                        <sfc-icon [imageSrc]="vm.gameStyle.image" [sfcComponentSize] [customSize]="3">
+                        </sfc-icon>
+                        <span>{{vm.gameStyle.value}}</span>
+                    </div>
+                    <div class="no-data" *ngIf="!vm.gameStyle">
+                        <span class="title">{{PlayersCardLocalization.GAME_STYLE}}:</span>
+                        <sfc-no-data></sfc-no-data>
+                    </div>
+                </div>
+                <div class="working-foot">
+                    <div *ngIf="vm.workingFoot" class="mark image">
+                        <sfc-icon [imageSrc]="vm.workingFoot.image" [sfcComponentSize]="ComponentSize.Large">
+                        </sfc-icon>
+                        <span>{{vm.workingFoot.value}}</span>
+                    </div>
+                    <div class="no-data" *ngIf="!vm.workingFoot">
+                        <span class="title">{{PlayersCardLocalization.WORKING_FOOT}}:</span>
+                        <sfc-no-data></sfc-no-data>
+                    </div>
+                </div>
+            </div>
+
+            <div class="column physical-condition">
+                <span class="title">{{PlayersCardLocalization.PHYSICAL_CONDITION}}:</span>
+                <sfc-stars [value]="vm.physicalCondition" [sfcComponentSize] [customSize]="0.6">
+                </sfc-stars>
+            </div>
+
+            <div class="column size">
+                <div *ngIf="vm.height" class="height">
+                    <span class="title">{{PlayersCardLocalization.HEIGHT}}:</span>
+                    <div class="icon-content">
+                        <fa-icon [icon]="faRulerVertical"></fa-icon>
+                        <p>{{vm.height}} {{PlayersCardLocalization.CM}}</p>
+                    </div>
+                </div>
+                <div *ngIf="vm.weight" class="weight">
+                    <span class="title">{{PlayersCardLocalization.WEIGHT}}:</span>
+                    <div class="icon-content">
+                        <fa-icon [icon]="faWeightScale"></fa-icon>
+                        <p>{{vm.weight}} {{PlayersCardLocalization.KG}}</p>
+                    </div>
+                </div>
+                <div class="no-data" *ngIf="!vm.hasSize">
+                    <span class="title">{{PlayersCardLocalization.SIZE}}:</span>
+                    <sfc-no-data></sfc-no-data>
+                </div>
+            </div>
+
+            <div class="column skill">
+                <span class="title">{{PlayersCardLocalization.SKILL}}:</span>
+                <sfc-stars [value]="vm.skill!" [sfcComponentSize] [customSize]="0.6"></sfc-stars>
+            </div>
+
+            <div class="column tags" *ngIf="vm.tags?.length">
+                <span class="title">{{PlayersCardLocalization.TAGS}}:</span>
+                <sfc-tags [tags]="vm.tags" [sfcComponentSize] [customSize]="0.6"></sfc-tags>
+            </div>
+
+            <div class="column free-play">
+                <span class="title">{{PlayersCardLocalization.FREE_PLAY}}:</span>
+                <fa-icon [icon]="vm.freePlayIcon"></fa-icon>
+            </div>
+        </div>
+    </div>
+
+    <div class="back">
+        <ng-container *ngTemplateOutlet="actions"></ng-container>
+
+        <div class="column raiting">
+            <span class="title">{{PlayersCardLocalization.TOTAL}}</span>
+            <sfc-progress-circle [progress]="vm.raiting"></sfc-progress-circle>
+        </div>
+
+        <div class="column types">
+            <div class="type" *ngFor="let type of vm.types">
+                <span class="title">{{type.label}}</span>
+                <sfc-progress-semi-circle [progress]="type.value" [limits]="false" [sfcComponentSize]
+                    [customSize]="0.6">
+                </sfc-progress-semi-circle>
+            </div>
+        </div>
+
+        <sfc-delimeter [label]="PlayersCardLocalization.STATS"></sfc-delimeter>
+
+        <div class="column stats">
+            <div class="stat" *ngFor="let stat of vm.stats;">
+                <div class="header" *ngIf="vm.metadata[stat.key] as metadata">
+                    <div class="title">
+                        <h3>{{stat.label}}</h3>
+                        <span [style.color]="metadata.color">{{metadata.average}}</span>
+                    </div>
+                    <sfc-progress-line [progress]="metadata.average" [hideEnd]="true" [sfcComponentSize]
+                        [customSize]="0.7">
+                    </sfc-progress-line>
+                </div>
+
+                <div class="stat-content">
+                    <div class="line" *ngFor="let statItem of stat.items">
+                        <span class="label">{{statItem.label}}</span>
+                        <span *ngIf="model?.stats" class="stat-value">{{model.stats[stat.key][statItem.key]}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,14 +1,8 @@
-import { HttpContext } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { LOADER } from '@core/interceptors/loader/loader.interceptor';
-import { ObservableDataModel, ObservableModel } from '@core/models/observable.model';
-import { StorageService } from '@core/services';
-import { environment } from '@environments/environment';
-import { BehaviorSubject, of } from 'rxjs';
+import { of } from 'rxjs';
 import { DataService } from '../data/data.service';
 import { IGetDataResponse } from '../data/models/get-data.response';
-import { IdentityService } from '../identity/identity.service';
 import { EnumService } from './enum.service';
 import { IEnumsModel } from './models/enums.model';
 

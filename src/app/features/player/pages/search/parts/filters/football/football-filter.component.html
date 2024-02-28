@@ -1,0 +1,66 @@
+<div class="container" [formGroupName]="SearchPageFilterPart.Football">
+    <div class="row">
+        <div class="column">
+            <sfc-bubbles-input id="positions" formControlName="positions" [items]="POSITIONS"
+                [label]="Localization.INPUT.POSITIONS.LABEL" [helperText]="Localization.INPUT.POSITIONS.HELPER_TEXT">
+            </sfc-bubbles-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-stars-input id="physical-condition" formControlName="physicalCondition"
+                [label]="Localization.INPUT.PHYSICAL_CONDITION.LABEL" [reset]="true"
+                [resetLabel]="Localization.RESET_LABEL"
+                [helperText]="Localization.INPUT.PHYSICAL_CONDITION.HELPER_TEXT">
+            </sfc-stars-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-bubbles-input id="game-styles" formControlName="gameStyles" [items]="GAME_STYLES"
+                [label]="Localization.INPUT.GAME_STYLES.LABEL"
+                [helperText]="Localization.INPUT.GAME_STYLES.HELPER_TEXT">
+            </sfc-bubbles-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-select-input id="working-foot" formControlName="workingFoot"
+                [label]="Localization.INPUT.WORKING_FOOT.LABEL"
+                [placeholder]="Localization.INPUT.WORKING_FOOT.PLACEHOLDER"
+                [helperText]="Localization.INPUT.WORKING_FOOT.HELPER_TEXT" [data]="enumService.enums.workingFoots"
+                [multiple]="false" [showDefaultItem]="true"
+                [defaultItemLabel]="Localization.INPUT.WORKING_FOOT.DEFAULT_ITEM_LABEL" [bordered]="true">
+            </sfc-select-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-range-input id="height" formControlName="height" [label]="Localization.INPUT.HEIGHT.LABEL"
+                [helperText]="Localization.INPUT.HEIGHT.HELPER_TEXT" [multiple]="true" [showValue]="true"
+                [max]="Constants.MAX_HEIGHT" [generateMultipleLabel]="generateHeightRangeLabel.bind(this)">
+            </sfc-range-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-range-input id="weight" formControlName="weight" [label]="Localization.INPUT.WEIGHT.LABEL"
+                [helperText]="Localization.INPUT.WEIGHT.HELPER_TEXT" [multiple]="true" [showValue]="true"
+                [max]="Constants.MAX_WEIGHT" [generateMultipleLabel]="generateWeightRangeLabel.bind(this)">
+            </sfc-range-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-stars-input id="skill" formControlName="skill" [label]="Localization.INPUT.SKILL.LABEL" [reset]="true"
+                [helperText]="Localization.INPUT.SKILL.HELPER_TEXT" [resetLabel]="Localization.RESET_LABEL">
+            </sfc-stars-input>
+        </div>
+    </div>
+</div>

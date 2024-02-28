@@ -31,14 +31,21 @@ describe('Share.Component:Title', () => {
     expect(fixture.nativeElement.querySelector('div.container')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('.title')).toBeTruthy();
     expect(fixture.nativeElement.querySelector('.label')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('.label p')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('.label span')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('sfc-icon-tooltip')).toBeTruthy();
-    expect(fixture.nativeElement.querySelector('sfc-delimeter')).toBeTruthy();
   });
 
-  fit('Should have default icon', () => {
-    expect(component.icon).toEqual(faCircleQuestion);
+  fit('Should not have icon by default', () => {
+    expect(component.icon).toBeNull();
+  });
+
+  fit('Should label not exist', () => {
+    expect(fixture.nativeElement.querySelector('.label p')).toBeNull();
+  });
+
+  fit('Should label exist', () => {
+    component.label = 'Test label';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.label p')).toBeTruthy();
   });
 
   fit('Should have defined label', () => {
@@ -48,11 +55,33 @@ describe('Share.Component:Title', () => {
     expect(fixture.nativeElement.querySelector('.label p').innerText).toEqual(component.label);
   });
 
+  fit('Should description not exist', () => {
+    expect(fixture.nativeElement.querySelector('.label span')).toBeNull();
+  });
+
+  fit('Should description exist', () => {
+    component.description = 'Test description';
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.label span')).toBeTruthy();
+  });
+
   fit('Should have defined description', () => {
     component.description = 'Test description';
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('.label span').innerText).toEqual(component.description);
+  });
+
+  fit('Should icon tooltip not exist', () => {
+    expect(fixture.nativeElement.querySelector('sfc-icon-tooltip')).toBeNull();
+  });
+
+  fit('Should icon tooltip exist', () => {
+    component.icon = faStar;
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('sfc-icon-tooltip')).toBeTruthy();
   });
 
   fit('Should icon tooltip has appropriate attributes', () => {
@@ -64,5 +93,16 @@ describe('Share.Component:Title', () => {
 
     expect(tooltipIconEl.componentInstance.tooltip).toEqual(component.tooltip);
     expect(tooltipIconEl.componentInstance.icon).toEqual(component.icon);
+  });
+
+  fit('Should delimeter not exist', () => {
+    component.delimeter = false;
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('sfc-delimeter')).toBeNull();
+  });
+
+  fit('Should delimeter exist', () => {
+    expect(fixture.nativeElement.querySelector('sfc-delimeter')).toBeTruthy();
   });
 });

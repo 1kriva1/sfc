@@ -9,7 +9,7 @@ import {
 } from 'ngx-sfc-common';
 import { fromEvent, map, Observable, startWith, Subscription, tap, switchMap, filter, catchError, of, BehaviorSubject, from } from 'rxjs';
 import { HeaderService } from '@core/components';
-import { IForm } from '@core/models';
+import { IForm } from '@core/types';
 import { EditPageConstants } from './edit.page.constants';
 import { IEditPageFormModel } from './models/edit-page-form.model';
 import { ProfileEditPagePart } from './edit-page-part.enum';
@@ -27,7 +27,6 @@ import { ICreatePlayerRequest } from '../../services/player/models/create/create
 import { RoutKey } from '@core/enums';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IProfileModel } from '../../models/profile.model';
-import { ProfileEditPageMapper } from '../../utils/edit.page.mapper';
 import { IChangesCheck, IChangesCheckGuardModel } from '@core/guards/changes-check/changes-check.model';
 import { Title } from '@angular/platform-browser';
 import { NotificationService } from '@core/services/notification/notification.service';
@@ -42,6 +41,7 @@ import { INotification } from '@core/services/notification/notification.model';
 import { CommonConstants as ApplicationCommonConstants } from '@core/constants/common.constants';
 import { fileMaxSize } from 'ngx-sfc-inputs';
 import { EnumService } from '@share/services';
+import { mapPlayerRequest } from '../../utils/edit.page.mapper';
 
 @Component({
   templateUrl: './edit.page.component.html',
@@ -208,7 +208,7 @@ export class ProfileEditPageComponent
           .pipe(
             tap(() => this.tapSubmit()),
             filter(() => this.profileForm.valid),
-            switchMap(() => from(ProfileEditPageMapper.mapToServer(
+            switchMap(() => from(mapPlayerRequest(
               value,
               { available: this.statsService.stats.available, used: this.statsService.stats.used })
             )),
@@ -233,13 +233,13 @@ export class ProfileEditPageComponent
 
     this.setGuardChangesModel();
 
-    this.setPageTitle();
-
-    this.updatePlayer(playerId);
+    this.setPageTitle();    
 
     this.notify();
 
     this.statsService.init({ available: this.statsService.stats.available, used: this.statsService.stats.used });
+
+    this.updatePlayer(playerId);
 
     this.router.navigate([`${RoutKey.Profiles}/${playerId}/${RoutKey.Edit}`]);
   }

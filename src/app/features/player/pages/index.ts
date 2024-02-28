@@ -1,0 +1,9 @@
+export { PlayersSearchPageComponent } from "./search/search.page.component";
+export { GeneralFilterComponent } from "./search/parts/filters/general/general-filter.component";
+export { FootballFilterComponent } from "./search/parts/filters/football/football-filter.component";
+export { StatsFilterComponent } from "./search/parts/filters/stats/stats-filter.component";
+export { PlayersRecommendationComponent } from "./search/parts/recomendation/players-recommendation.component";
+export { PlayerRecommendationComponent } from "./search/parts/recomendation/parts/player/player-recommendation.component";
+export { PlayersRowComponent } from "./search/parts/table/row/players-row.component";
+export { PlayersRowContentComponent } from "./search/parts/table/row-content/players-row-content.component";
+export { PlayersCardComponent } from "./search/parts/table/card/players-card.component";

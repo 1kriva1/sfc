@@ -1,0 +1,118 @@
+@use "ngx-sfc-common/styles/index" as *;
+@import "mixins";
+@import "../styles";
+
+:host {
+  @include host;
+
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+
+    @include theme-value(background, $background-container-default);
+
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    padding: 1em 0.5em;
+
+    .column {
+      @include column;
+      @include common;
+
+      flex-direction: column;
+      padding: $column-padding;
+
+      .title {
+        padding-bottom: 0.5em;
+      }
+
+      @include column-tags;
+
+      &.tags {
+        max-width: 20%;
+      }
+
+      &.stats,
+      &.types {
+        flex-direction: row;
+      }
+
+      &.types {
+        .content {
+          sfc-progress-semi-circle {
+            ::ng-deep > .container {
+              color: $color-default;
+            }
+          }
+        }
+      }
+
+      @include column-free-play;
+
+      &.free-play,
+      &.game-style,
+      &.working-foot {
+        .title {
+          text-transform: none;
+        }
+      }
+    }
+  }
+
+  /* stylelint-disable no-descending-specificity */
+  // positions
+  &.position-3,
+  &.position-2,
+  &.position-1,
+  &.position-0 {
+    .container {
+      .column {
+        @include position-common;
+        @include position-column-free-play;
+
+        &.types {
+          .content {
+            @include position-type;
+          }
+        }
+      }
+    }
+  }
+
+  &.position-3 {
+    .container {
+      background: $color-blue-0;
+    }
+  }
+
+  &.position-2 {
+    .container {
+      background: $color-green-2;
+    }
+  }
+
+  &.position-1 {
+    .container {
+      background: $color-magenta-0;
+    }
+  }
+
+  &.position-0 {
+    .container {
+      background: $color-red-0;
+    }
+  }
+  /* stylelint-enable no-descending-specificity */
+
+  @media (max-width: 425px) {
+    .container {
+      .column {
+        &.tags {
+          max-width: none;
+        }
+      }
+    }
+  }
+}

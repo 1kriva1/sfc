@@ -1,4 +1,4 @@
-export type StatsValueModel = { [category: number]: { [type: number]: number }; };
+import { StatsValue } from "@share/types";
 
 export interface IStatsPointsModel {
     available: number;
@@ -7,5 +7,5 @@ export interface IStatsPointsModel {
 
 export interface IStatsProfileModel {
     points: IStatsPointsModel;
-    value: StatsValueModel;
+    value: StatsValue;
 }

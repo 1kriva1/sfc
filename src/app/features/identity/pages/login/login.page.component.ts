@@ -5,7 +5,7 @@ import { ButtonType, CheckmarkType, Direction, isEmail } from 'ngx-sfc-common';
 import { SliderType } from 'ngx-sfc-components';
 import { Subscription, startWith, switchMap, fromEvent, tap, map, filter, catchError, of } from 'rxjs';
 import { RoutKey } from '@core/enums';
-import { IForm } from '@core/models';
+import { IForm } from '@core/types';
 import { buildPath, buildTitle, markFormTouchedAndDirty } from '@core/utils';
 import { BaseErrorResponse } from '@core/models/http/base-error.response';
 import { IdentityService } from '@share/services/identity/identity.service';

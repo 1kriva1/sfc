@@ -1,0 +1,145 @@
+@use "ngx-sfc-common/styles/index" as *;
+@import "mixins";
+@import "../styles";
+
+:host {
+  display: inline-block;
+  width: 100%;
+
+  @include host(pointer);
+
+  .container {
+    display: flex;
+    align-items: center;
+
+    @include theme-value(background, $background-container-default);
+
+    border-radius: $border-radius;
+    padding: $container-padding;
+    box-shadow: $box-shadow;
+
+    .column {
+      @include column;
+      @include common;
+
+      .title,
+      .image {
+        font-size: 0.7em;
+      }
+
+      .title.mobile {
+        display: none;
+      }
+
+      @include column-name;
+      @include column-available;
+      @include column-size(column, 0);
+
+      &.size {
+        .size-container {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+      &.pysical-condition {
+        .title.mobile {
+          text-transform: none;
+        }
+      }
+
+      &.actions {
+        @include action-menu;
+        @include position-action-menu($color-default);
+      }
+    }
+  }
+
+  @include position($color-1, $color-2);
+
+  &.expanded {
+    .container {
+      background: $color-1;
+      border-radius: initial;
+      border-top-left-radius: $border-radius;
+      border-top-right-radius: $border-radius;
+      box-shadow: none;
+    }
+  }
+
+  // positions
+  &.position-3,
+  &.position-2,
+  &.position-1,
+  &.position-0 {
+    .container {
+      .column {
+        @include position-common;
+        @include position-column-name;
+
+        &.actions {
+          @include position-action-menu;
+        }
+      }
+    }
+  }
+
+  &.position-3 {
+    @include position($color-blue-1, $color-blue-0);
+  }
+
+  &.position-2 {
+    @include position($color-green-3, $color-green-2);
+  }
+
+  &.position-1 {
+    @include position($color-magenta-1, $color-magenta-0);
+  }
+
+  &.position-0 {
+    @include position($color-red-1, $color-red-0);
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      flex-flow: row wrap;
+      justify-content: space-around;
+      padding: 1em 0.5em;
+
+      .column {
+        display: flex;
+        flex-basis: calc(25%);
+        justify-content: center;
+        flex-direction: column;
+        width: auto !important;
+        padding: 0.5em;
+
+        .title.mobile {
+          display: block;
+          font-size: 0.6em;
+        }
+
+        &.size {
+          .size-container {
+            flex-direction: row;
+
+            .content {
+              padding: 0 0.5em;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 425px) {
+    .container {
+      flex-direction: column;
+
+      .column {
+        display: flex;
+        flex-basis: initial;
+      }
+    }
+  }
+}

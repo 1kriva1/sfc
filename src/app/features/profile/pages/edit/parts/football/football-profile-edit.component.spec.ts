@@ -4,6 +4,7 @@ import { FormBuilder, FormGroupDirective, ReactiveFormsModule } from '@angular/f
 import { By } from '@angular/platform-browser';
 import { EnumService } from '@share/services';
 import { ShareModule } from '@share/share.module';
+import { ENUM_SERVICE } from '@test/stubs';
 import { hasItemBy, NgxSfcCommonModule } from 'ngx-sfc-common';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
 import { FootballProfileEditComponent } from './football-profile-edit.component';
@@ -14,31 +15,6 @@ describe('Features.Profile.Page:ProfileEdit.Part:FootballProfileEdit', () => {
     let component: FootballProfileEditComponent;
     let fixture: ComponentFixture<FootballProfileEditComponent>;
     let formGroupDirective: FormGroupDirective;
-    let enumServiceStub: Partial<EnumService> = {
-        enums: {
-            footballPositions: [
-                { key: 0, value: 'Goalkeeper' },
-                { key: 1, value: 'Defender' },
-                { key: 2, value: 'Midfielder' },
-                { key: 3, value: 'Forward' }
-            ],
-            gameStyles: [
-                { key: 0, value: 'Defend' },
-                { key: 1, value: 'Attacking' },
-                { key: 2, value: 'Aggressive' },
-                { key: 3, value: 'Control' },
-                { key: 4, value: 'Counter Attacks' }
-            ],
-            statCategories: [],
-            statSkills: [],
-            statTypes: [],
-            workingFoots: [
-                { key: 0, value: "Right" },
-                { key: 1, value: "Left" },
-                { key: 2, value: "Both" }
-            ]
-        }
-    };
 
     beforeEach(async () => {
         const formBuilder = new FormBuilder();
@@ -50,7 +26,7 @@ describe('Features.Profile.Page:ProfileEdit.Part:FootballProfileEdit', () => {
             declarations: [FootballProfileEditComponent],
             providers: [
                 { provide: FormGroupDirective, useValue: formGroupDirective },
-                { provide: EnumService, useValue: enumServiceStub }
+                { provide: EnumService, useValue: ENUM_SERVICE }
             ]
         }).compileComponents();
 

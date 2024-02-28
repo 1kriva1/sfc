@@ -1,0 +1,298 @@
+@use "ngx-sfc-common/styles/index" as *;
+@use "ngx-sfc-common/components/delimeter/delimeter.component.mixins.scss" as delimeter;
+@import "mixins";
+@import "../styles";
+
+%position {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+:host {
+  @include host(pointer);
+
+  display: inline-block;
+  margin: 0.5em;
+
+  .container {
+    position: relative;
+    transition-duration: 0.6s;
+    transition-timing-function: ease-in-out;
+    transform-style: preserve-3d;
+    width: 15em;
+    height: 28em;
+
+    .title {
+      @include title;
+    }
+
+    .front {
+      .scroll-part {
+        width: 95%;
+        overflow-y: auto;
+        margin-bottom: 0.5em;
+      }
+
+      .column {
+        @include column-name;
+        @include column-available;
+        @include column-size(row, 0 0.5em);
+        @include column-free-play;
+        @include column-tags;
+
+        &.name {
+          sfc-player-info-panel {
+            ::ng-deep > .container {
+              flex-direction: column;
+            }
+          }
+        }
+
+        &.size {
+          > div {
+            text-align: center;
+            padding: 0 0.5em;
+          }
+        }
+
+        &.free-play {
+          fa-icon {
+            padding-top: 0.2em;
+          }
+        }
+
+        &.physical-condition,
+        &.free-play {
+          > .title {
+            text-transform: none;
+          }
+        }
+
+        .no-data {
+          text-align: center;
+
+          .title {
+            display: block;
+          }
+        }
+
+        &.combined {
+          flex-direction: row;
+
+          > div {
+            padding: 0 0.5em;
+          }
+
+          .game-style,
+          .working-foot {
+            .title {
+              text-transform: none;
+            }
+          }
+        }
+      }
+
+      sfc-delimeter {
+        width: 80%;
+      }
+    }
+
+    .back {
+      transform: rotateY(-180deg);
+
+      sfc-delimeter {
+        width: 100%;
+        padding-top: 0.7em;
+        font-weight: bold;
+        font-size: 0.8em;
+        text-transform: capitalize;
+      }
+
+      .column {
+        /* stylelint-disable no-descending-specificity */
+        .title {
+          padding-bottom: 0.2em;
+        }
+
+        &.raiting {
+          .title {
+            font-size: 0.8em;
+          }
+        }
+        /* stylelint-enable no-descending-specificity */
+
+        &.types {
+          width: 100%;
+          flex-direction: row;
+          justify-content: space-evenly;
+
+          .type {
+            @include center;
+
+            flex-direction: column;
+
+            sfc-progress-semi-circle {
+              ::ng-deep .container {
+                color: $color-default;
+              }
+            }
+          }
+        }
+
+        &.stats {
+          width: 95%;
+          overflow-y: scroll;
+          display: block;
+          margin-bottom: 0.5em;
+
+          .stat {
+            padding: 0.3em;
+
+            .title {
+              @extend %position;
+
+              font-size: 0.7em;
+              text-transform: none;
+
+              h3 {
+                margin: 0;
+              }
+
+              span {
+                font-weight: bold;
+              }
+            }
+
+            .stat-content {
+              .line {
+                @extend %position;
+
+                color: $color-8;
+                padding: 0.2em 0;
+                font-size: 0.7em;
+
+                .stat-value {
+                  font-weight: bold;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .front,
+    .back {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      border-radius: 0.5em;
+      box-shadow: $box-shadow;
+
+      .actions {
+        position: relative;
+        top: 0.5em;
+        left: -6em;
+
+        @include action-menu;
+        @include position-action-menu($color-default);
+      }
+
+      .column {
+        @include column;
+        @include common;
+
+        flex-direction: column;
+        padding: 0.2em;
+      }
+
+      ::ng-deep sfc-delimeter {
+        @include delimeter.sfc-delimeter-as-default;
+      }
+    }
+  }
+
+  /* stylelint-disable no-descending-specificity */
+  &.back {
+    .container {
+      transform: rotateY(-180deg);
+    }
+  }
+  /* stylelint-enable no-descending-specificity */
+
+  @include position-card($background-container-default, $color-1);
+
+  /* stylelint-disable no-descending-specificity */
+  // positions
+  &.position-3,
+  &.position-2,
+  &.position-1,
+  &.position-0 {
+    .container {
+      .front,
+      .back {
+        .actions {
+          @include position-action-menu;
+        }
+
+        .column {
+          @include position-common;
+          @include position-column-name;
+          @include position-column-free-play;
+        }
+
+        & > {
+          ::ng-deep sfc-delimeter {
+            @include delimeter.sfc-delimeter-as-dark;
+          }
+        }
+      }
+
+      .back {
+        .column {
+          &.types {
+            .type {
+              @include position-type;
+            }
+          }
+
+          &.stats {
+            .stat {
+              .stat-content {
+                .line {
+                  color: $color-2;
+
+                  .stat-value {
+                    color: $color-0;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  /* stylelint-enable no-descending-specificity */
+
+  &.position-3 {
+    @include position-card($color-blue-1, $color-blue-0);
+  }
+
+  &.position-2 {
+    @include position-card($color-green-3, $color-green-2);
+  }
+
+  &.position-1 {
+    @include position-card($color-magenta-1, $color-magenta-0);
+  }
+
+  &.position-0 {
+    @include position-card($color-red-1, $color-red-0);
+  }
+}

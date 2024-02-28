@@ -1,0 +1,31 @@
+:host {
+  .container {
+    .row {
+      &.photo-and-free {
+        .column {
+          justify-content: center;
+          flex-wrap: nowrap;
+          padding: 0 0.5em;
+
+          sfc-radio-input {
+            padding: 1em 0.5em;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .container {
+      .row {
+        .column {
+          sfc-datetime-input {
+            ::ng-deep .container > .content > sfc-modal sfc-datetime-modal.full-size {
+              min-width: initial;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -19,14 +19,7 @@
             [defaultDots]="false">
 
             <sfc-avatar [data]="avatarModel" [radius]="40" [sfcComponentSize]="ComponentSize.Small" [stroke]="1"
-                [progressModel]="avatarProgressModel">
-                <sfc-avatar-badge *ngIf="!playerService.playerCreated" [position]="AvatarBadgePosition.RightTop"
-                    [background]="'#fcbb42'">
-                    <span [sfc-tooltip]="AVATAR_BADGE_CREATE_PROFILE_TOOLTIP_TEXT" [tooltipPosition]="Position.Bottom">
-                        <fa-icon [icon]="faExclamation"></fa-icon>
-                    </span>
-                </sfc-avatar-badge>
-            </sfc-avatar>
+                [progressModel]="avatarProgressModel" [badges]="avatarBadges"></sfc-avatar>
 
         </sfc-dropdown-menu>
     </div>

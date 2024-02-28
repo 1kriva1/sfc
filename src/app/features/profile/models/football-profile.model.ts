@@ -1,4 +1,4 @@
-import { IValueModel } from "@core/models";
+import { IValueModel } from "@core/types";
 
 export interface IFootballProfileModel {
     height: number | null;

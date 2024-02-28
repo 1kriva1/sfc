@@ -1,0 +1,14 @@
+<div class="container">
+    <sfc-avatar *ngIf="avatar" [radius]="radius" [stroke]="stroke" [progress]="model.raiting" [data]="avatarModel"
+        [progressModel]="avatarProgressModel" [badges]="badges">
+    </sfc-avatar>
+
+    <div *ngIf="info" class="info">
+        <h3>{{model.firstName}} {{model.lastName}}</h3>
+        <p>
+            <ng-container *ngIf="model.position?.value || age">{{model.position?.value || age }} • </ng-container>
+            <span>{{model.city}}</span>
+        </p>
+        <sfc-stars [value]="stars" [sfcComponentSize]="ComponentSize.Small"></sfc-stars>
+    </div>
+</div>

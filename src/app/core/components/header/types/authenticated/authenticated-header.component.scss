@@ -98,6 +98,16 @@
               flex-direction: column;
               justify-content: center;
               align-items: center;
+
+              sfc-avatar-badge {
+                ::ng-deep > .container {
+                  > span {
+                    &::before {
+                      font-size: 1.3em;
+                    }
+                  }
+                }
+              }
             }
           }
 

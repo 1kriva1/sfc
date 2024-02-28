@@ -2,8 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faBell, faEnvelope, faUser } from '@fortawesome/free-regular-svg-icons';
 import { faExclamation, faPlus, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
-import { ComponentSize, firstOrDefault, hasItem, isDefined, Position } from 'ngx-sfc-common';
-import { AvatarBadgePosition, IAvatarDataModel, IAvatarProgressModel, IDropdownMenuItemModel } from 'ngx-sfc-components';
+import { any, ComponentSize, firstOrDefault, hasItem, isDefined, Position } from 'ngx-sfc-common';
+import { AvatarBadgePosition, IAvatarBadgeModel, IAvatarDataModel, IAvatarProgressModel, IDropdownMenuItemModel } from 'ngx-sfc-components';
 import { filter, map, Subscription } from 'rxjs';
 import { CommonConstants } from '@core/constants';
 import { RoutKey } from '@core/enums';
@@ -27,32 +27,29 @@ export class AuthenticatedHeaderComponent implements OnInit, OnDestroy {
   faBell = faBell;
   faEnvelope = faEnvelope;
   faPlus = faPlus;
-  faExclamation = faExclamation;
 
   ComponentSize = ComponentSize;
   Position = Position;
-  AvatarBadgePosition = AvatarBadgePosition;
 
   MESSAGES_TOOLTIP_TEXT = $localize`:@@core.component.header-authenticated.tooltip.messages:Messages`;
   NOTIFICATIONS_TOOLTIP_TEXT = $localize`:@@core.component.header-authenticated.tooltip.notifications:Notifications`;
-  AVATAR_BADGE_CREATE_PROFILE_TOOLTIP_TEXT = $localize`:@@core.component.header-authenticated.tooltip.avatar-badge-create-profile:Please create profile!`;
 
   public navigations: IHeaderNavigationModel[] = [
     {
       label: $localize`:@@core.component.header-authenticated.navigation.players:Players`,
-      click: () => this.navigate()
+      click: () => this.navigate(RoutKey.Players)
     },
     {
       label: $localize`:@@core.component.header-authenticated.navigation.games:Games`,
-      click: () => this.navigate()
+      click: () => this.navigate(RoutKey.Players)
     },
     {
       label: $localize`:@@core.component.header-authenticated.navigation.teams:Teams`,
-      click: () => this.navigate()
+      click: () => this.navigate(RoutKey.Players)
     },
     {
       label: $localize`:@@core.component.header-authenticated.navigation.locations:Locations`,
-      click: () => this.navigate()
+      click: () => this.navigate(RoutKey.Players)
     }
   ];
 
@@ -63,6 +60,18 @@ export class AuthenticatedHeaderComponent implements OnInit, OnDestroy {
   public avatarProgressModel: IAvatarProgressModel = {
     filledColor: 'red'
   }
+
+  public avatarBadges: IAvatarBadgeModel[] = [
+    {
+      position: AvatarBadgePosition.RightTop,
+      icon: faExclamation,
+      background: '#fcbb42',
+      tooltip: {
+        position: Position.Bottom,
+        value: $localize`:@@core.component.header-authenticated.tooltip.avatar-badge-create-profile:Please create profile!`
+      }
+    }
+  ];
 
   public actions: IDropdownMenuItemModel[] = [
     {
@@ -110,9 +119,9 @@ export class AuthenticatedHeaderComponent implements OnInit, OnDestroy {
     this._playerSubscription?.unsubscribe();
   }
 
-  private navigate(): void {
+  private navigate(key: RoutKey): void {
     this.headerService.toggleByValue(false);
-    this.router.navigate([buildPath(RoutKey.Profiles)]);
+    this.router.navigate([buildPath(key)]);
   }
 
   private logout(): void {
@@ -139,5 +148,7 @@ export class AuthenticatedHeaderComponent implements OnInit, OnDestroy {
     if (!hasItem(this.actions, this.profileAction)) {
       this.actions.unshift(this.profileAction);
     }
+
+    this.avatarBadges = any(this.avatarBadges) ? [] : this.avatarBadges;
   }
 }

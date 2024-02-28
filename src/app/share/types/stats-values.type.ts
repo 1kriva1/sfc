@@ -1,0 +1,1 @@
+export type StatsValue = { [category: number]: { [type: number]: number }; };

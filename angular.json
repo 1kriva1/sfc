@@ -54,13 +54,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "1mb",
+                  "maximumWarning": "1.2mb",
                   "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "8kb",
-                  "maximumError": "11kb"
+                  "maximumWarning": "85kb",
+                  "maximumError": "100kb"
                 }
               ],
               "outputHashing": "all"
@@ -120,7 +120,7 @@
             },
             "styles": [
               "src/styles.scss",
-              "src/test-styles.scss"
+              "src/tests/styles.scss"
             ],
             "scripts": []
           }

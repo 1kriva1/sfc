@@ -9,20 +9,22 @@ import { HeaderService } from '@core/components';
 import { CommonConstants as ApplicationCommonConstants } from '@core/constants';
 import { RoutKey } from '@core/enums';
 import { IChangesCheckGuardModel } from '@core/guards/changes-check/changes-check.model';
-import { IValueModel } from '@core/models';
 import { NotificationService } from '@core/services';
 import { MessageSeverity } from '@core/services/message/message-severity.enum';
+import { IValueModel } from '@core/types';
 import { buildTitle } from '@core/utils';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFutbol, faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { faCamera, faG, faStar } from '@fortawesome/free-solid-svg-icons';
 import { EnumService, PlayerService as SharePlayerService } from '@share/services';
 import { ShareModule } from '@share/share.module';
+import { StatsValue } from '@share/types';
+import { ENUM_SERVICE } from '@test/stubs';
 import { ButtonType, CommonConstants, ModalService, nameof, NgxSfcCommonModule, UIConstants } from 'ngx-sfc-common';
 import { NgxSfcComponentsModule } from 'ngx-sfc-components';
 import { NgxSfcInputsModule } from 'ngx-sfc-inputs';
 import { of, throwError } from 'rxjs';
-import { IProfileModel, StatsValueModel } from '../../models';
+import { IProfileModel } from '../../models';
 import { ICreatePlayerRequest, IUpdatePlayerRequest } from '../../services/player/models';
 import { ICreatePlayerResponse } from '../../services/player/models/create/create.response';
 import { IUpdatePlayerResponse } from '../../services/player/models/update/update.response';
@@ -53,217 +55,6 @@ describe('Features.Profile.Page:ProfileEdit', () => {
         create: () => { return of(); },
         update: () => { return of(); }
     };
-    let enumServiceStub: Partial<EnumService> = {
-        enums: {
-            footballPositions: [
-                { key: 0, value: 'Goalkeeper' },
-                { key: 1, value: 'Defender' },
-                { key: 2, value: 'Midfielder' },
-                { key: 3, value: 'Forward' }
-            ],
-            gameStyles: [
-                { key: 0, value: 'Defend' },
-                { key: 1, value: 'Attacking' },
-                { key: 2, value: 'Aggressive' },
-                { key: 3, value: 'Control' },
-                { key: 4, value: 'Counter Attacks' }
-            ],
-            statCategories: [
-                { key: 0, value: 'Defend' },
-                { key: 1, value: 'Shooting' },
-                { key: 2, value: 'Passing' },
-                { key: 3, value: 'Dribbling' },
-                { key: 4, value: 'Defending' },
-                { key: 5, value: 'Physicality' }
-            ],
-            statSkills: [
-                { key: 0, value: 'Physical' },
-                { key: 1, value: 'Mental' },
-                { key: 2, value: 'Skill' },
-            ],
-            statTypes: [
-                {
-                    category: 0,
-                    skill: 0,
-                    key: 0,
-                    value: "Acceleration",
-                },
-                {
-                    category: 0,
-                    skill: 0,
-                    key: 1,
-                    value: "Sprint Speed"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 2,
-                    value: "Positioning"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 3,
-                    value: "Finishing"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 4,
-                    value: "Shot Power"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 5,
-                    value: "Long Shots"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 6,
-                    value: "Volleys"
-                },
-                {
-                    category: 1,
-                    skill: 2,
-                    key: 7,
-                    value: "Penalties"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 8,
-                    value: "Vision"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 9,
-                    value: "Crossing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 10,
-                    value: "FK. Accuracy"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 11,
-                    value: "Short Passing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 12,
-                    value: "Long Passing"
-                },
-                {
-                    category: 2,
-                    skill: 2,
-                    key: 13,
-                    value: "Curve"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 14,
-                    value: "Agility"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 15,
-                    value: "Balance"
-                },
-                {
-                    category: 3,
-                    skill: 0,
-                    key: 16,
-                    value: "Reactions"
-                },
-                {
-                    category: 3,
-                    skill: 2,
-                    key: 17,
-                    value: "Ball Control"
-                },
-                {
-                    category: 3,
-                    skill: 2,
-                    key: 18,
-                    value: "Dribbling"
-                },
-                {
-                    category: 3,
-                    skill: 1,
-                    key: 19,
-                    value: "Composure"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 20,
-                    value: "Interceptions"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 21,
-                    value: "Heading Accuracy"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 22,
-                    value: "Def. Awareness"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 23,
-                    value: "Standing Tackle"
-                },
-                {
-                    category: 4,
-                    skill: 2,
-                    key: 24,
-                    value: "Sliding Tackle"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 25,
-                    value: "Jumping"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 26,
-                    value: "Stamina"
-                },
-                {
-                    category: 5,
-                    skill: 0,
-                    key: 27,
-                    value: "Strength"
-                },
-                {
-                    category: 5,
-                    skill: 1,
-                    key: 28,
-                    value: "Aggression"
-                }
-            ],
-            workingFoots: [
-                { key: 0, value: "Right" },
-                { key: 1, value: "Left" },
-                { key: 2, value: "Both" }
-            ]
-        }
-    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -282,7 +73,7 @@ describe('Features.Profile.Page:ProfileEdit', () => {
                 { provide: PlayerService, useValue: playerServiceStub },
                 { provide: NotificationService, useValue: notificationServiceStub },
                 { provide: HeaderService, useValue: headerServiceStub },
-                { provide: EnumService, useValue: enumServiceStub }
+                { provide: EnumService, useValue: ENUM_SERVICE }
             ]
         }).compileComponents();
 
@@ -356,14 +147,14 @@ describe('Features.Profile.Page:ProfileEdit', () => {
             (headerServiceStub as any).open = false;
             fixture.detectChanges();
 
-            expect(fixture.nativeElement.querySelector('.side')).toBeTruthy();
+            expect(fixture.nativeElement.querySelector('.container > .side')).toBeTruthy();
         });
 
         fit('Should hide side menu', () => {
             (headerServiceStub as any).open = true;
             fixture.detectChanges();
 
-            expect(fixture.nativeElement.querySelector('.side')).toBeNull();
+            expect(fixture.nativeElement.querySelector('.container > .side')).toBeNull();
         });
 
         fit('Should guard changes modal has configuration as constant', () => {
@@ -437,7 +228,7 @@ describe('Features.Profile.Page:ProfileEdit', () => {
                 const starsEl: DebugElement = fixture.debugElement.query(By.css('.info .stars sfc-stars')),
                     iconTooltipEl: DebugElement = fixture.debugElement.query(By.css('.info .stars sfc-icon-tooltip'));
 
-                expect(starsEl.componentInstance.value).toEqual(3);
+                expect(starsEl.componentInstance.value).toEqual(2.5);
                 expect(iconTooltipEl.componentInstance.tooltip).toEqual(EditPageLocalization.STARS_TOOLTIP);
                 expect(iconTooltipEl.componentInstance.icon).toEqual(faQuestionCircle);
             });
@@ -1355,35 +1146,35 @@ describe('Features.Profile.Page:ProfileEdit', () => {
                         Used: 0
                     },
                     Values: [
-                        { Category: 0, Type: 0, Value: 50 },
-                        { Category: 0, Type: 1, Value: 50 },
-                        { Category: 1, Type: 2, Value: 50 },
-                        { Category: 1, Type: 3, Value: 50 },
-                        { Category: 1, Type: 4, Value: 50 },
-                        { Category: 1, Type: 5, Value: 50 },
-                        { Category: 1, Type: 6, Value: 50 },
-                        { Category: 1, Type: 7, Value: 50 },
-                        { Category: 2, Type: 8, Value: 50 },
-                        { Category: 2, Type: 9, Value: 50 },
-                        { Category: 2, Type: 10, Value: 50 },
-                        { Category: 2, Type: 11, Value: 50 },
-                        { Category: 2, Type: 12, Value: 50 },
-                        { Category: 2, Type: 13, Value: 50 },
-                        { Category: 3, Type: 14, Value: 50 },
-                        { Category: 3, Type: 15, Value: 50 },
-                        { Category: 3, Type: 16, Value: 50 },
-                        { Category: 3, Type: 17, Value: 50 },
-                        { Category: 3, Type: 18, Value: 50 },
-                        { Category: 3, Type: 19, Value: 50 },
-                        { Category: 4, Type: 20, Value: 50 },
-                        { Category: 4, Type: 21, Value: 50 },
-                        { Category: 4, Type: 22, Value: 50 },
-                        { Category: 4, Type: 23, Value: 50 },
-                        { Category: 4, Type: 24, Value: 50 },
-                        { Category: 5, Type: 25, Value: 50 },
-                        { Category: 5, Type: 26, Value: 50 },
-                        { Category: 5, Type: 27, Value: 50 },
-                        { Category: 5, Type: 28, Value: 50 }
+                        { Type: 0, Value: 50 },
+                        { Type: 1, Value: 50 },
+                        { Type: 2, Value: 50 },
+                        { Type: 3, Value: 50 },
+                        { Type: 4, Value: 50 },
+                        { Type: 5, Value: 50 },
+                        { Type: 6, Value: 50 },
+                        { Type: 7, Value: 50 },
+                        { Type: 8, Value: 50 },
+                        { Type: 9, Value: 50 },
+                        { Type: 10, Value: 50 },
+                        { Type: 11, Value: 50 },
+                        { Type: 12, Value: 50 },
+                        { Type: 13, Value: 50 },
+                        { Type: 14, Value: 50 },
+                        { Type: 15, Value: 50 },
+                        { Type: 16, Value: 50 },
+                        { Type: 17, Value: 50 },
+                        { Type: 18, Value: 50 },
+                        { Type: 19, Value: 50 },
+                        { Type: 20, Value: 50 },
+                        { Type: 21, Value: 50 },
+                        { Type: 22, Value: 50 },
+                        { Type: 23, Value: 50 },
+                        { Type: 24, Value: 50 },
+                        { Type: 25, Value: 50 },
+                        { Type: 26, Value: 50 },
+                        { Type: 27, Value: 50 },
+                        { Type: 28, Value: 50 }
                     ]
                 }
             }
@@ -1446,7 +1237,7 @@ describe('Features.Profile.Page:ProfileEdit', () => {
         fixture.detectChanges();
     }
 
-    function buildStatsValueModel(): StatsValueModel {
+    function buildStatsValueModel(): StatsValue {
         return {
             0: {
                 0: 50,

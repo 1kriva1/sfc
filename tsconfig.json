@@ -35,6 +35,9 @@
       ],
       "@core/*": [
         "./src/app/core/*"
+      ],
+      "@test/*": [
+        "src/tests/*"
       ]
     }
   },

@@ -1,0 +1,51 @@
+<div class="container">
+    <div class="column tags" *ngIf="vm.tags?.length">
+        <span class="title">{{PlayersRowContentLocalization.TAGS}}:</span>
+        <sfc-tags [tags]="vm.tags" [sfcComponentSize] [customSize]="0.6"></sfc-tags>
+    </div>
+    <div class="column free-play">
+        <span class="title">{{PlayersRowContentLocalization.FREE_PLAY}}:</span>
+        <fa-icon [icon]="vm.freePlayIcon"></fa-icon>
+    </div>
+    <div class="column game-style">
+        <span class="title">{{PlayersRowContentLocalization.GAME_STYLE}}:</span>
+        <div *ngIf="vm.gameStyle" class="mark image">
+            <sfc-icon [imageSrc]="vm.gameStyle.image" [sfcComponentSize] [customSize]="3">
+            </sfc-icon>
+            <span>{{vm.gameStyle.value}}</span>
+        </div>
+        <sfc-no-data *ngIf="!vm.gameStyle"></sfc-no-data>
+    </div>
+    <div class="column working-foot">
+        <span class="title">{{PlayersRowContentLocalization.WORKING_FOOT}}:</span>
+        <div *ngIf="vm.workingFoot" class="mark image">
+            <sfc-icon [imageSrc]="vm.workingFoot.image" [sfcComponentSize]="ComponentSize.Large">
+            </sfc-icon>
+            <span>{{vm.workingFoot.value!}}</span>
+        </div>
+        <sfc-no-data *ngIf="!vm.workingFoot"></sfc-no-data>
+    </div>
+    <div class="column skill">
+        <span class="title">{{PlayersRowContentLocalization.SKILL}}:</span>
+        <sfc-stars [value]="vm.skill!" [sfcComponentSize] [customSize]="0.6"></sfc-stars>
+    </div>
+    <div class="column stats">
+        <div class="column raiting">
+            <span class="title">{{PlayersRowContentLocalization.RATING}}</span>
+            <div class="content">
+                <sfc-progress-circle [progress]="vm.raiting" [sfcComponentSize] [customSize]="0.7">
+                </sfc-progress-circle>
+            </div>
+        </div>
+        <div class="column types">
+            <div *ngFor="let type of vm.types" class="column">
+                <span class="title">{{type.label}}</span>
+                <div class="content">
+                    <sfc-progress-semi-circle [progress]="type.value" [limits]="false" [sfcComponentSize]
+                        [customSize]="0.7">
+                    </sfc-progress-semi-circle>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

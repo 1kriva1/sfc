@@ -59,22 +59,22 @@ export class GeneralProfileEditLocalization {
             VALIDATIONS: {
                 EMPTY: $localize`:@@core.validation.empty:Should not be empty.`,
                 DUPLICATE: $localize`:@@core.validation.duplicate:Duplicate value.`,
-                TAG_LENGTH: $localize`:@@feature.profile.edit.page.general.tags.validation.tag-length:Tag value is too long, allowed length `,
-                TAGS_LENGTH: $localize`:@@feature.profile.edit.page.general.tags.validation.tags-length:Too much tags.`
+                TAG_LENGTH: $localize`:@@core.validation.tag.length:Tag value is too long, allowed length`,
+                TAGS_LENGTH: $localize`:@@core.validation.tags.length:Too much tags.`
             }
         },
         AVAILABLE_FROM: {
             LABEL_PLACEHOLDER: $localize`:@@feature.profile.edit.page.general.available-from-time.label-placeholder:Available from such time`,
             HELPER_TEXT: $localize`:@@feature.profile.edit.page.general.available-from-time.helper-text:From which time you can play`,
             VALIDATIONS: {
-                COMPARE: $localize`:@@feature.profile.edit.page.general.available-from.validation.compare:Must be less than available to value.`
+                COMPARE: $localize`:@@core.validation.available-from.compare:Must be less than available to value.`
             }
         },
         AVAILABLE_TO: {
             LABEL_PLACEHOLDER: $localize`:@@feature.profile.edit.page.general.available-to-time.label-placeholder:Available to such time`,
             HELPER_TEXT: $localize`:@@feature.profile.edit.page.general.available-to-time.helper-text:To what time you can play`,
             VALIDATIONS: {
-                COMPARE: $localize`:@@feature.profile.edit.page.general.available-to.validation.compare:Must be more than available from value.`
+                COMPARE: $localize`:@@core.validation.available-to.compare:Must be more than available from value.`
             }
         },
         AVAILABLE_DAYS: {

@@ -1,0 +1,38 @@
+@use "ngx-sfc-common/styles/index" as *;
+@import "mixins";
+
+:host {
+  cursor: default;
+
+  .container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 1.25em;
+    padding: 1.2em 2em;
+
+    fa-icon {
+      color: $color-0;
+      padding: 0.6em 0.7em;
+      border-radius: 0.8em;
+    }
+
+    .info {
+      padding: 0 1em;
+
+      span {
+        font-size: 0.6em;
+        color: $color-2;
+        font-weight: bold;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 1.1em;
+        color: $color-0;
+        padding-top: 0.1em;
+      }
+    }
+  }
+}

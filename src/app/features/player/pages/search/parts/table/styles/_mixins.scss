@@ -1,0 +1,260 @@
+@use "ngx-sfc-common/styles/index" as *;
+@use "ngx-sfc-common/components/delimeter/delimeter.component.mixins.scss" as delimeter;
+@use "ngx-sfc-inputs/components/tags/tags-input.component.mixins.scss" as tags-input;
+
+@mixin host($cursor: default) {
+  cursor: $cursor;
+  user-select: none;
+}
+
+@mixin title() {
+  color: $color-8;
+  font-size: 0.6em;
+  font-weight: bold;
+  user-select: none;
+  text-align: center;
+  padding: 0.5em 0;
+  text-transform: capitalize;
+}
+
+@mixin common() {
+  .title {
+    @include title;
+  }
+
+  .icon-content {
+    display: flex;
+    align-items: center;
+
+    p {
+      color: $color-8;
+      margin: 0;
+      font-size: 0.6em;
+      margin-left: 0.5em;
+      font-weight: bold;
+    }
+
+    fa-icon {
+      color: $color-green-4;
+      font-size: 1em;
+    }
+  }
+
+  .mark {
+    padding: 0.5em 0.4em;
+    border: 0.2em solid $color-green-4;
+    border-radius: 4em;
+    color: $color-default;
+    font-size: 0.6em;
+    font-weight: bold;
+  }
+
+  .image {
+    @include center-wrap;
+
+    flex-direction: column;
+    text-align: center;
+    border: none;
+    font-size: 0.6em;
+  }
+}
+
+@mixin column() {
+  @include center-wrap;
+
+  padding: 0 0.2em;
+
+  sfc-no-data {
+    color: $color-default;
+  }
+}
+
+@mixin column-name() {
+  &.name {
+    sfc-player-info-panel {
+      ::ng-deep > .container {
+        > .info {
+          @include center;
+
+          text-align: center;
+          flex-direction: column;
+          color: $color-default;
+
+          h3 {
+            font-size: 0.9em;
+          }
+
+          p {
+            color: $color-default;
+            margin: 0.2em 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin column-available() {
+  &.available {
+    flex-direction: column;
+    justify-content: flex-start;
+
+    > div {
+      text-align: center;
+
+      &.days {
+        @include tags-input.sfc-tags-input-as-default;
+      }
+
+      p {
+        text-align: left;
+      }
+    }
+  }
+}
+
+@mixin column-size($direction, $padding) {
+  &.size {
+    flex-direction: $direction;
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      padding: $padding;
+    }
+  }
+}
+
+@mixin column-free-play() {
+  &.free-play {
+    fa-icon {
+      color: $color-default;
+    }
+  }
+}
+
+@mixin column-tags() {
+  &.tags {
+    @include tags-input.sfc-tags-input-as-default;
+  }
+}
+
+@mixin position($background, $background-hover) {
+  .container {
+    background: $background;
+  }
+
+  &:not(.expanded):hover {
+    .container {
+      background: $background-hover;
+    }
+  }
+}
+
+@mixin position-common() {
+  .title {
+    color: $color-1;
+  }
+
+  .mark {
+    color: $color-1;
+  }
+
+  .icon-content {
+    fa-icon {
+      color: $color-yellow-1;
+    }
+
+    p {
+      color: $color-2;
+    }
+  }
+
+  sfc-no-data {
+    color: $color-dark;
+  }
+}
+
+@mixin position-column-name() {
+  &.name {
+    sfc-player-info-panel {
+      ::ng-deep > .container {
+        > .info {
+          color: $color-0;
+
+          p {
+            color: $color-1;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin position-column-free-play() {
+  &.free-play {
+    fa-icon {
+      color: $color-0;
+    }
+  }
+}
+
+@mixin position-type() {
+  sfc-progress-semi-circle {
+    ::ng-deep .container {
+      color: $color-0;
+    }
+  }
+}
+
+@mixin position-card($background, $background-hover) {
+  .container {
+    .front,
+    .back {
+      background: $background;
+      transition: background $transition-duration-default $transition-timing-function-default;
+    }
+  }
+
+  &:hover {
+    .container {
+      .front,
+      .back {
+        background: $background-hover;
+      }
+    }
+  }
+}
+
+@mixin action-menu() {
+  sfc-dropdown-menu {
+    ::ng-deep ul > li {
+      > .container {
+        width: 1.8em;
+        height: 1.8em;
+      }
+
+      > .dropdown-container {
+        sfc-dropdown-menu-item {
+          sfc-delimeter {
+            @include delimeter.sfc-delimeter-as-default;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin position-action-menu($color: $color-0) {
+  sfc-dropdown-menu {
+    ::ng-deep sfc-dots {
+      ::ng-deep > .container {
+        > .dots-container {
+          > .dot {
+            @include theme-value(background, $color !important);
+          }
+        }
+      }
+    }
+  }
+}

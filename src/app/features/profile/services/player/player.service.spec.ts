@@ -152,7 +152,7 @@ describe('Features.Profile.Service:Player', () => {
                     Available: 2,
                     Used: 1
                 },
-                Values: [{ Type: 0, Category: 0, Value: 50 }]
+                Values: [{ Type: 0, Value: 50 }]
             }
         }
     }

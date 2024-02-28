@@ -1,9 +1,8 @@
-import { IValueModel } from "@core/models";
+import { ILimitModel } from "@core/models";
+import { IValueModel } from "@core/types";
 
-export interface IGeneralProfileAvailabilityModel {
+export interface IGeneralProfileAvailabilityModel extends ILimitModel<Date | null> {
     days: IValueModel<number>[] | null;
-    from: Date | null;
-    to: Date | null;
 }
 
 export interface IGeneralProfileModel {

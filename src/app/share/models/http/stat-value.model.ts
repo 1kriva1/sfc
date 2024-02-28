@@ -1,5 +1,4 @@
 export interface IStatValueModel {
-    Type: any;
-    Category: any;
+    Type: number;
     Value: number;
 }

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { faCircleQuestion, IconDefinition } from '@fortawesome/free-regular-svg-icons';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 
 @Component({
   selector: 'sfc-title',
@@ -18,5 +18,8 @@ export class TitleComponent {
   tooltip!: string;
 
   @Input()
-  icon: IconDefinition = faCircleQuestion;
+  icon: IconDefinition | null = null;
+
+  @Input()
+  delimeter: boolean = true;
 }

@@ -1,6 +1,6 @@
 import { WeekDay } from "@angular/common";
 import { any, firstItem, isDefined } from "ngx-sfc-common";
-import { IEnumModel } from "../../models";
+import { IEnumModel } from "../../types";
 
 export function getWeekDays(include?: number[] | number | null): IEnumModel<number> | IEnumModel<number>[] {
     const values = getEnumValues(WeekDay, include).map((key: WeekDay) => {

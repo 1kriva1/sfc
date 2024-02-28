@@ -1,0 +1,46 @@
+<div class="container" [formGroupName]="SearchPageFilterPart.Stats">
+    <div class="row">
+        <div class="column">
+            <sfc-range-input id="total" formControlName="total" [label]="Localization.INPUT.TOTAL.LABEL"
+                [helperText]="Localization.INPUT.TOTAL.HELPER_TEXT" [multiple]="true" [showValue]="true"
+                [generateMultipleLabel]="generateRangeLabel">
+            </sfc-range-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-stars-input id="raiting" formControlName="raiting" [label]="Localization.INPUT.RAITING.LABEL"
+                [reset]="true" [helperText]="Localization.INPUT.RAITING.HELPER_TEXT"
+                [resetLabel]="Localization.RESET_LABEL">
+            </sfc-stars-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-range-input id="physical" formControlName="physical" [label]="Localization.INPUT.PHYSICAL.LABEL"
+                [helperText]="Localization.INPUT.PHYSICAL.HELPER_TEXT" [multiple]="true" [showValue]="true"
+                [generateMultipleLabel]="generateRangeLabel">
+            </sfc-range-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-range-input id="mental" formControlName="mental" [label]="Localization.INPUT.MENTAL.LABEL"
+                [helperText]="Localization.INPUT.MENTAL.HELPER_TEXT" [multiple]="true" [showValue]="true"
+                [generateMultipleLabel]="generateRangeLabel">
+            </sfc-range-input>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column">
+            <sfc-range-input id="skill" formControlName="skill" [label]="Localization.INPUT.SKILL.LABEL"
+                [helperText]="Localization.INPUT.SKILL.HELPER_TEXT" [multiple]="true" [showValue]="true"
+                [generateMultipleLabel]="generateRangeLabel">
+            </sfc-range-input>
+        </div>
+    </div>
+</div>

@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { RoutKey } from '@core/enums';
 import { buildPath, buildTitle, markFormTouchedAndDirty } from '@core/utils';
 import { IRegistrationFormModel } from './registration-form.model';
-import { IForm } from '@core/models/form.model';
+import { IForm } from '@core/types';
 import { IdentityService } from '@share/services/identity/identity.service';
 import { IRegistrationRequest, IRegistrationResponse } from '@share/services/identity/models';
 import { RegistrationPageLocalization } from './registration.page.localization';

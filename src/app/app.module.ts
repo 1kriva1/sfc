@@ -8,7 +8,8 @@ import { CoreModule } from '@core/core.module';
 import {
   DataModule,
   I18nModule,
-  PlayerModule, TokenRefreshModule
+  PlayerModule, 
+  TokenRefreshModule
 } from '@core/initializers';
 import { HttpInterceptorProviders } from '@core/interceptors';
 import { HomeModule } from './features/home/home.module';

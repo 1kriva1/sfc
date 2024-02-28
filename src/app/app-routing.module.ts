@@ -33,6 +33,12 @@ const routes: Routes = [
     data: { layout: LayoutConstants.ONLY_HEADER_LAYOUT_MODEL },
     canMatch: [CanMatchAuthorized]
   },
+  {
+    path: RoutKey.Players,
+    loadChildren: () => import('./features/player/player.module').then(m => m.PlayerModule),
+    data: { layout: LayoutConstants.ONLY_HEADER_LAYOUT_MODEL },
+    canMatch: [CanMatchAuthorized]
+  },
   { path: '', redirectTo: buildPath(RoutKey.Welcome), pathMatch: 'full' },
   { path: '**', component: NotFoundPageComponent, data: { layout: LayoutConstants.ONLY_CONTENT_LAYOUT_MODEL, themeEnabled: false } }
 ];
